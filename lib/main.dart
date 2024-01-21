@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'pages/home/page/home.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'dashboard/pages/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

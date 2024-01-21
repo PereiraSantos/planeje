@@ -1,16 +1,12 @@
-import '../../entities/revision.dart';
 import '../../utils/format_date.dart';
+import '../entities/revision.dart';
 
 class BuildRevision {
   Revision build({
     required String description,
-    required String nextRevision,
   }) {
     return Revision(
-      dateCriation: buildDate(),
       description: description,
-      revision: buildDate(),
-      nextRevision: nextRevision,
     );
   }
 

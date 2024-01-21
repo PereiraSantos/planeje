@@ -7,27 +7,19 @@ class FormatDate {
     Intl.defaultLocale = 'pt_BR';
   }
 
-  static String formatDate(DateTime date) =>
-      DateFormat('dd/MM/yyyy').format(date);
+  String formatDate(DateTime date) => DateFormat('dd/MM/yyyy').format(date);
 
-  static String formatDateWek(String date) => date != ''
-      ? DateFormat("EEEE - MMMM")
-          .format(dateParse(date))
-          .replaceAll("-feira", "")
-      : '';
+  String formatDateWek(String date) =>
+      date != '' ? DateFormat("EEEE - MMMM").format(dateParse(date)).replaceAll("-feira", "") : '';
 
-  static String formatDateString(String date) =>
-      date != '' ? DateFormat("dd/MM/yy").format(dateParse(date)) : '';
+  String formatDateString(String date) => date != '' ? DateFormat("dd/MM/yy").format(dateParse(date)) : '';
 
-  static String formatDateStringDb(String date) =>
+  String formatDateStringDb(String date) =>
       date != '' ? DateFormat("dd/MM/yyyy").format(dateParse(date)) : '';
 
-  static String formatDateStringNotification(DateTime date) =>
-      DateFormat('dd/MM/yyyy hh:mm:ss').format(date);
+  String formatDateStringNotification(DateTime date) => DateFormat('dd/MM/yyyy hh:mm:ss').format(date);
 
-  static DateTime dateParse(String date) =>
-      DateFormat('dd/MM/yyyy').parse(date);
+  DateTime dateParse(String date) => DateFormat('dd/MM/yyyy').parse(date);
 
-  static DateTime dateParseAlert(String date) =>
-      DateFormat('yyyy-MM-dd hh:mm:ss').parse(date);
+  DateTime dateParseAlert(String date) => DateFormat('yyyy-MM-dd hh:mm:ss').parse(date);
 }

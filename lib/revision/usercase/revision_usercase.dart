@@ -1,10 +1,10 @@
-import 'package:planeje/entities/revision.dart';
-import 'package:planeje/revision/datasource/database/database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
 
+import '../entities/revision.dart';
 import '../repository/revision_repository.dart';
 
-class RevisionUsercase implements IRevisionRepository {
-  final DatabaseDataSource databaseDataSource;
+class RevisionUsercase implements RevisionRepository {
+  final RevisionDatabaseDataSource databaseDataSource;
 
   RevisionUsercase(this.databaseDataSource);
 

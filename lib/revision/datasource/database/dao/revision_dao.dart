@@ -1,5 +1,6 @@
 import 'package:floor/floor.dart';
-import 'package:planeje/entities/revision.dart';
+
+import '../../../entities/revision.dart';
 
 @dao
 abstract class RevisionDao {
@@ -15,8 +16,8 @@ abstract class RevisionDao {
   @Query('SELECT * FROM revision WHERE text LIKE :text')
   Future<List<Revision>> findRevisionByDescription(String text);
 
-  @Query('update revision set text = :text,  description = :description, status = :status WHERE id = :id')
-  Future<void> updateRevision(String text, String description, int id, bool status);
+  @Query('update revision set description = :description, status = :status WHERE id = :id')
+  Future<int?> updateRevision(String description, int id, bool status);
 
   @insert
   Future<int> insertRevision(Revision revision);

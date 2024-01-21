@@ -1,0 +1,125 @@
+import 'package:flutter/material.dart';
+
+import 'button_custon.dart';
+
+// ignore: must_be_immutable
+class AppBarWidget extends StatelessWidget {
+  AppBarWidget({
+    super.key,
+    required this.callbackHome,
+    required this.callbackReviser,
+    required this.callbackAnnotation,
+    required this.callbackAdd,
+    required this.callbackFilter,
+    this.colorHome = Colors.black12,
+    this.colorReviser = Colors.black12,
+    this.colorAnnotation = Colors.black12,
+    this.showAction = true,
+    this.countReviserLate = 0,
+  });
+
+  final Function callbackHome;
+  final Function callbackReviser;
+  final Function callbackAnnotation;
+  final Function callbackAdd;
+  final Function callbackFilter;
+  Color colorHome;
+  Color colorReviser;
+  Color colorAnnotation;
+  bool showAction;
+  int countReviserLate;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: const Color(0xffffffff),
+      elevation: 0,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () => callbackHome(),
+            child: ButtonCuston(
+              color: colorHome,
+              width: 30,
+              child: const Icon(
+                Icons.home,
+                color: Colors.black54,
+                size: 20,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => callbackReviser(),
+            child: ButtonCuston(
+              color: colorReviser,
+              width: MediaQuery.of(context).size.width * 0.2,
+              margin: const EdgeInsets.only(left: 05),
+              child: const Text(
+                "Revisão",
+                style: TextStyle(
+                    fontSize: 13, color: Color.fromARGB(137, 10, 5, 5), fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => callbackAnnotation(),
+            child: ButtonCuston(
+              color: colorAnnotation,
+              width: MediaQuery.of(context).size.width * 0.2,
+              margin: const EdgeInsets.only(left: 05),
+              child: const Text(
+                "Anotação",
+                style: TextStyle(
+                    fontSize: 13, color: Color.fromARGB(137, 10, 5, 5), fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        Visibility(
+          visible: showAction,
+          child: SizedBox(
+            width: 30,
+            child: IconButton(
+              onPressed: () async => await callbackAdd(),
+              icon: const Icon(
+                Icons.add,
+                color: Colors.black54,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
+        Visibility(
+          visible: showAction,
+          child: IconButton(
+            onPressed: () => callbackFilter(),
+            icon: const Icon(
+              Icons.filter_alt_rounded,
+              color: Colors.black54,
+              size: 20,
+            ),
+          ),
+        ),
+        Visibility(
+          visible: !showAction,
+          child: IconButton(
+            onPressed: null,
+            icon: Badge(
+              label: Text("$countReviserLate"),
+              isLabelVisible: countReviserLate > 0 ? true : false,
+              child: const Icon(
+                Icons.notifications,
+                color: Colors.black54,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

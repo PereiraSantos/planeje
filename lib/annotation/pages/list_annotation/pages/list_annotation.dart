@@ -1,55 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/pages/list_annotation/pages/list_annotation.dart';
+import 'package:planeje/annotation/entities/annotation.dart';
+import 'package:planeje/annotation/pages/register_annotation/pages/register_annotation.dart';
+import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
 
 import '../../../../dashboard/pages/home.dart';
 import '../../../../usercase/format_date.dart';
 import '../../../../usercase/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
-import '../../../entities/revision.dart';
-import '../../register_revision/page/register_revision.dart';
 import '../component/text_list.dart';
-import '../controller/revision_controller.dart';
+import '../controller/list_annotation_controller.dart';
 
-class ListRevision extends StatefulWidget {
-  const ListRevision({
-    Key? key,
-  }) : super(key: key);
+class ListAnnotation extends StatefulWidget {
+  const ListAnnotation({super.key});
 
   @override
-  State<ListRevision> createState() => _ListRevisionState();
+  State<ListAnnotation> createState() => _ListAnnotationState();
 }
 
-class _ListRevisionState extends State<ListRevision> {
-  final RevisionListController revisionController = RevisionListController();
-
-  var showFilter = false;
-
-  int sizeList = 0;
-
-  String? search;
-
+class _ListAnnotationState extends State<ListAnnotation> {
+  final ListAnnotattionController listAnnotattionController = ListAnnotattionController();
   void reloadPage() => setState(() {});
-
-  Widget labelText(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, top: 5),
-      child: SizedBox(
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 15, color: Colors.black87),
-        ),
-      ),
-    );
-  }
-
-  Color getColor(Revision value) {
-    if (value.status!) {
-      return const Color.fromARGB(255, 129, 236, 185);
-    }
-    return Colors.white;
-  }
-
-  bool compareDate(String date) => FormatDate().dateParse(date).isBefore(DateTime.now());
 
   void message(BuildContext context, String message) {
     var snackBar = SnackBar(
@@ -68,29 +38,25 @@ class _ListRevisionState extends State<ListRevision> {
           callbackHome: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const Home())),
           callbackReviser: () =>
               Navigator.of(context).push(TransitionsBuilder.createRoute(const ListRevision())),
-          callbackAnnotation: () =>
-              Navigator.of(context).push(TransitionsBuilder.createRoute(const ListAnnotation())),
+          callbackAnnotation: () {},
           callbackAdd: () async {
             var result = await Navigator.of(context).push(
               TransitionsBuilder.createRoute(
-                RegisterRevision(),
+                RegisterAnnotation(),
               ),
             );
 
             if (result) reloadPage();
           },
           callbackFilter: () {
-            if (sizeList > 0) {
-              showFilter = !showFilter;
-              reloadPage();
-            }
+            reloadPage();
           },
-          colorReviser: Colors.black54,
+          colorAnnotation: Colors.black54,
         ),
       ),
       body: FutureBuilder(
-        future: revisionController.getRevision(value: ''),
-        builder: (BuildContext context, AsyncSnapshot<List<Revision>> snapshot) {
+        future: listAnnotattionController.getAnnotation(value: ''),
+        builder: (BuildContext context, AsyncSnapshot<List<Annotation>> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
               return ListView.builder(
@@ -107,7 +73,7 @@ class _ListRevisionState extends State<ListRevision> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               content: Text(
-                                "Deseja excluir? \n${snapshot.data![index].description!}",
+                                "Deseja excluir? \n${snapshot.data![index].text!}",
                                 style: const TextStyle(color: Colors.black45, fontSize: 20),
                               ),
                               actions: <Widget>[
@@ -118,7 +84,7 @@ class _ListRevisionState extends State<ListRevision> {
                                     children: [
                                       TextButton(
                                         onPressed: () async {
-                                          var result = await revisionController
+                                          var result = await listAnnotattionController
                                               .onClickDelete(snapshot.data![index].id!);
                                           if (result && context.mounted) {
                                             message(context, 'Removido com sucesso');
@@ -141,7 +107,7 @@ class _ListRevisionState extends State<ListRevision> {
                                         child: const Text("SIM"),
                                       ),
                                       TextButton(
-                                        onPressed: () => Navigator.pop(context, false),
+                                        onPressed: () => Navigator.of(context).pop(false),
                                         style: ButtonStyle(
                                           side: MaterialStateProperty.all(
                                             const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
@@ -177,7 +143,7 @@ class _ListRevisionState extends State<ListRevision> {
                         onTap: () async {
                           var result = await Navigator.of(context).push(
                             TransitionsBuilder.createRoute(
-                              RegisterRevision(revisionEntity: snapshot.data![index]),
+                              RegisterAnnotation(annotation: snapshot.data![index]),
                             ),
                           );
                           if (result) reloadPage();
@@ -187,26 +153,16 @@ class _ListRevisionState extends State<ListRevision> {
                           shape: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  labelText("Descrisão:"),
-                                  Expanded(
-                                    flex: 2,
-                                    child: SizedBox(
-                                      width: double.maxFinite,
-                                      child: TextCard(
-                                        padding: const EdgeInsets.only(left: 8, top: 2, right: 5),
-                                        revisionEntity: snapshot.data![index].description ?? "",
-                                        maxLines: 5,
-                                      ),
-                                    ),
-                                  ),
+                                  TextList(snapshot.data![index].text ?? ""),
                                 ],
-                              )
+                              ),
+                              TextList.date(FormatDate().formatDateWek(snapshot.data![index].dateText ?? "")),
                             ],
                           ),
                         ),
@@ -219,7 +175,7 @@ class _ListRevisionState extends State<ListRevision> {
               return Container(
                 padding: const EdgeInsets.only(left: 18.0),
                 child: const Text(
-                  "Não há revisão!!!",
+                  "Não há anotação!!!",
                   style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
                 ),
               );

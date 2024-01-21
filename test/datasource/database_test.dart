@@ -1,50 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:planeje/entities/date_revision.dart';
-import 'package:planeje/entities/revision.dart';
+
 import 'package:planeje/revision/datasource/repository/datasource_revision_repository.dart';
+import 'package:planeje/revision/entities/revision.dart';
 
-class DatabaseMock implements IDataSourceRevisionRepository {
+class DatabaseMock implements RevisionDataSourceRepository {
   DatabaseMock();
-
-  @override
-  Future<DateRevision?> deleteDateRevisionById(int id) async {
-    return DateRevision();
-  }
-
-  @override
-  Future<DateRevision?> deleteDateRevisionByIdRevision(int id, String date) async {
-    return DateRevision();
-  }
-
-  @override
-  Future<List<DateRevision>> findAllDateRevisions() async {
-    return [DateRevision()];
-  }
-
-  @override
-  Future<List<DateRevision>> findDateRevisionById(int id) async {
-    return [DateRevision()];
-  }
-
-  @override
-  Future<DateRevision?> findDateRevisionByIdRevision(int id, String date) async {
-    return DateRevision();
-  }
-
-  @override
-  Future<int> insertDateRevision(DateRevision dateRevision) async {
-    return 1;
-  }
-
-  @override
-  Future<int> insertDateRevisionList(List<DateRevision> dateRevision) async {
-    return 1;
-  }
-
-  @override
-  Future<DateRevision?> updateDateRevisionById(bool status, int id) async {
-    return DateRevision();
-  }
 
   @override
   Future<Revision?> deleteRevisionById(int id) async {
@@ -78,10 +38,6 @@ class DatabaseMock implements IDataSourceRevisionRepository {
 }
 
 void main() {
-  DatabaseMock database = DatabaseMock();
-  test("Espero que cadastre um registro", () async {
-    var result = await database
-        .insertDateRevision(DateRevision(id: 1, date: '2024', hour: 21, minute: 30, revisionId: 1));
-    expect(result, equals(1));
-  });
+  /* DatabaseMock database = DatabaseMock();
+  test("Espero que cadastre um registro", () async {});*/
 }

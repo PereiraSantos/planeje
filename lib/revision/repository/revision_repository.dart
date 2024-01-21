@@ -1,6 +1,6 @@
-import '../../entities/revision.dart';
+import '../entities/revision.dart';
 
-abstract class IRevisionRepository {
+abstract class RevisionRepository {
   Future<List<Revision>> findAllRevisions();
   Future<Revision?> findRevisionById(int id);
   Future<Revision?> deleteRevisionById(int id);
