@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/revision/pages/register_revision/controller/revision_controller.dart';
+import '../../../../usercase/format_date.dart';
 import '../../../../widgets/text_button_widget.dart';
 import '../../../../widgets/text_form_field_widget.dart';
 import '../../../entities/revision.dart';
+import '../component/change_date_next_review.dart';
 
 // ignore: must_be_immutable
 class RegisterRevision extends StatelessWidget {
-  RegisterRevision({Key? key, this.revisionEntity}) : super(key: key) {
+  RegisterRevision({super.key, this.revisionEntity}) {
     textDescriptionController.text = revisionEntity?.description ?? '';
   }
 
@@ -14,7 +16,7 @@ class RegisterRevision extends StatelessWidget {
   final RevisionRegisterController controller = RevisionRegisterController();
   final formKey = GlobalKey<FormState>();
   final TextEditingController textDescriptionController = TextEditingController();
-  TimeOfDay? selectedTime;
+  String? dateNextRevision;
 
   String title() => revisionEntity != null ? "Atualizar" : "Adicionar";
 
@@ -55,6 +57,11 @@ class RegisterRevision extends StatelessWidget {
                   keyboardType: TextInputType.multiline,
                   textArea: true,
                 ),
+                ChangeDateNextReview(
+                  revisionEntity: revisionEntity,
+                  onClick: (value) => controller.setStatus(value),
+                  onClickCalendar: (value) => dateNextRevision = value,
+                ),
               ],
             ),
           ),
@@ -71,7 +78,12 @@ class RegisterRevision extends StatelessWidget {
               label: 'SALVAR',
               onClick: () async {
                 if (!formKey.currentState!.validate()) return;
-                if (!await controller.saveOrUpdate(textDescriptionController.text, id: revisionEntity?.id)) {
+                if (!await controller.saveOrUpdate(
+                    textDescriptionController.text,
+                    dateNextRevision ??
+                        revisionEntity?.nextDate ??
+                        FormatDate().formatDate(FormatDate().newDate()),
+                    id: revisionEntity?.id)) {
                   return;
                 }
                 if (context.mounted) {

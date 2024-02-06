@@ -1,42 +1,38 @@
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
-class CheckBoxComponent extends StatefulWidget {
-  CheckBoxComponent({
+class CheckBoxComponent extends StatelessWidget {
+  const CheckBoxComponent({
     super.key,
-    required this.child,
+    required this.label,
     required this.onClick,
     this.isChecked = false,
   });
 
-  final Widget child;
+  final String label;
   final Function(bool) onClick;
-  bool? isChecked;
+  final bool isChecked;
 
-  @override
-  State<CheckBoxComponent> createState() => _CheckBoxComponentState();
-}
-
-class _CheckBoxComponentState extends State<CheckBoxComponent> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Checkbox(
-          checkColor: Colors.white,
-          activeColor: Colors.green,
-          value: widget.isChecked ?? false,
-          onChanged: (bool? value) {
-            setState(() {
-              widget.isChecked = value!;
-            });
-
-            widget.onClick(value!);
-          },
-        ),
-        widget.child
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Checkbox(
+              checkColor: Colors.white,
+              activeColor: Colors.green,
+              value: isChecked,
+              onChanged: (bool? value) => onClick(value!)),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 17,
+              color: Color.fromARGB(255, 134, 134, 134),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

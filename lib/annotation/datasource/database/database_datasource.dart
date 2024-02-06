@@ -2,6 +2,8 @@ import 'package:planeje/annotation/datasource/repository/annotation_datasource_r
 import 'package:planeje/annotation/entities/annotation.dart';
 
 import '../../../database/app_database.dart';
+import '../../entities/annotation_revision.dart';
+import 'dao/annotation_dao_custom.dart';
 
 class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
   Future<AppDatabase> getInstance() async {
@@ -48,5 +50,23 @@ class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
   Future<Annotation?> updateAnnotationTime(String time, int id) async {
     final database = await getInstance();
     return await database.annotationDao.updateAnnotationTime(time, id);
+  }
+
+  @override
+  Future<Annotation?> updateAnnotationRevision(int idRevision, int id) async {
+    final database = await getInstance();
+    return await database.annotationDao.updateAnnotationRevision(idRevision, id);
+  }
+
+  @override
+  Future<List<AnnotationRevision>?> getAnnotationWidthRevision() async {
+    final database = await getInstance();
+    return await AnnotationDaoCustom().getAnnotationWidthRevision(database);
+  }
+
+  @override
+  Future<List<Annotation>?> findAnnotationByIdRevision(int idRevision) async {
+    final database = await getInstance();
+    return await database.annotationDao.findAnnotationByIdRevision(idRevision);
   }
 }

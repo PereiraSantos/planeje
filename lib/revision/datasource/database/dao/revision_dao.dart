@@ -16,8 +16,18 @@ abstract class RevisionDao {
   @Query('SELECT * FROM revision WHERE text LIKE :text')
   Future<List<Revision>> findRevisionByDescription(String text);
 
-  @Query('update revision set description = :description, status = :status WHERE id = :id')
-  Future<int?> updateRevision(String description, int id, bool status);
+  @Query(
+      'update revision set description = :description, next_date = :nextDate,status = :status WHERE id = :id')
+  Future<int?> updateRevision(String description, String nextDate, int id, bool status);
+
+  @Query('SELECT * FROM revision where status = 0 order by next_date desc limit 1')
+  Future<Revision?> getNextRevision();
+
+  @Query('SELECT * FROM revision where status = 0')
+  Future<List<Revision>?> getDelayedRevision();
+
+  @Query('SELECT * FROM revision where status = 1')
+  Future<List<Revision>?> getCompletedRevision();
 
   @insert
   Future<int> insertRevision(Revision revision);

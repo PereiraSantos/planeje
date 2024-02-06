@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 // ignore: must_be_immutable
 class TextFormFieldWidget extends StatelessWidget {
   TextFormFieldWidget({
-    Key? key,
+    super.key,
     required this.controller,
     this.inputFormatter,
     this.maxLine = 1,
@@ -16,7 +16,7 @@ class TextFormFieldWidget extends StatelessWidget {
     this.suffixIcon,
     this.textArea = false,
     this.readOnly = false,
-  }) : super(key: key);
+  });
 
   final TextEditingController controller;
   final String? hintText;
@@ -43,8 +43,7 @@ class TextFormFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(left: 20.0, top: 10, right: 20, bottom: 10),
+      padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20, bottom: 10),
       child: TextFormField(
         controller: controller,
         maxLines: maxLine,
@@ -56,27 +55,20 @@ class TextFormFieldWidget extends StatelessWidget {
         textCapitalization: TextCapitalization.sentences,
         style: const TextStyle(fontSize: 22, color: Colors.black54),
         decoration: InputDecoration(
-            labelText: hintText,
-            labelStyle: const TextStyle(
-              color: Colors.black54,
-              fontSize: 22.0,
-              fontWeight: FontWeight.w300,
-            ),
-            suffixIcon: suffixIcon,
-            hintStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 22.0,
-              fontFamily: 'helvetica_neue_light',
-            ),
-            border: borderRadius != null ? theme(borderRadius!) : null,
-            focusedBorder: textArea
-                ? const OutlineInputBorder(
-                    borderSide: BorderSide(
-                      width: 1,
-                      color: Colors.black54,
-                    ),
-                  )
-                : null),
+          labelText: hintText,
+          labelStyle: const TextStyle(
+            color: Colors.black54,
+            fontSize: 22.0,
+            fontWeight: FontWeight.w300,
+          ),
+          suffixIcon: suffixIcon,
+          hintStyle: const TextStyle(
+            color: Colors.black,
+            fontSize: 22.0,
+            fontFamily: 'helvetica_neue_light',
+          ),
+          border: borderRadius != null ? theme(borderRadius!) : null,
+        ),
         validator: (value) {
           if (valid) {
             return validator(value);

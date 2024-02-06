@@ -10,15 +10,19 @@ class Revision {
   final String? description;
 
   @ColumnInfo(name: 'status')
-  final bool? status;
+  bool? status;
 
   @ColumnInfo(name: 'date')
   final String? date;
+
+  @ColumnInfo(name: 'next_date')
+  final String? nextDate;
 
   Revision({
     this.id,
     this.description,
     this.status = false,
     this.date,
+    this.nextDate,
   });
 }

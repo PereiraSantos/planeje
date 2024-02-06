@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 
 import '../../../../widgets/text_button_widget.dart';
+import '../component/drop_down_revision.dart';
 import '../controller/register_annotation_controller.dart';
 
+// ignore: must_be_immutable
 class RegisterAnnotation extends StatelessWidget {
   RegisterAnnotation({super.key, this.annotation}) {
     textController.text = annotation?.text ?? '';
@@ -13,6 +15,7 @@ class RegisterAnnotation extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
   final TextEditingController textController = TextEditingController();
   final RegisterAnnotationController controller = RegisterAnnotationController();
+  int? idRevision;
 
   void message(BuildContext context, String message) {
     var snackBar = SnackBar(
@@ -38,28 +41,47 @@ class RegisterAnnotation extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 80),
         child: Form(
           key: formKey,
-          child: TextFormField(
-            controller: textController,
-            maxLines: 100,
-            style: const TextStyle(fontSize: 22, color: Colors.black54),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Descrição aqui.',
-              hintStyle: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 22.0,
-                fontFamily: 'helvetica_neue_light',
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropDownButtonCustom(
+                  onClick: (value) => idRevision = value, idRevision: annotation?.idRevision),
+              const Text(
+                "Descrição",
+                style: TextStyle(fontSize: 18, color: Colors.grey),
               ),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
+              Flexible(
+                child: TextFormField(
+                  controller: textController,
+                  maxLines: 40,
+                  style: const TextStyle(fontSize: 22, color: Colors.black54),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black12, width: 1.0),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black12, width: 1.0),
+                    ),
+                    hintStyle: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 22.0,
+                      fontFamily: 'helvetica_neue_light',
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Campo obrigatório';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -74,7 +96,8 @@ class RegisterAnnotation extends StatelessWidget {
               label: 'SALVAR',
               onClick: () async {
                 if (!formKey.currentState!.validate()) return;
-                if (!await controller.saveOrUpdate(textController.text, id: annotation?.id)) {
+                if (!await controller.saveOrUpdate(textController.text,
+                    id: annotation?.id, idRevision: idRevision ?? annotation?.idRevision)) {
                   return;
                 }
                 if (context.mounted) {

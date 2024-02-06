@@ -1,6 +1,7 @@
 import 'package:planeje/annotation/entities/annotation.dart';
 
 import '../datasource/database/database_datasource.dart';
+import '../entities/annotation_revision.dart';
 import '../repository/annotiation_repository.dart';
 
 class AnnotationUsercase implements AnnotationRepository {
@@ -41,5 +42,20 @@ class AnnotationUsercase implements AnnotationRepository {
   @override
   Future<Annotation?> updateAnnotationTime(String time, int id) async {
     return annotationDatabaseDatasource.updateAnnotationTime(time, id);
+  }
+
+  @override
+  Future<Annotation?> updateAnnotationRevision(int idRevision, int id) async {
+    return annotationDatabaseDatasource.updateAnnotationRevision(idRevision, id);
+  }
+
+  @override
+  Future<List<AnnotationRevision>?> getAnnotationWidthRevision() async {
+    return annotationDatabaseDatasource.getAnnotationWidthRevision();
+  }
+
+  @override
+  Future<List<Annotation>?> findAnnotationByIdRevision(int idRevision) async {
+    return annotationDatabaseDatasource.findAnnotationByIdRevision(idRevision);
   }
 }

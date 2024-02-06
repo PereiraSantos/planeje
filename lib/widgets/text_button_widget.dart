@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextButtonWidget extends StatelessWidget {
-  const TextButtonWidget({Key? key, required this.label, required this.onClick})
-      : super(key: key);
+  const TextButtonWidget({super.key, required this.label, required this.onClick});
 
   final String label;
   final Function onClick;
@@ -24,10 +23,7 @@ class TextButtonWidget extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
           child: Text(
             label,
-            style: const TextStyle(
-                fontSize: 14.0,
-                fontFamily: 'helvetica_neue_light',
-                color: Colors.black54),
+            style: const TextStyle(fontSize: 14.0, fontFamily: 'helvetica_neue_light', color: Colors.black54),
           ),
         ),
         onPressed: () => onClick(),

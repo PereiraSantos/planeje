@@ -87,9 +87,9 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `status` INTEGER, `date` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `status` INTEGER, `date` TEXT, `next_date` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `text` TEXT, `date_text` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -120,7 +120,8 @@ class _$RevisionDao extends RevisionDao {
                   'id': item.id,
                   'description': item.description,
                   'status': item.status == null ? null : (item.status! ? 1 : 0),
-                  'date': item.date
+                  'date': item.date,
+                  'next_date': item.nextDate
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -138,7 +139,8 @@ class _$RevisionDao extends RevisionDao {
             id: row['id'] as int?,
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?));
+            date: row['date'] as String?,
+            nextDate: row['next_date'] as String?));
   }
 
   @override
@@ -148,7 +150,8 @@ class _$RevisionDao extends RevisionDao {
             id: row['id'] as int?,
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?),
+            date: row['date'] as String?,
+            nextDate: row['next_date'] as String?),
         arguments: [id]);
   }
 
@@ -159,7 +162,8 @@ class _$RevisionDao extends RevisionDao {
             id: row['id'] as int?,
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?),
+            date: row['date'] as String?,
+            nextDate: row['next_date'] as String?),
         arguments: [id]);
   }
 
@@ -170,20 +174,56 @@ class _$RevisionDao extends RevisionDao {
             id: row['id'] as int?,
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?),
+            date: row['date'] as String?,
+            nextDate: row['next_date'] as String?),
         arguments: [text]);
   }
 
   @override
   Future<int?> updateRevision(
     String description,
+    String nextDate,
     int id,
     bool status,
   ) async {
     return _queryAdapter.query(
-        'update revision set description = ?1, status = ?3 WHERE id = ?2',
+        'update revision set description = ?1, next_date = ?2,status = ?4 WHERE id = ?3',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [description, id, status ? 1 : 0]);
+        arguments: [description, nextDate, id, status ? 1 : 0]);
+  }
+
+  @override
+  Future<Revision?> getNextRevision() async {
+    return _queryAdapter.query(
+        'SELECT * FROM revision where status = 0 order by next_date desc limit 1',
+        mapper: (Map<String, Object?> row) => Revision(
+            id: row['id'] as int?,
+            description: row['description'] as String?,
+            status: row['status'] == null ? null : (row['status'] as int) != 0,
+            date: row['date'] as String?,
+            nextDate: row['next_date'] as String?));
+  }
+
+  @override
+  Future<List<Revision>?> getDelayedRevision() async {
+    return _queryAdapter.queryList('SELECT * FROM revision where status = 0',
+        mapper: (Map<String, Object?> row) => Revision(
+            id: row['id'] as int?,
+            description: row['description'] as String?,
+            status: row['status'] == null ? null : (row['status'] as int) != 0,
+            date: row['date'] as String?,
+            nextDate: row['next_date'] as String?));
+  }
+
+  @override
+  Future<List<Revision>?> getCompletedRevision() async {
+    return _queryAdapter.queryList('SELECT * FROM revision where status = 1',
+        mapper: (Map<String, Object?> row) => Revision(
+            id: row['id'] as int?,
+            description: row['description'] as String?,
+            status: row['status'] == null ? null : (row['status'] as int) != 0,
+            date: row['date'] as String?,
+            nextDate: row['next_date'] as String?));
   }
 
   @override
@@ -204,7 +244,8 @@ class _$AnnotationDao extends AnnotationDao {
             (Annotation item) => <String, Object?>{
                   'id': item.id,
                   'text': item.text,
-                  'date_text': item.dateText
+                  'date_text': item.dateText,
+                  'id_revision': item.idRevision
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -221,7 +262,8 @@ class _$AnnotationDao extends AnnotationDao {
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             text: row['text'] as String?,
-            dateText: row['date_text'] as String?));
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?));
   }
 
   @override
@@ -230,8 +272,21 @@ class _$AnnotationDao extends AnnotationDao {
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             text: row['text'] as String?,
-            dateText: row['date_text'] as String?),
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?),
         arguments: [id]);
+  }
+
+  @override
+  Future<List<Annotation>?> findAnnotationByIdRevision(int idRevision) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM annotation WHERE id_revision = ?1',
+        mapper: (Map<String, Object?> row) => Annotation(
+            id: row['id'] as int?,
+            text: row['text'] as String?,
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?),
+        arguments: [idRevision]);
   }
 
   @override
@@ -243,8 +298,24 @@ class _$AnnotationDao extends AnnotationDao {
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             text: row['text'] as String?,
-            dateText: row['date_text'] as String?),
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?),
         arguments: [text, id]);
+  }
+
+  @override
+  Future<Annotation?> updateAnnotationRevision(
+    int idRevision,
+    int id,
+  ) async {
+    return _queryAdapter.query(
+        'update annotation set id_revision = ?1 WHERE id = ?2',
+        mapper: (Map<String, Object?> row) => Annotation(
+            id: row['id'] as int?,
+            text: row['text'] as String?,
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?),
+        arguments: [idRevision, id]);
   }
 
   @override
@@ -257,7 +328,8 @@ class _$AnnotationDao extends AnnotationDao {
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             text: row['text'] as String?,
-            dateText: row['date_text'] as String?),
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?),
         arguments: [data, id]);
   }
 
@@ -270,7 +342,8 @@ class _$AnnotationDao extends AnnotationDao {
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             text: row['text'] as String?,
-            dateText: row['date_text'] as String?),
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?),
         arguments: [time, id]);
   }
 
@@ -280,7 +353,8 @@ class _$AnnotationDao extends AnnotationDao {
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             text: row['text'] as String?,
-            dateText: row['date_text'] as String?),
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?),
         arguments: [id]);
   }
 

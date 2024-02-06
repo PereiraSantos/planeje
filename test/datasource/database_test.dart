@@ -32,8 +32,26 @@ class DatabaseMock implements RevisionDataSourceRepository {
   }
 
   @override
-  Future<int> updateRevision(String description, int id, bool status) async {
+  Future<int> updateRevision(String description, String nextDate, int id, bool status) async {
     return 1;
+  }
+
+  @override
+  Future<Revision?> getNextRevision() {
+    // TODO: implement getNextRevision
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Revision>?> getCompletedRevision() {
+    // TODO: implement getCompletedRevision
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Revision>?> getDelayedRevision() {
+    // TODO: implement getDelayedRevision
+    throw UnimplementedError();
   }
 }
 

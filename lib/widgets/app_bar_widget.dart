@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'button_custon.dart';
 
 // ignore: must_be_immutable
@@ -15,7 +14,7 @@ class AppBarWidget extends StatelessWidget {
     this.colorReviser = Colors.black12,
     this.colorAnnotation = Colors.black12,
     this.showAction = true,
-    this.countReviserLate = 0,
+    this.quantity = 0,
   });
 
   final Function callbackHome;
@@ -27,7 +26,7 @@ class AppBarWidget extends StatelessWidget {
   Color colorReviser;
   Color colorAnnotation;
   bool showAction;
-  int countReviserLate;
+  int quantity;
 
   @override
   Widget build(BuildContext context) {
@@ -109,8 +108,8 @@ class AppBarWidget extends StatelessWidget {
           child: IconButton(
             onPressed: null,
             icon: Badge(
-              label: Text("$countReviserLate"),
-              isLabelVisible: countReviserLate > 0 ? true : false,
+              label: Text("$quantity"),
+              isLabelVisible: quantity > 0 ? true : false,
               child: const Icon(
                 Icons.notifications,
                 color: Colors.black54,

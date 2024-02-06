@@ -1,12 +1,12 @@
 import '../../../datasource/database/database_datasource.dart';
-import '../../../entities/annotation.dart';
+import '../../../entities/annotation_revision.dart';
 import '../../../usercase/annotation_usercase.dart';
 
 class ListAnnotattionController {
   final AnnotationUsercase annotationUsercase = AnnotationUsercase(AnnotationDatabaseDatasource());
 
-  Future<List<Annotation>> getAnnotation({String? value}) async {
-    return await annotationUsercase.findAllAnnotation() ?? [];
+  Future<List<AnnotationRevision>> getAnnotation({String? value}) async {
+    return await annotationUsercase.getAnnotationWidthRevision() ?? [];
   }
 
   Future<bool> onClickDelete(int id) async {

@@ -11,5 +11,13 @@ class Annotation {
   @ColumnInfo(name: 'date_text')
   final String? dateText;
 
-  Annotation({this.id, this.text, this.dateText});
+  @ColumnInfo(name: 'id_revision')
+  final int? idRevision;
+
+  Annotation({
+    this.id,
+    this.text,
+    this.dateText,
+    this.idRevision,
+  });
 }

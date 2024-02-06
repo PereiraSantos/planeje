@@ -7,6 +7,8 @@ class FormatDate {
     Intl.defaultLocale = 'pt_BR';
   }
 
+  DateTime newDate() => DateTime.now();
+
   String formatDate(DateTime date) => DateFormat('dd/MM/yyyy').format(date);
 
   String formatDateWek(String date) =>

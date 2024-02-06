@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ButtonList extends StatelessWidget {
-  const ButtonList(this.onClick,
-      {Key? key, this.color = Colors.blue, this.icon = Icons.edit})
-      : super(key: key);
+  const ButtonList(this.onClick, {super.key, this.color = Colors.blue, this.icon = Icons.edit});
 
-  factory ButtonList.delete(Function onClick) =>
-      ButtonList(onClick, color: Colors.red, icon: Icons.delete);
+  factory ButtonList.delete(Function onClick) => ButtonList(onClick, color: Colors.red, icon: Icons.delete);
 
   final MaterialColor color;
   final Function onClick;

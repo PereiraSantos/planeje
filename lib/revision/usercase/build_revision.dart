@@ -4,9 +4,12 @@ import '../entities/revision.dart';
 class BuildRevision {
   Revision build({
     required String description,
+    required String nextDate,
   }) {
     return Revision(
       description: description,
+      date: buildDate(),
+      nextDate: nextDate,
     );
   }
 
