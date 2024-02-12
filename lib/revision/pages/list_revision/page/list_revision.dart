@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/pages/list_annotation/pages/list_annotation.dart';
 
-import '../../../../annotation/entities/annotation.dart';
 import '../../../../dashboard/pages/home.dart';
 import '../../../../usercase/format_date.dart';
 import '../../../../usercase/transitions_builder.dart';
