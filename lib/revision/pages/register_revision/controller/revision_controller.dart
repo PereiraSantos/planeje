@@ -12,13 +12,28 @@ class RevisionRegisterController {
 
   void setStatus(bool value) => status = value;
 
-  Future<bool> saveOrUpdate(String description, String nextDate, {int? id}) async {
+  Future<bool> saveOrUpdate(String description, String nextDate, String? timeInit, String? timeEnd,
+      {int? id}) async {
     var result = id != null
         ? await revisionUsercase.updateRevision(description, nextDate, id, status)
-        : await revisionUsercase
-            .insertRevision(buildRevision.build(description: description, nextDate: nextDate));
+        : await revisionUsercase.insertRevision(buildRevision.build(
+            description: description,
+            nextDate: nextDate,
+            timeInit: intiTimeInit(timeInit),
+            timeEnd: initTimrEnd(timeEnd),
+          ));
 
     return result != null ? true : false;
+  }
+
+  String intiTimeInit(String? timeInit) {
+    if (timeInit != null && timeInit != "") return timeInit;
+    return FormatDate().formatTime(DateTime.now());
+  }
+
+  String initTimrEnd(String? timeEnd) {
+    if (timeEnd != null && timeEnd != "") return timeEnd;
+    return FormatDate().formatTime(DateTime.now());
   }
 
   String nextRevision(String date) {

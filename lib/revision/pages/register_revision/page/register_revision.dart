@@ -5,6 +5,7 @@ import '../../../../widgets/text_button_widget.dart';
 import '../../../../widgets/text_form_field_widget.dart';
 import '../../../entities/revision.dart';
 import '../component/change_date_next_review.dart';
+import '../component/change_time_revision.dart';
 
 // ignore: must_be_immutable
 class RegisterRevision extends StatelessWidget {
@@ -17,6 +18,8 @@ class RegisterRevision extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
   final TextEditingController textDescriptionController = TextEditingController();
   String? dateNextRevision;
+  String? timeInit;
+  String? timeEnd;
 
   String title() => revisionEntity != null ? "Atualizar" : "Adicionar";
 
@@ -57,6 +60,11 @@ class RegisterRevision extends StatelessWidget {
                   keyboardType: TextInputType.multiline,
                   textArea: true,
                 ),
+                ChangeTimeRevision(
+                  onClickTimeInit: (time) => timeInit = time,
+                  onClickTimeEnd: (time) => timeEnd = time,
+                  revisionEntity: revisionEntity,
+                ),
                 ChangeDateNextReview(
                   revisionEntity: revisionEntity,
                   onClick: (value) => controller.setStatus(value),
@@ -83,6 +91,8 @@ class RegisterRevision extends StatelessWidget {
                     dateNextRevision ??
                         revisionEntity?.nextDate ??
                         FormatDate().formatDate(FormatDate().newDate()),
+                    timeInit,
+                    timeEnd,
                     id: revisionEntity?.id)) {
                   return;
                 }

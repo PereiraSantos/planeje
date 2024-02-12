@@ -9,16 +9,17 @@ class DateReview extends StatelessWidget {
   DateReview({
     super.key,
     required this.onClickCalendar,
-    required dateNextRevision,
+    required this.dateNextRevision,
   }) {
-    date.text = dateNextRevision;
+    date.text = dateNextRevision ?? '';
   }
 
   final Function(DateTime picked) onClickCalendar;
   String? dateNextRevision;
   final TextEditingController date = TextEditingController();
 
-  DateTime initDate(String? date) => date != null ? FormatDate().dateParse(date) : DateTime.now();
+  DateTime initDate(String? date) =>
+      date != null && date != "" ? FormatDate().dateParse(date) : DateTime.now();
 
   @override
   Widget build(BuildContext context) {

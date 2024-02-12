@@ -87,7 +87,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `status` INTEGER, `date` TEXT, `next_date` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `status` INTEGER, `date` TEXT, `next_date` TEXT, `time_init` TEXT, `time_end` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
 
@@ -121,7 +121,9 @@ class _$RevisionDao extends RevisionDao {
                   'description': item.description,
                   'status': item.status == null ? null : (item.status! ? 1 : 0),
                   'date': item.date,
-                  'next_date': item.nextDate
+                  'next_date': item.nextDate,
+                  'time_init': item.timeInit,
+                  'time_end': item.timeEnd
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -140,7 +142,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
             date: row['date'] as String?,
-            nextDate: row['next_date'] as String?));
+            nextDate: row['next_date'] as String?,
+            timeInit: row['time_init'] as String?,
+            timeEnd: row['time_end'] as String?));
   }
 
   @override
@@ -151,7 +155,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
             date: row['date'] as String?,
-            nextDate: row['next_date'] as String?),
+            nextDate: row['next_date'] as String?,
+            timeInit: row['time_init'] as String?,
+            timeEnd: row['time_end'] as String?),
         arguments: [id]);
   }
 
@@ -163,7 +169,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
             date: row['date'] as String?,
-            nextDate: row['next_date'] as String?),
+            nextDate: row['next_date'] as String?,
+            timeInit: row['time_init'] as String?,
+            timeEnd: row['time_end'] as String?),
         arguments: [id]);
   }
 
@@ -175,7 +183,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
             date: row['date'] as String?,
-            nextDate: row['next_date'] as String?),
+            nextDate: row['next_date'] as String?,
+            timeInit: row['time_init'] as String?,
+            timeEnd: row['time_end'] as String?),
         arguments: [text]);
   }
 
@@ -201,7 +211,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
             date: row['date'] as String?,
-            nextDate: row['next_date'] as String?));
+            nextDate: row['next_date'] as String?,
+            timeInit: row['time_init'] as String?,
+            timeEnd: row['time_end'] as String?));
   }
 
   @override
@@ -212,7 +224,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
             date: row['date'] as String?,
-            nextDate: row['next_date'] as String?));
+            nextDate: row['next_date'] as String?,
+            timeInit: row['time_init'] as String?,
+            timeEnd: row['time_end'] as String?));
   }
 
   @override
@@ -223,7 +237,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             status: row['status'] == null ? null : (row['status'] as int) != 0,
             date: row['date'] as String?,
-            nextDate: row['next_date'] as String?));
+            nextDate: row['next_date'] as String?,
+            timeInit: row['time_init'] as String?,
+            timeEnd: row['time_end'] as String?));
   }
 
   @override

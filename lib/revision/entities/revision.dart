@@ -18,11 +18,19 @@ class Revision {
   @ColumnInfo(name: 'next_date')
   final String? nextDate;
 
+  @ColumnInfo(name: 'time_init')
+  final String? timeInit;
+
+  @ColumnInfo(name: 'time_end')
+  final String? timeEnd;
+
   Revision({
     this.id,
     this.description,
     this.status = false,
     this.date,
     this.nextDate,
+    this.timeInit,
+    this.timeEnd,
   });
 }

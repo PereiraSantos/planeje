@@ -192,8 +192,40 @@ class _ListRevisionState extends State<ListRevision> {
                                         ),
                                       ),
                                     ),
+                                    labelText("Das:"),
+                                    Expanded(
+                                      flex: 1,
+                                      child: SizedBox(
+                                        width: double.maxFinite,
+                                        child: TextCard(
+                                          padding:
+                                              const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
+                                          revisionEntity: snapshot.data![index].timeInit != null &&
+                                                  snapshot.data![index].timeInit != ""
+                                              ? FormatDate().formatTimeString(snapshot.data![index].timeInit!)
+                                              : "",
+                                          maxLines: 5,
+                                        ),
+                                      ),
+                                    ),
+                                    labelText("Até:"),
+                                    Expanded(
+                                      flex: 1,
+                                      child: SizedBox(
+                                        width: double.maxFinite,
+                                        child: TextCard(
+                                          padding:
+                                              const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
+                                          revisionEntity: snapshot.data![index].timeEnd != null &&
+                                                  snapshot.data![index].timeEnd != ""
+                                              ? FormatDate().formatTimeString(snapshot.data![index].timeEnd!)
+                                              : "",
+                                          maxLines: 5,
+                                        ),
+                                      ),
+                                    ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ),
