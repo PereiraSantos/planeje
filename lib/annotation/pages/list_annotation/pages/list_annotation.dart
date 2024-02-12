@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/annotation/pages/list_annotation/component/dialog_delete.dart';
 import 'package:planeje/annotation/pages/register_annotation/pages/register_annotation.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
 
@@ -20,14 +21,6 @@ class ListAnnotation extends StatefulWidget {
 class _ListAnnotationState extends State<ListAnnotation> {
   final ListAnnotattionController listAnnotattionController = ListAnnotattionController();
   void reloadPage() => setState(() {});
-
-  void message(BuildContext context, String message) {
-    var snackBar = SnackBar(
-      content: Text(message),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,68 +62,8 @@ class _ListAnnotationState extends State<ListAnnotation> {
                       key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.startToEnd) {
-                          return await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: Text(
-                                  "Deseja excluir? \n${snapshot.data![index].text!}",
-                                  style: const TextStyle(color: Colors.black45, fontSize: 20),
-                                ),
-                                actions: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10.0, right: 15.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () async {
-                                            var result = await listAnnotattionController
-                                                .onClickDelete(snapshot.data![index].id!);
-                                            if (result && context.mounted) {
-                                              message(context, 'Removido com sucesso');
-                                              Navigator.pop(context, true);
-                                            }
-                                          },
-                                          style: ButtonStyle(
-                                            side: MaterialStateProperty.all(
-                                              const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
-                                            ),
-                                            foregroundColor:
-                                                MaterialStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
-                                            padding: MaterialStateProperty.all(
-                                              const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                                            ),
-                                            textStyle: MaterialStateProperty.all(
-                                              const TextStyle(fontSize: 18),
-                                            ),
-                                          ),
-                                          child: const Text("SIM"),
-                                        ),
-                                        TextButton(
-                                          onPressed: () => Navigator.of(context).pop(false),
-                                          style: ButtonStyle(
-                                            side: MaterialStateProperty.all(
-                                              const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
-                                            ),
-                                            foregroundColor:
-                                                MaterialStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
-                                            padding: MaterialStateProperty.all(
-                                              const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                                            ),
-                                            textStyle: MaterialStateProperty.all(
-                                              const TextStyle(fontSize: 18),
-                                            ),
-                                          ),
-                                          child: const Text("NÃO"),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          return await DialogDelete.build(
+                              context, snapshot.data![index], listAnnotattionController);
                         }
                         return null;
                       },
