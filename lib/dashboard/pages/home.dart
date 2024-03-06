@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     dashboardController.getDelayedRevision();
-    dashboardController.getCompletedRevision;
+    dashboardController.getCompletedRevision();
   }
 
   @override
