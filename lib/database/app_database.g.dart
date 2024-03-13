@@ -203,9 +203,23 @@ class _$RevisionDao extends RevisionDao {
   }
 
   @override
-  Future<Revision?> getNextRevision() async {
-    return _queryAdapter.query(
-        'SELECT * FROM revision where status = 0 order by next_date desc limit 1',
+  Future<List<Revision>?> getNextRevisionLate() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision where status = 0 order by next_date desc limit 3',
+        mapper: (Map<String, Object?> row) => Revision(
+            id: row['id'] as int?,
+            description: row['description'] as String?,
+            status: row['status'] == null ? null : (row['status'] as int) != 0,
+            date: row['date'] as String?,
+            nextDate: row['next_date'] as String?,
+            timeInit: row['time_init'] as String?,
+            timeEnd: row['time_end'] as String?));
+  }
+
+  @override
+  Future<List<Revision>?> getNextRevision() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision where status = 1 order by next_date desc limit 3',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,

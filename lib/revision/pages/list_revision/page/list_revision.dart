@@ -35,7 +35,7 @@ class _ListRevisionState extends State<ListRevision> {
       child: SizedBox(
         child: Text(
           label,
-          style: const TextStyle(fontSize: 15, color: Colors.black87),
+          style: const TextStyle(fontSize: 15, color: Colors.black54),
         ),
       ),
     );

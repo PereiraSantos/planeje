@@ -7,7 +7,8 @@ abstract class RevisionRepository {
   Future<List<Revision>> findRevisionByDescription(String text);
   Future<void> updateRevision(String description, String nextDate, int id, bool status);
   Future<int?> insertRevision(Revision revision);
-  Future<Revision?> getNextRevision();
+  Future<List<Revision>?> getNextRevisionLate();
+  Future<List<Revision>?> getNextRevision();
   Future<List<Revision>?> getDelayedRevision();
   Future<List<Revision>?> getCompletedRevision();
 }

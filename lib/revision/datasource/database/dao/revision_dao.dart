@@ -20,8 +20,11 @@ abstract class RevisionDao {
       'update revision set description = :description, next_date = :nextDate,status = :status WHERE id = :id')
   Future<int?> updateRevision(String description, String nextDate, int id, bool status);
 
-  @Query('SELECT * FROM revision where status = 0 order by next_date desc limit 1')
-  Future<Revision?> getNextRevision();
+  @Query('SELECT * FROM revision where status = 0 order by next_date desc limit 3')
+  Future<List<Revision>?> getNextRevisionLate();
+
+  @Query('SELECT * FROM revision where status = 1 order by next_date desc limit 3')
+  Future<List<Revision>?> getNextRevision();
 
   @Query('SELECT * FROM revision where status = 0')
   Future<List<Revision>?> getDelayedRevision();

@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:planeje/revision/entities/revision.dart';
 
 import '../../revision/pages/list_revision/component/text_list.dart';
+import '../../revision/pages/register_revision/page/register_revision.dart';
 import '../../usercase/format_date.dart';
-import '../controller/dashboard_controller.dart';
+import '../../usercase/transitions_builder.dart';
 
 class NextRevision extends StatelessWidget {
-  const NextRevision({super.key, required this.dashboardController});
+  const NextRevision({
+    super.key,
+    required this.future,
+    required this.text,
+    required this.finishUpdaterReviser,
+  });
 
-  final DashboardController dashboardController;
+  final Future<List<Revision>?> future;
+  final String text;
+  final Function() finishUpdaterReviser;
 
   Widget labelText(String label) {
     return Padding(
@@ -16,7 +24,10 @@ class NextRevision extends StatelessWidget {
       child: SizedBox(
         child: Text(
           label,
-          style: const TextStyle(fontSize: 15, color: Colors.black87),
+          style: const TextStyle(
+            fontSize: 15,
+            color: Colors.black54,
+          ),
         ),
       ),
     );
@@ -25,94 +36,94 @@ class NextRevision extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: dashboardController.getNextRevision(),
-      builder: (BuildContext context, AsyncSnapshot<Revision> snapshot) {
+      future: future,
+      builder: (BuildContext context, AsyncSnapshot<List<Revision>?> snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data?.id != null) {
-            return Container(
-              width: double.maxFinite,
-              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 5, top: 10),
-                    alignment: Alignment.bottomLeft,
-                    child: const Text(
-                      "Proxima revisão",
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black54),
-                    ),
+          if (snapshot.data!.isNotEmpty) {
+            return Column(
+              children: [
+                const Padding(padding: EdgeInsets.all(10)),
+                Container(
+                  padding: const EdgeInsets.only(left: 15, top: 10),
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    text,
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black54),
                   ),
-                  Card(
-                    elevation: 8,
-                    shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            labelText("Descrição:"),
-                            Expanded(
-                              flex: 2,
-                              child: SizedBox(
-                                width: double.maxFinite,
-                                child: TextCard(
-                                  padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                  revisionEntity: snapshot.data?.description ?? "",
-                                  maxLines: 5,
-                                ),
+                ),
+                ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () async {
+                        var result = await Navigator.of(context).push(
+                          TransitionsBuilder.createRoute(
+                            RegisterRevision(revisionEntity: snapshot.data![index]),
+                          ),
+                        );
+                        if (result) finishUpdaterReviser();
+                      },
+                      child: Container(
+                        width: double.maxFinite,
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: Card(
+                          elevation: 8,
+                          shape: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  labelText("Descrição:"),
+                                  Expanded(
+                                    flex: 2,
+                                    child: SizedBox(
+                                      width: double.maxFinite,
+                                      child: TextCard(
+                                        padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
+                                        revisionEntity: snapshot.data![index].description ?? "",
+                                        maxLines: 5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  labelText("Revisa em:"),
+                                  Expanded(
+                                    flex: 2,
+                                    child: SizedBox(
+                                      width: double.maxFinite,
+                                      child: TextCard(
+                                        padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
+                                        revisionEntity: FormatDate()
+                                            .formatDateString(snapshot.data![index].nextDate ?? ""),
+                                        maxLines: 5,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            labelText("Criado em:"),
-                            Expanded(
-                              flex: 2,
-                              child: SizedBox(
-                                width: double.maxFinite,
-                                child: TextCard(
-                                  padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                  revisionEntity: FormatDate().formatDateString(snapshot.data?.date ?? ""),
-                                  maxLines: 5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            labelText("Revisa em:"),
-                            Expanded(
-                              flex: 2,
-                              child: SizedBox(
-                                width: double.maxFinite,
-                                child: TextCard(
-                                  padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                  revisionEntity:
-                                      FormatDate().formatDateString(snapshot.data?.nextDate ?? ""),
-                                  maxLines: 5,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             );
-          } else {
-            return const SizedBox();
           }
+
+          return const SizedBox();
         } else {
           return const SizedBox(
             width: 15,

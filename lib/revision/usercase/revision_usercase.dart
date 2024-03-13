@@ -39,7 +39,12 @@ class RevisionUsercase implements RevisionRepository {
   }
 
   @override
-  Future<Revision?> getNextRevision() async {
+  Future<List<Revision>?> getNextRevisionLate() async {
+    return await databaseDataSource.getNextRevisionLate();
+  }
+
+  @override
+  Future<List<Revision>?> getNextRevision() async {
     return await databaseDataSource.getNextRevision();
   }
 

@@ -72,7 +72,15 @@ class _HomeState extends State<Home> {
                 ReviserLate(
                     quantityCompleted: dashboardController.reviserNotifier.quantityCompleted,
                     quantityDelayed: dashboardController.reviserNotifier.quantityDelayed),
-                NextRevision(dashboardController: dashboardController),
+                NextRevision(
+                    future: dashboardController.getNextRevisionLate(),
+                    text: 'Próxima revisão atrasada',
+                    finishUpdaterReviser: () => reloadPage()),
+                NextRevision(
+                  future: dashboardController.getNextRevision(),
+                  text: 'Próxima revisão',
+                  finishUpdaterReviser: () => reloadPage(),
+                ),
                 const ChartsRevision(),
               ],
             );

@@ -37,7 +37,12 @@ class DatabaseMock implements RevisionDataSourceRepository {
   }
 
   @override
-  Future<Revision?> getNextRevision() {
+  Future<List<Revision>?> getNextRevisionLate() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Revision>?> getNextRevision() {
     throw UnimplementedError();
   }
 

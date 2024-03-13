@@ -12,8 +12,12 @@ class DashboardController {
     reviserNotifier.updateQuantityCompleted(value);
   }
 
-  Future<Revision> getNextRevision() async {
-    return await revisionUsercase.getNextRevision() ?? Revision();
+  Future<List<Revision>?> getNextRevisionLate() async {
+    return await revisionUsercase.getNextRevisionLate();
+  }
+
+  Future<List<Revision>?> getNextRevision() async {
+    return await revisionUsercase.getNextRevision();
   }
 
   Future<void> getDelayedRevision() async {

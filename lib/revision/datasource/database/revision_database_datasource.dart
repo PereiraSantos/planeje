@@ -45,7 +45,13 @@ class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
   }
 
   @override
-  Future<Revision?> getNextRevision() async {
+  Future<List<Revision>?> getNextRevisionLate() async {
+    final database = await getInstance();
+    return await database.revisionDao.getNextRevisionLate();
+  }
+
+  @override
+  Future<List<Revision>?> getNextRevision() async {
     final database = await getInstance();
     return await database.revisionDao.getNextRevision();
   }
