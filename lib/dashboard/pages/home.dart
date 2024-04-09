@@ -73,9 +73,9 @@ class _HomeState extends State<Home> {
                 ReviserLate(
                     quantityCompleted: dashboardController.reviserNotifier.quantityCompleted,
                     quantityDelayed: dashboardController.reviserNotifier.quantityDelayed),
-                HourReviser(
+                /*  HourReviser(
                     month: dashboardController.reviserNotifier.quantityHourMonth,
-                    week: dashboardController.reviserNotifier.quantityHourWeek),
+                    week: dashboardController.reviserNotifier.quantityHourWeek),*/
                 NextRevision(
                     future: dashboardController.getNextRevisionLate(),
                     text: 'Próxima revisão atrasada',

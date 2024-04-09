@@ -99,7 +99,7 @@ class NextRevision extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  labelText("Revisa em:"),
+                                  labelText("Revisa:"),
                                   Expanded(
                                     flex: 2,
                                     child: SizedBox(

@@ -5,12 +5,7 @@ import '../../../entities/date_revision.dart';
 import '../../../entities/revision_time.dart';
 
 class FindRevisionDao {
-  Future<AppDatabase> getInstance() async {
-    return await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-  }
-
-  Future<List<RevisionTime>> findRevision() async {
-    final database = await getInstance();
+  Future<List<RevisionTime>> findRevision(AppDatabase database) async {
     List<RevisionTime> listRevisionTime = [];
 
     List<Map> list = await database.database.rawQuery(

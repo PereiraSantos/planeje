@@ -24,7 +24,8 @@ class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
 
   @override
   Future<List<RevisionTime>> findRevisionByDescription(String text) async {
-    return await FindRevisionDao().findRevision();
+    final database = await getInstance();
+    return await FindRevisionDao().findRevision(database);
   }
 
   @override

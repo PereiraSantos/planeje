@@ -92,7 +92,8 @@ class AppBarWidget extends StatelessWidget {
             ),
           ),
         ),
-        Visibility(
+        const SizedBox(width: 12),
+        /*  Visibility(
           visible: showAction,
           child: IconButton(
             onPressed: () => callbackFilter(),
@@ -102,7 +103,7 @@ class AppBarWidget extends StatelessWidget {
               size: 20,
             ),
           ),
-        ),
+        ),*/
         Visibility(
           visible: !showAction,
           child: IconButton(

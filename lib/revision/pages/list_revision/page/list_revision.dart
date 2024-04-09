@@ -128,7 +128,7 @@ class _ListRevisionState extends State<ListRevision> {
                           },
                           child: Card(
                             elevation: 8,
-                            color: checkColorDate(snapshot.data![index].dateRevision.dateRevision),
+                            color: checkColorDate(snapshot.data![index].dateRevision.nextDate),
                             shape: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                               borderSide: BorderSide.none,
@@ -158,14 +158,15 @@ class _ListRevisionState extends State<ListRevision> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    labelText("Criado em:"),
+                                    labelText("Criado:"),
                                     Expanded(
                                       flex: 2,
                                       child: SizedBox(
                                         width: double.maxFinite,
                                         child: TextCard(
                                           padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                          revisionEntity: FormatDate().formatDateString("01/01/2024"),
+                                          revisionEntity: FormatDate().formatDateString(
+                                              '${snapshot.data![index].revision.dateCreational}'),
                                           maxLines: 5,
                                         ),
                                       ),
@@ -176,7 +177,7 @@ class _ListRevisionState extends State<ListRevision> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    labelText("Revisa em:"),
+                                    labelText("Revisa:"),
                                     Expanded(
                                       flex: 2,
                                       child: SizedBox(
@@ -185,7 +186,7 @@ class _ListRevisionState extends State<ListRevision> {
                                           padding:
                                               const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
                                           revisionEntity: FormatDate().formatDateString(
-                                              '${snapshot.data![index].dateRevision.dateRevision}'),
+                                              '${snapshot.data![index].dateRevision.nextDate}'),
                                           maxLines: 5,
                                         ),
                                       ),
