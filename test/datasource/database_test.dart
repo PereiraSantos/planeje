@@ -1,7 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:planeje/revision/datasource/repository/datasource_revision_repository.dart';
+import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/entities/revision.dart';
+import 'package:planeje/revision/entities/revision_time.dart';
 
 class DatabaseMock implements RevisionDataSourceRepository {
   DatabaseMock();
@@ -17,8 +19,8 @@ class DatabaseMock implements RevisionDataSourceRepository {
   }
 
   @override
-  Future<List<Revision>> findRevisionByDescription(String text) async {
-    return [Revision()];
+  Future<List<RevisionTime>> findRevisionByDescription(String text) async {
+    return [RevisionTime(Revision(), DateRevision())];
   }
 
   @override
@@ -32,27 +34,8 @@ class DatabaseMock implements RevisionDataSourceRepository {
   }
 
   @override
-  Future<int> updateRevision(String description, String nextDate, int id, bool status) async {
-    return 1;
-  }
-
-  @override
-  Future<List<Revision>?> getNextRevisionLate() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Revision>?> getNextRevision() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Revision>?> getCompletedRevision() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Revision>?> getDelayedRevision() {
+  Future<int?> updateRevision(Object revision) {
+    // TODO: implement updateRevision
     throw UnimplementedError();
   }
 }

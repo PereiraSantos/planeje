@@ -1,29 +1,34 @@
+import 'package:flutter/material.dart';
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
 import 'package:planeje/revision/usercase/revision_usercase.dart';
 
 import '../../../../usercase/format_date.dart';
-import '../../../usercase/build_revision.dart';
+import '../../../datasource/database/date_revision_database_datasource.dart';
+import '../../../entities/date_revision.dart';
+import '../../../entities/revision.dart';
+import '../../../usercase/date_revision_usercase.dart';
 
 class RevisionRegisterController {
   RevisionUsercase revisionUsercase = RevisionUsercase(RevisionDatabaseDataSource());
-  BuildRevision buildRevision = BuildRevision();
+  DateRevisionUsercase dateRevisionUsercase = DateRevisionUsercase(DateRevisionDatabaseDataSource());
 
   bool status = false;
 
   void setStatus(bool value) => status = value;
 
-  Future<bool> saveOrUpdate(String description, String nextDate, String? timeInit, String? timeEnd,
-      {int? id}) async {
-    var result = id != null
-        ? await revisionUsercase.updateRevision(description, nextDate, id, status)
-        : await revisionUsercase.insertRevision(buildRevision.build(
-            description: description,
-            nextDate: nextDate,
-            timeInit: intiTimeInit(timeInit),
-            timeEnd: initTimrEnd(timeEnd),
-          ));
+  Future<int?> saveOrUpdate({required Revision revision, required bool update}) async {
+    var result = update
+        ? await revisionUsercase.updateRevision(revision)
+        : await revisionUsercase.insertRevision(revision);
 
-    return result != null ? true : false;
+    return result;
+  }
+
+  Future<int> saveDateRevision(DateRevision dateRevision, bool update) async {
+    var result = update
+        ? await dateRevisionUsercase.updateDateRevision(dateRevision)
+        : await dateRevisionUsercase.insertDateRevision(dateRevision);
+    return result;
   }
 
   String intiTimeInit(String? timeInit) {
@@ -45,5 +50,13 @@ class RevisionRegisterController {
     dateTemp = dateTemp.add(const Duration(days: 30));
 
     return FormatDate().formatDate(dateTemp);
+  }
+
+  void message(BuildContext context, String message) {
+    var snackBar = SnackBar(
+      content: Text(message),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

@@ -5,30 +5,34 @@ import '../../../../annotation/usercase/annotation_usercase.dart';
 import '../../../../usercase/format_date.dart';
 import '../../../datasource/database/revision_database_datasource.dart';
 import '../../../entities/revision.dart';
+import '../../../entities/revision_time.dart';
 import '../../../usercase/revision_usercase.dart';
 
 class RevisionListController {
   RevisionUsercase revisionUsercase = RevisionUsercase(RevisionDatabaseDataSource());
   AnnotationUsercase annotationUsercase = AnnotationUsercase(AnnotationDatabaseDatasource());
 
-  Future<List<Revision>> getRevision({String? value}) async {
+  Future<List<RevisionTime>> getRevision({String? value}) async =>
+      await revisionUsercase.findRevisionByDescription('%$value%');
+
+  /*Future<List<Revision>> findRevision({String? value}) async {
     List<Revision> listRevision = [];
     listRevision = value != null && value != ""
         ? await revisionUsercase.findRevisionByDescription('%$value%')
         : await revisionUsercase.findAllRevisions();
 
     return await updateRevisionStatus(listRevision);
-  }
+  }*/
 
   Future<List<Revision>> updateRevisionStatus(List<Revision> listRevision) async {
-    for (var i = 0; i < listRevision.length; i++) {
+    /*for (var i = 0; i < listRevision.length; i++) {
       var result = compareDate(listRevision[i].nextDate!, (nextDate, dateNow) => nextDate.isBefore(dateNow));
       if (result && listRevision[i].status!) {
         listRevision[i].status = false;
         await revisionUsercase.updateRevision(listRevision[i].description!, listRevision[i].nextDate!,
             listRevision[i].id!, listRevision[i].status!);
       }
-    }
+    }*/
     return listRevision;
   }
 

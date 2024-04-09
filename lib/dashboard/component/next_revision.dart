@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/revision/entities/revision.dart';
+import 'package:planeje/revision/entities/revision_time.dart';
 
 import '../../revision/pages/list_revision/component/text_list.dart';
 import '../../revision/pages/register_revision/page/register_revision.dart';
-import '../../usercase/format_date.dart';
 import '../../usercase/transitions_builder.dart';
+import '../../utils/format_date.dart';
 
 class NextRevision extends StatelessWidget {
   const NextRevision({
@@ -14,7 +14,7 @@ class NextRevision extends StatelessWidget {
     required this.finishUpdaterReviser,
   });
 
-  final Future<List<Revision>?> future;
+  final Future<List<RevisionTime>?> future;
   final String text;
   final Function() finishUpdaterReviser;
 
@@ -37,7 +37,7 @@ class NextRevision extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: future,
-      builder: (BuildContext context, AsyncSnapshot<List<Revision>?> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>?> snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isNotEmpty) {
             return Column(
@@ -60,7 +60,9 @@ class NextRevision extends StatelessWidget {
                       onTap: () async {
                         var result = await Navigator.of(context).push(
                           TransitionsBuilder.createRoute(
-                            RegisterRevision(revisionEntity: snapshot.data![index]),
+                            RegisterRevision(
+                                revisionEntity: RevisionTime(
+                                    snapshot.data![index].revision, snapshot.data![index].dateRevision)),
                           ),
                         );
                         if (result) finishUpdaterReviser();
@@ -86,7 +88,7 @@ class NextRevision extends StatelessWidget {
                                       width: double.maxFinite,
                                       child: TextCard(
                                         padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                        revisionEntity: snapshot.data![index].description ?? "",
+                                        revisionEntity: snapshot.data![index].revision.description ?? "",
                                         maxLines: 5,
                                       ),
                                     ),
@@ -104,8 +106,8 @@ class NextRevision extends StatelessWidget {
                                       width: double.maxFinite,
                                       child: TextCard(
                                         padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                        revisionEntity: FormatDate()
-                                            .formatDateString(snapshot.data![index].nextDate ?? ""),
+                                        revisionEntity: FormatDate.formatDateString(
+                                            "${snapshot.data![index].dateRevision.nextDate}"),
                                         maxLines: 5,
                                       ),
                                     ),

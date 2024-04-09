@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../revision/entities/revision.dart';
+import '../../../../revision/entities/revision_time.dart';
 import '../../../../revision/pages/list_revision/controller/revision_controller.dart';
 
 // ignore: must_be_immutable
@@ -21,7 +22,7 @@ class DropDownButtonCustom extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: RevisionListController().getRevision(value: ''),
-      builder: (BuildContext context, AsyncSnapshot<List<Revision>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isNotEmpty) {
             return Padding(
@@ -37,8 +38,8 @@ class DropDownButtonCustom extends StatelessWidget {
                 onChanged: (int? value) => onClick(value),
                 items: snapshot.data!.map<DropdownMenuItem<int>>((value) {
                   return DropdownMenuItem<int>(
-                    value: value.id,
-                    child: Text('${value.description}'),
+                    value: value.revision.id,
+                    child: Text('${value.revision.description}'),
                   );
                 }).toList(),
               ),

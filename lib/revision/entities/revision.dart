@@ -9,28 +9,12 @@ class Revision {
   @ColumnInfo(name: 'description')
   final String? description;
 
-  @ColumnInfo(name: 'status')
-  bool? status;
-
-  @ColumnInfo(name: 'date')
-  final String? date;
-
-  @ColumnInfo(name: 'next_date')
-  final String? nextDate;
-
-  @ColumnInfo(name: 'time_init')
-  final String? timeInit;
-
-  @ColumnInfo(name: 'time_end')
-  final String? timeEnd;
+  @ColumnInfo(name: 'date_creational')
+  final String? dateCreational;
 
   Revision({
     this.id,
     this.description,
-    this.status = false,
-    this.date,
-    this.nextDate,
-    this.timeInit,
-    this.timeEnd,
+    this.dateCreational,
   });
 }

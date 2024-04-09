@@ -1,6 +1,8 @@
 import 'package:planeje/database/app_database.dart';
+import 'package:planeje/revision/datasource/database/revision_dao/find_revision_dao.dart';
 
 import '../../entities/revision.dart';
+import '../../entities/revision_time.dart';
 import '../repository/datasource_revision_repository.dart';
 
 class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
@@ -21,9 +23,8 @@ class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
   }
 
   @override
-  Future<List<Revision>> findRevisionByDescription(String text) async {
-    final database = await getInstance();
-    return await database.revisionDao.findRevisionByDescription(text);
+  Future<List<RevisionTime>> findRevisionByDescription(String text) async {
+    return await FindRevisionDao().findRevision();
   }
 
   @override
@@ -39,32 +40,8 @@ class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
   }
 
   @override
-  Future<int?> updateRevision(String description, String nextDate, int id, bool status) async {
+  Future<int?> updateRevision(Revision revision) async {
     final database = await getInstance();
-    return await database.revisionDao.updateRevision(description, nextDate, id, status);
-  }
-
-  @override
-  Future<List<Revision>?> getNextRevisionLate() async {
-    final database = await getInstance();
-    return await database.revisionDao.getNextRevisionLate();
-  }
-
-  @override
-  Future<List<Revision>?> getNextRevision() async {
-    final database = await getInstance();
-    return await database.revisionDao.getNextRevision();
-  }
-
-  @override
-  Future<List<Revision>?> getDelayedRevision() async {
-    final database = await getInstance();
-    return await database.revisionDao.getDelayedRevision();
-  }
-
-  @override
-  Future<List<Revision>?> getCompletedRevision() async {
-    final database = await getInstance();
-    return await database.revisionDao.getCompletedRevision();
+    return await database.revisionDao.updateRevision(revision);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/revision/entities/date_revision.dart';
 
-import '../../../../usercase/format_date.dart';
-import '../../../entities/revision.dart';
+import '../../../../utils/format_date.dart';
 import '../controller/revision_controller.dart';
 import 'check_box.dart';
 import 'date_review.dart';
@@ -14,7 +14,7 @@ class ChangeDateNextReview extends StatefulWidget {
     this.revisionEntity,
   });
 
-  final Revision? revisionEntity;
+  final DateRevision? revisionEntity;
   final Function(bool) onClick;
   final Function(String) onClickCalendar;
 
@@ -30,9 +30,9 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
   void generateNextRevision() {
     if (status) {
       dateNextRevision =
-          RevisionRegisterController().nextRevision(widget.revisionEntity?.nextDate ?? dateNextRevision);
+          RevisionRegisterController().nextRevision(widget.revisionEntity?.dateRevision ?? dateNextRevision);
     } else {
-      dateNextRevision = widget.revisionEntity?.nextDate ?? FormatDate().formatDate(FormatDate().newDate());
+      dateNextRevision = widget.revisionEntity?.nextDate ?? FormatDate.formatDate(FormatDate.newDate());
     }
   }
 
@@ -42,7 +42,7 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
           : '';
 
   void setDate(DateTime picked) {
-    dateNextRevision = FormatDate().formatDate(picked);
+    dateNextRevision = FormatDate.formatDate(picked);
     widget.onClickCalendar(dateNextRevision);
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/utils/format_date.dart';
 
-import '../../../../usercase/format_date.dart';
 import '../../../../usercase/time_mask.dart';
 import '../../../../widgets/text_form_field_widget.dart';
 
@@ -13,7 +13,7 @@ class TimeRevision extends StatelessWidget {
     required this.label,
   }) {
     date.text = timeRevision == null || timeRevision == ''
-        ? FormatDate().formatTimeString(FormatDate().formatTimeByString(FormatDate().newDate()))
+        ? FormatDate.formatTimeString(FormatDate.formatTimeByString(DateTime.now()))
         : timeRevision!;
   }
 
@@ -25,7 +25,7 @@ class TimeRevision extends StatelessWidget {
   TimeOfDay initDate(String? date) {
     var time = DateTime.now();
 
-    if (date != null && date != "") time = FormatDate().timeParse(date);
+    // if (date != null && date != "") time = FormatDate().timeParse(date);
     return TimeOfDay(hour: time.hour, minute: time.minute);
   }
 

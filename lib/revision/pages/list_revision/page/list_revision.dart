@@ -5,7 +5,7 @@ import '../../../../dashboard/pages/home.dart';
 import '../../../../usercase/format_date.dart';
 import '../../../../usercase/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
-import '../../../entities/revision.dart';
+import '../../../entities/revision_time.dart';
 import '../../register_revision/page/register_revision.dart';
 import '../component/dialog_delete.dart';
 import '../component/text_list.dart';
@@ -94,7 +94,7 @@ class _ListRevisionState extends State<ListRevision> {
       body: SingleChildScrollView(
         child: FutureBuilder(
           future: revisionController.getRevision(value: ''),
-          builder: (BuildContext context, AsyncSnapshot<List<Revision>> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
                 return ListView.builder(
@@ -106,7 +106,8 @@ class _ListRevisionState extends State<ListRevision> {
                       key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.startToEnd) {
-                          return await DialogDelete.build(context, revisionController, snapshot.data![index]);
+                          return await DialogDelete.build(
+                              context, revisionController, snapshot.data![index].revision);
                         }
                         return null;
                       },
@@ -127,7 +128,7 @@ class _ListRevisionState extends State<ListRevision> {
                           },
                           child: Card(
                             elevation: 8,
-                            color: checkColorDate(snapshot.data![index].nextDate),
+                            color: checkColorDate(snapshot.data![index].dateRevision.dateRevision),
                             shape: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                               borderSide: BorderSide.none,
@@ -146,7 +147,7 @@ class _ListRevisionState extends State<ListRevision> {
                                         width: double.maxFinite,
                                         child: TextCard(
                                           padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                          revisionEntity: snapshot.data![index].description ?? "",
+                                          revisionEntity: snapshot.data![index].revision.description ?? "",
                                           maxLines: 5,
                                         ),
                                       ),
@@ -164,8 +165,7 @@ class _ListRevisionState extends State<ListRevision> {
                                         width: double.maxFinite,
                                         child: TextCard(
                                           padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                          revisionEntity:
-                                              FormatDate().formatDateString(snapshot.data![index].date ?? ""),
+                                          revisionEntity: FormatDate().formatDateString("01/01/2024"),
                                           maxLines: 5,
                                         ),
                                       ),
@@ -184,10 +184,8 @@ class _ListRevisionState extends State<ListRevision> {
                                         child: TextCard(
                                           padding:
                                               const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                          revisionEntity: snapshot.data![index].nextDate != null &&
-                                                  snapshot.data![index].nextDate != ""
-                                              ? FormatDate().formatDateString(snapshot.data![index].nextDate!)
-                                              : "",
+                                          revisionEntity: FormatDate().formatDateString(
+                                              '${snapshot.data![index].dateRevision.dateRevision}'),
                                           maxLines: 5,
                                         ),
                                       ),
@@ -200,10 +198,8 @@ class _ListRevisionState extends State<ListRevision> {
                                         child: TextCard(
                                           padding:
                                               const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                          revisionEntity: snapshot.data![index].timeInit != null &&
-                                                  snapshot.data![index].timeInit != ""
-                                              ? FormatDate().formatTimeString(snapshot.data![index].timeInit!)
-                                              : "",
+                                          revisionEntity: FormatDate().formatTimeString(
+                                              '${snapshot.data![index].dateRevision.hourInit}'),
                                           maxLines: 5,
                                         ),
                                       ),
@@ -216,10 +212,8 @@ class _ListRevisionState extends State<ListRevision> {
                                         child: TextCard(
                                           padding:
                                               const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                          revisionEntity: snapshot.data![index].timeEnd != null &&
-                                                  snapshot.data![index].timeEnd != ""
-                                              ? FormatDate().formatTimeString(snapshot.data![index].timeEnd!)
-                                              : "",
+                                          revisionEntity: FormatDate().formatTimeString(
+                                              '${snapshot.data![index].dateRevision.hourEnd}'),
                                           maxLines: 5,
                                         ),
                                       ),

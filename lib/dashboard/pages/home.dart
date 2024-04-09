@@ -6,6 +6,7 @@ import '../../revision/pages/list_revision/page/list_revision.dart';
 import '../../usercase/transitions_builder.dart';
 import '../../widgets/app_bar_widget.dart';
 import '../component/charts_revision/charts_revision.dart';
+import '../component/hour_revision.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';
 import '../controller/dashboard_controller.dart';
@@ -72,6 +73,9 @@ class _HomeState extends State<Home> {
                 ReviserLate(
                     quantityCompleted: dashboardController.reviserNotifier.quantityCompleted,
                     quantityDelayed: dashboardController.reviserNotifier.quantityDelayed),
+                HourReviser(
+                    month: dashboardController.reviserNotifier.quantityHourMonth,
+                    week: dashboardController.reviserNotifier.quantityHourWeek),
                 NextRevision(
                     future: dashboardController.getNextRevisionLate(),
                     text: 'Próxima revisão atrasada',

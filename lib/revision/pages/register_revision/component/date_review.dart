@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/utils/format_date.dart';
 
 import '../../../../usercase/date_mask.dart';
-import '../../../../usercase/format_date.dart';
 import '../../../../widgets/text_form_field_widget.dart';
 
 // ignore: must_be_immutable
@@ -11,15 +11,14 @@ class DateReview extends StatelessWidget {
     required this.onClickCalendar,
     required this.dateNextRevision,
   }) {
-    date.text = dateNextRevision ?? '';
+    date.text = dateNextRevision != '' ? dateNextRevision! : FormatDate.formatDate(DateTime.now());
   }
 
   final Function(DateTime picked) onClickCalendar;
   String? dateNextRevision;
   final TextEditingController date = TextEditingController();
 
-  DateTime initDate(String? date) =>
-      date != null && date != "" ? FormatDate().dateParse(date) : DateTime.now();
+  DateTime initDate(String? date) => date != null && date != "" ? FormatDate.dateParse(date) : DateTime.now();
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
 
 import '../entities/revision.dart';
+import '../entities/revision_time.dart';
 import '../repository/revision_repository.dart';
 
 class RevisionUsercase implements RevisionRepository {
@@ -19,7 +20,7 @@ class RevisionUsercase implements RevisionRepository {
   }
 
   @override
-  Future<List<Revision>> findRevisionByDescription(String text) async {
+  Future<List<RevisionTime>> findRevisionByDescription(String text) async {
     return await databaseDataSource.findRevisionByDescription(text);
   }
 
@@ -34,27 +35,11 @@ class RevisionUsercase implements RevisionRepository {
   }
 
   @override
-  Future<int?> updateRevision(description, String nextDate, int id, bool status) async {
-    return await databaseDataSource.updateRevision(description, nextDate, id, status);
+  Future<int?> updateRevision(Revision revision) async {
+    return await databaseDataSource.updateRevision(revision);
   }
 
-  @override
-  Future<List<Revision>?> getNextRevisionLate() async {
-    return await databaseDataSource.getNextRevisionLate();
-  }
-
-  @override
-  Future<List<Revision>?> getNextRevision() async {
-    return await databaseDataSource.getNextRevision();
-  }
-
-  @override
-  Future<List<Revision>?> getDelayedRevision() async {
-    return await databaseDataSource.getDelayedRevision();
-  }
-
-  @override
-  Future<List<Revision>?> getCompletedRevision() async {
-    return await databaseDataSource.getCompletedRevision();
+  Revision buildRevision({required String description, required dateCriational, int? id}) {
+    return Revision(id: id, description: description, dateCreational: dateCriational);
   }
 }

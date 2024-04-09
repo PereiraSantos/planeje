@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/pages/register_revision/component/time_revision.dart';
-import '../../../entities/revision.dart';
 
 class ChangeTimeRevision extends StatefulWidget {
   const ChangeTimeRevision(
@@ -8,7 +8,7 @@ class ChangeTimeRevision extends StatefulWidget {
 
   final Function(String time) onClickTimeInit;
   final Function(String time) onClickTimeEnd;
-  final Revision? revisionEntity;
+  final DateRevision? revisionEntity;
 
   @override
   State<ChangeTimeRevision> createState() => _ChangeTimeRevisionState();
@@ -18,10 +18,10 @@ class _ChangeTimeRevisionState extends State<ChangeTimeRevision> {
   String? timeInit;
   String? timeEnd;
 
-  initTime() {
+  void initTime() {
     if (widget.revisionEntity != null) {
-      timeInit = widget.revisionEntity!.timeInit;
-      timeEnd = widget.revisionEntity!.timeEnd;
+      timeInit = widget.revisionEntity!.hourInit;
+      timeEnd = widget.revisionEntity!.hourEnd;
     }
   }
 

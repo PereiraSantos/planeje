@@ -63,6 +63,8 @@ class _$AppDatabase extends AppDatabase {
 
   RevisionDao? _revisionDaoInstance;
 
+  DateRevisionDao? _dateRevisionDaoInstance;
+
   AnnotationDao? _annotationDaoInstance;
 
   Future<sqflite.Database> open(
@@ -87,7 +89,9 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `status` INTEGER, `date` TEXT, `next_date` TEXT, `time_init` TEXT, `time_end` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `date_creational` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
 
@@ -100,6 +104,12 @@ class _$AppDatabase extends AppDatabase {
   @override
   RevisionDao get revisionDao {
     return _revisionDaoInstance ??= _$RevisionDao(database, changeListener);
+  }
+
+  @override
+  DateRevisionDao get dateRevisionDao {
+    return _dateRevisionDaoInstance ??=
+        _$DateRevisionDao(database, changeListener);
   }
 
   @override
@@ -119,11 +129,16 @@ class _$RevisionDao extends RevisionDao {
             (Revision item) => <String, Object?>{
                   'id': item.id,
                   'description': item.description,
-                  'status': item.status == null ? null : (item.status! ? 1 : 0),
-                  'date': item.date,
-                  'next_date': item.nextDate,
-                  'time_init': item.timeInit,
-                  'time_end': item.timeEnd
+                  'date_creational': item.dateCreational
+                }),
+        _revisionUpdateAdapter = UpdateAdapter(
+            database,
+            'revision',
+            ['id'],
+            (Revision item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description,
+                  'date_creational': item.dateCreational
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -134,17 +149,15 @@ class _$RevisionDao extends RevisionDao {
 
   final InsertionAdapter<Revision> _revisionInsertionAdapter;
 
+  final UpdateAdapter<Revision> _revisionUpdateAdapter;
+
   @override
   Future<List<Revision>> findAllRevisions() async {
     return _queryAdapter.queryList('SELECT * FROM revision',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?,
-            nextDate: row['next_date'] as String?,
-            timeInit: row['time_init'] as String?,
-            timeEnd: row['time_end'] as String?));
+            dateCreational: row['date_creational'] as String?));
   }
 
   @override
@@ -153,11 +166,7 @@ class _$RevisionDao extends RevisionDao {
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?,
-            nextDate: row['next_date'] as String?,
-            timeInit: row['time_init'] as String?,
-            timeEnd: row['time_end'] as String?),
+            dateCreational: row['date_creational'] as String?),
         arguments: [id]);
   }
 
@@ -167,11 +176,7 @@ class _$RevisionDao extends RevisionDao {
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?,
-            nextDate: row['next_date'] as String?,
-            timeInit: row['time_init'] as String?,
-            timeEnd: row['time_end'] as String?),
+            dateCreational: row['date_creational'] as String?),
         arguments: [id]);
   }
 
@@ -181,85 +186,110 @@ class _$RevisionDao extends RevisionDao {
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?,
-            nextDate: row['next_date'] as String?,
-            timeInit: row['time_init'] as String?,
-            timeEnd: row['time_end'] as String?),
+            dateCreational: row['date_creational'] as String?),
         arguments: [text]);
-  }
-
-  @override
-  Future<int?> updateRevision(
-    String description,
-    String nextDate,
-    int id,
-    bool status,
-  ) async {
-    return _queryAdapter.query(
-        'update revision set description = ?1, next_date = ?2,status = ?4 WHERE id = ?3',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [description, nextDate, id, status ? 1 : 0]);
-  }
-
-  @override
-  Future<List<Revision>?> getNextRevisionLate() async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM revision where status = 0 order by next_date desc limit 3',
-        mapper: (Map<String, Object?> row) => Revision(
-            id: row['id'] as int?,
-            description: row['description'] as String?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?,
-            nextDate: row['next_date'] as String?,
-            timeInit: row['time_init'] as String?,
-            timeEnd: row['time_end'] as String?));
-  }
-
-  @override
-  Future<List<Revision>?> getNextRevision() async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM revision where status = 1 order by next_date desc limit 3',
-        mapper: (Map<String, Object?> row) => Revision(
-            id: row['id'] as int?,
-            description: row['description'] as String?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?,
-            nextDate: row['next_date'] as String?,
-            timeInit: row['time_init'] as String?,
-            timeEnd: row['time_end'] as String?));
-  }
-
-  @override
-  Future<List<Revision>?> getDelayedRevision() async {
-    return _queryAdapter.queryList('SELECT * FROM revision where status = 0',
-        mapper: (Map<String, Object?> row) => Revision(
-            id: row['id'] as int?,
-            description: row['description'] as String?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?,
-            nextDate: row['next_date'] as String?,
-            timeInit: row['time_init'] as String?,
-            timeEnd: row['time_end'] as String?));
-  }
-
-  @override
-  Future<List<Revision>?> getCompletedRevision() async {
-    return _queryAdapter.queryList('SELECT * FROM revision where status = 1',
-        mapper: (Map<String, Object?> row) => Revision(
-            id: row['id'] as int?,
-            description: row['description'] as String?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            date: row['date'] as String?,
-            nextDate: row['next_date'] as String?,
-            timeInit: row['time_init'] as String?,
-            timeEnd: row['time_end'] as String?));
   }
 
   @override
   Future<int> insertRevision(Revision revision) {
     return _revisionInsertionAdapter.insertAndReturnId(
         revision, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateRevision(Revision revision) {
+    return _revisionUpdateAdapter.updateAndReturnChangedRows(
+        revision, OnConflictStrategy.abort);
+  }
+}
+
+class _$DateRevisionDao extends DateRevisionDao {
+  _$DateRevisionDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _dateRevisionInsertionAdapter = InsertionAdapter(
+            database,
+            'date_revision',
+            (DateRevision item) => <String, Object?>{
+                  'id_date': item.id,
+                  'date_revision': item.dateRevision,
+                  'next_date_revision': item.nextDate,
+                  'hour_init': item.hourInit,
+                  'hour_end': item.hourEnd,
+                  'id_revision': item.idRevision
+                }),
+        _dateRevisionUpdateAdapter = UpdateAdapter(
+            database,
+            'date_revision',
+            ['id_date'],
+            (DateRevision item) => <String, Object?>{
+                  'id_date': item.id,
+                  'date_revision': item.dateRevision,
+                  'next_date_revision': item.nextDate,
+                  'hour_init': item.hourInit,
+                  'hour_end': item.hourEnd,
+                  'id_revision': item.idRevision
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<DateRevision> _dateRevisionInsertionAdapter;
+
+  final UpdateAdapter<DateRevision> _dateRevisionUpdateAdapter;
+
+  @override
+  Future<List<DateRevision>> findAllRevisions() async {
+    return _queryAdapter.queryList('SELECT * FROM date_revision',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            nextDate: row['next_date_revision'] as String?,
+            hourInit: row['hour_init'] as String?,
+            hourEnd: row['hour_end'] as String?,
+            idRevision: row['id_revision'] as int?));
+  }
+
+  @override
+  Future<DateRevision?> findDateRevisionById(int id) async {
+    return _queryAdapter.query('SELECT * FROM date_revision WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            nextDate: row['next_date_revision'] as String?,
+            hourInit: row['hour_init'] as String?,
+            hourEnd: row['hour_end'] as String?,
+            idRevision: row['id_revision'] as int?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<DateRevision?> deleteDateRevisionById(int id) async {
+    return _queryAdapter.query('delete FROM date_revision WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            nextDate: row['next_date_revision'] as String?,
+            hourInit: row['hour_init'] as String?,
+            hourEnd: row['hour_end'] as String?,
+            idRevision: row['id_revision'] as int?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> insertDateRevision(DateRevision dateRevision) {
+    return _dateRevisionInsertionAdapter.insertAndReturnId(
+        dateRevision, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateDateRevision(DateRevision dateRevision) {
+    return _dateRevisionUpdateAdapter.updateAndReturnChangedRows(
+        dateRevision, OnConflictStrategy.abort);
   }
 }
 
