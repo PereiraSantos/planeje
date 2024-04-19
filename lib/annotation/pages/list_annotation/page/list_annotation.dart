@@ -4,6 +4,7 @@ import 'package:planeje/annotation/pages/register_annotation/pages/register_anno
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
 
 import '../../../../dashboard/pages/home.dart';
+import '../../../../quiz_revision/pages/list_quiz/page/list_quiz.dart';
 import '../../../../usercase/format_date.dart';
 import '../../../../usercase/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
@@ -31,12 +32,12 @@ class _ListAnnotationState extends State<ListAnnotation> {
           callbackHome: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const Home())),
           callbackReviser: () =>
               Navigator.of(context).push(TransitionsBuilder.createRoute(const ListRevision())),
-          callbackAnnotation: () {},
+          callbackAnnotation: () =>
+              Navigator.of(context).push(TransitionsBuilder.createRoute(const ListAnnotation())),
+          callBackQuiz: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
           callbackAdd: () async {
             var result = await Navigator.of(context).push(
-              TransitionsBuilder.createRoute(
-                RegisterAnnotation(),
-              ),
+              TransitionsBuilder.createRoute(RegisterAnnotation()),
             );
 
             if (result) reloadPage();

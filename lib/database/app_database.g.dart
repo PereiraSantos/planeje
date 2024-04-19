@@ -67,6 +67,10 @@ class _$AppDatabase extends AppDatabase {
 
   AnnotationDao? _annotationDaoInstance;
 
+  QuizDao? _quizDaoInstance;
+
+  QuestionDao? _questionDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -94,6 +98,10 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `label` TEXT, `description` TEXT, `answer` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -115,6 +123,16 @@ class _$AppDatabase extends AppDatabase {
   @override
   AnnotationDao get annotationDao {
     return _annotationDaoInstance ??= _$AnnotationDao(database, changeListener);
+  }
+
+  @override
+  QuizDao get quizDao {
+    return _quizDaoInstance ??= _$QuizDao(database, changeListener);
+  }
+
+  @override
+  QuestionDao get questionDao {
+    return _questionDaoInstance ??= _$QuestionDao(database, changeListener);
   }
 }
 
@@ -422,5 +440,184 @@ class _$AnnotationDao extends AnnotationDao {
   Future<int> insertAnnotation(Annotation annotationEntity) {
     return _annotationInsertionAdapter.insertAndReturnId(
         annotationEntity, OnConflictStrategy.abort);
+  }
+}
+
+class _$QuizDao extends QuizDao {
+  _$QuizDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _quizInsertionAdapter = InsertionAdapter(
+            database,
+            'quiz',
+            (Quiz item) => <String, Object?>{
+                  'id': item.id,
+                  'topic': item.topic,
+                  'description': item.description
+                }),
+        _quizUpdateAdapter = UpdateAdapter(
+            database,
+            'quiz',
+            ['id'],
+            (Quiz item) => <String, Object?>{
+                  'id': item.id,
+                  'topic': item.topic,
+                  'description': item.description
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Quiz> _quizInsertionAdapter;
+
+  final UpdateAdapter<Quiz> _quizUpdateAdapter;
+
+  @override
+  Future<List<Quiz>?> getAllQuiz() async {
+    return _queryAdapter.queryList('SELECT * FROM quiz',
+        mapper: (Map<String, Object?> row) => Quiz(
+            id: row['id'] as int?,
+            topic: row['topic'] as String?,
+            description: row['description'] as String?));
+  }
+
+  @override
+  Future<Quiz?> getQuizById(int id) async {
+    return _queryAdapter.query('SELECT * FROM quiz WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Quiz(
+            id: row['id'] as int?,
+            topic: row['topic'] as String?,
+            description: row['description'] as String?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<Quiz?> deleteQuiz(int id) async {
+    return _queryAdapter.query('delete FROM quiz WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Quiz(
+            id: row['id'] as int?,
+            topic: row['topic'] as String?,
+            description: row['description'] as String?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> insertQuiz(Quiz quiz) {
+    return _quizInsertionAdapter.insertAndReturnId(
+        quiz, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateQuiz(Quiz quiz) {
+    return _quizUpdateAdapter.updateAndReturnChangedRows(
+        quiz, OnConflictStrategy.abort);
+  }
+}
+
+class _$QuestionDao extends QuestionDao {
+  _$QuestionDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _questionInsertionAdapter = InsertionAdapter(
+            database,
+            'question',
+            (Question item) => <String, Object?>{
+                  'id': item.id,
+                  'id_quiz': item.idQuiz,
+                  'label': item.label,
+                  'description': item.description,
+                  'answer': item.answer == null ? null : (item.answer! ? 1 : 0)
+                }),
+        _questionUpdateAdapter = UpdateAdapter(
+            database,
+            'question',
+            ['id'],
+            (Question item) => <String, Object?>{
+                  'id': item.id,
+                  'id_quiz': item.idQuiz,
+                  'label': item.label,
+                  'description': item.description,
+                  'answer': item.answer == null ? null : (item.answer! ? 1 : 0)
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Question> _questionInsertionAdapter;
+
+  final UpdateAdapter<Question> _questionUpdateAdapter;
+
+  @override
+  Future<List<Question>?> getAllQuestion() async {
+    return _queryAdapter.queryList('SELECT * FROM question',
+        mapper: (Map<String, Object?> row) => Question(
+            id: row['id'] as int?,
+            idQuiz: row['id_quiz'] as int?,
+            label: row['label'] as String?,
+            description: row['description'] as String?,
+            answer:
+                row['answer'] == null ? null : (row['answer'] as int) != 0));
+  }
+
+  @override
+  Future<Question?> getQuestionById(int id) async {
+    return _queryAdapter.query('SELECT * FROM question WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Question(
+            id: row['id'] as int?,
+            idQuiz: row['id_quiz'] as int?,
+            label: row['label'] as String?,
+            description: row['description'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0),
+        arguments: [id]);
+  }
+
+  @override
+  Future<List<Question>?> getQuestionByIdQuiz(int idQuiz) async {
+    return _queryAdapter.queryList('SELECT * FROM question WHERE id_quiz = ?1',
+        mapper: (Map<String, Object?> row) => Question(
+            id: row['id'] as int?,
+            idQuiz: row['id_quiz'] as int?,
+            label: row['label'] as String?,
+            description: row['description'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0),
+        arguments: [idQuiz]);
+  }
+
+  @override
+  Future<void> deleteQuestion(int id) async {
+    await _queryAdapter
+        .queryNoReturn('delete FROM question WHERE id = ?1', arguments: [id]);
+  }
+
+  @override
+  Future<void> deleteQuestionByIdQuiz(int idQuiz) async {
+    await _queryAdapter.queryNoReturn('delete FROM question WHERE id_quiz = ?1',
+        arguments: [idQuiz]);
+  }
+
+  @override
+  Future<List<int>> insertQuestionList(List<Question> question) {
+    return _questionInsertionAdapter.insertListAndReturnIds(
+        question, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> insertQuestion(Question question) {
+    return _questionInsertionAdapter.insertAndReturnId(
+        question, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateQuestion(Question question) {
+    return _questionUpdateAdapter.updateAndReturnChangedRows(
+        question, OnConflictStrategy.abort);
   }
 }

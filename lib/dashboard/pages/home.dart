@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/pages/list_annotation/pages/list_annotation.dart';
+import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.dart';
 import 'package:planeje/revision/pages/register_revision/page/register_revision.dart';
 
+import '../../quiz_revision/pages/list_quiz/page/list_quiz.dart';
 import '../../revision/pages/list_revision/page/list_revision.dart';
 import '../../usercase/transitions_builder.dart';
 import '../../widgets/app_bar_widget.dart';
 import '../component/charts_revision/charts_revision.dart';
-import '../component/hour_revision.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';
 import '../controller/dashboard_controller.dart';
@@ -44,6 +44,8 @@ class _HomeState extends State<Home> {
                   Navigator.of(context).push(TransitionsBuilder.createRoute(const ListRevision())),
               callbackAnnotation: () =>
                   Navigator.of(context).push(TransitionsBuilder.createRoute(const ListAnnotation())),
+              callBackQuiz: () =>
+                  Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
               callbackAdd: () async {
                 var result = await Navigator.of(context).push(
                   TransitionsBuilder.createRoute(

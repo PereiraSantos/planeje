@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../../../../revision/entities/revision.dart';
 import '../../../../revision/entities/revision_time.dart';
 import '../../../../revision/pages/list_revision/controller/revision_controller.dart';
 

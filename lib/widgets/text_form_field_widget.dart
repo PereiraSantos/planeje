@@ -6,6 +6,7 @@ class TextFormFieldWidget extends StatelessWidget {
   TextFormFieldWidget({
     super.key,
     required this.controller,
+    this.onChange,
     this.inputFormatter,
     this.maxLine = 1,
     this.minLine = 1,
@@ -29,6 +30,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final bool textArea;
   final bool readOnly;
+  final Function(String?)? onChange;
 
   InputBorder theme(double value) {
     return OutlineInputBorder(
@@ -45,37 +47,39 @@ class TextFormFieldWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20, bottom: 10),
       child: TextFormField(
-        controller: controller,
-        maxLines: maxLine,
-        minLines: minLine,
-        readOnly: readOnly,
-        autofocus: false,
-        keyboardType: keyboardType,
-        inputFormatters: inputFormatter,
-        textCapitalization: TextCapitalization.sentences,
-        style: const TextStyle(fontSize: 22, color: Colors.black54),
-        decoration: InputDecoration(
-          labelText: hintText,
-          labelStyle: const TextStyle(
-            color: Colors.black54,
-            fontSize: 22.0,
-            fontWeight: FontWeight.w300,
+          controller: controller,
+          maxLines: maxLine,
+          minLines: minLine,
+          readOnly: readOnly,
+          autofocus: false,
+          keyboardType: keyboardType,
+          inputFormatters: inputFormatter,
+          textCapitalization: TextCapitalization.sentences,
+          style: const TextStyle(fontSize: 22, color: Colors.black54),
+          decoration: InputDecoration(
+            labelText: hintText,
+            labelStyle: const TextStyle(
+              color: Colors.black54,
+              fontSize: 22.0,
+              fontWeight: FontWeight.w300,
+            ),
+            suffixIcon: suffixIcon,
+            hintStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 22.0,
+              fontFamily: 'helvetica_neue_light',
+            ),
+            border: borderRadius != null ? theme(borderRadius!) : null,
           ),
-          suffixIcon: suffixIcon,
-          hintStyle: const TextStyle(
-            color: Colors.black,
-            fontSize: 22.0,
-            fontFamily: 'helvetica_neue_light',
-          ),
-          border: borderRadius != null ? theme(borderRadius!) : null,
-        ),
-        validator: (value) {
-          if (valid) {
-            return validator(value);
-          }
-          return null;
-        },
-      ),
+          validator: (value) {
+            if (valid) {
+              return validator(value);
+            }
+            return null;
+          },
+          onChanged: (value) {
+            if (onChange != null) onChange!(value);
+          }),
     );
   }
 

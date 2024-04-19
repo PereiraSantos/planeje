@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/pages/list_annotation/pages/list_annotation.dart';
+import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.dart';
+import 'package:planeje/quiz_revision/pages/list_quiz/page/list_quiz.dart';
 
 import '../../../../dashboard/pages/home.dart';
 import '../../../../usercase/format_date.dart';
@@ -73,11 +74,10 @@ class _ListRevisionState extends State<ListRevision> {
               Navigator.of(context).push(TransitionsBuilder.createRoute(const ListRevision())),
           callbackAnnotation: () =>
               Navigator.of(context).push(TransitionsBuilder.createRoute(const ListAnnotation())),
+          callBackQuiz: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
           callbackAdd: () async {
             var result = await Navigator.of(context).push(
-              TransitionsBuilder.createRoute(
-                RegisterRevision(),
-              ),
+              TransitionsBuilder.createRoute(RegisterRevision()),
             );
 
             if (result) reloadPage();
