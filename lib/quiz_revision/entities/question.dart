@@ -18,12 +18,16 @@ class Question {
   @ColumnInfo(name: 'answer')
   bool? answer;
 
+  @ignore
+  bool? uniqueAnswer;
+
   Question({
     this.id,
     this.idQuiz,
     this.label,
     this.description,
     this.answer = false,
+    this.uniqueAnswer,
   });
 
   void setIdQuiz(int? value) => idQuiz = id;

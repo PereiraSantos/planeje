@@ -10,6 +10,7 @@ import '../../../../usercase/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
 import '../../../entities/annotation_revision.dart';
 import '../component/text_list.dart';
+import '../component/view_annotation.dart';
 import '../controller/list_annotation_controller.dart';
 
 class ListAnnotation extends StatefulWidget {
@@ -104,6 +105,19 @@ class _ListAnnotationState extends State<ListAnnotation> {
                                         "${snapshot.data![index].description}",
                                         flex: 6,
                                       ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 10, top: 05),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            await ViewAnnotation.build(context, snapshot.data![index]);
+                                          },
+                                          child: const Icon(
+                                            Icons.remove_red_eye,
+                                            color: Colors.black54,
+                                            size: 22,
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -112,6 +126,22 @@ class _ListAnnotationState extends State<ListAnnotation> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     TextList(snapshot.data![index].text ?? ""),
+                                    Visibility(
+                                      visible: snapshot.data![index].idRevision != null ? false : true,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right: 10, top: 05),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            await ViewAnnotation.build(context, snapshot.data![index]);
+                                          },
+                                          child: const Icon(
+                                            Icons.remove_red_eye,
+                                            color: Colors.black54,
+                                            size: 22,
+                                          ),
+                                        ),
+                                      ),
+                                    )
                                   ],
                                 ),
                                 TextList.date(
