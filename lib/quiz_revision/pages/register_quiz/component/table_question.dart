@@ -6,10 +6,16 @@ import 'component_table.dart';
 
 // ignore: must_be_immutable
 class TableQuestion extends StatelessWidget with ComponentTable {
-  TableQuestion({super.key, required this.listQuestion, required this.onClick});
+  TableQuestion({
+    super.key,
+    required this.listQuestion,
+    required this.onClick,
+    required this.onDelete,
+  });
 
   List<Question> listQuestion = [];
   final Function(int, bool) onClick;
+  final Function(int) onDelete;
 
   List<TableRow> table() {
     List<TableRow> list = [
@@ -17,6 +23,7 @@ class TableQuestion extends StatelessWidget with ComponentTable {
         label: 'Id*',
         description: 'Descrição',
         answer: 'Resposta',
+        icon: const SizedBox(),
         color: const Color.fromARGB(66, 158, 158, 158),
       )
     ];
@@ -28,6 +35,14 @@ class TableQuestion extends StatelessWidget with ComponentTable {
           description: '${listQuestion[i].description}',
           child: CheckBoxCustom(
               isChecked: listQuestion[i].answer ?? false, onClick: (value) => onClick(i, value ?? false)),
+          icon: GestureDetector(
+            onTap: () => onDelete(i),
+            child: const Icon(
+              Icons.delete_forever,
+              color: Color.fromARGB(162, 244, 67, 54),
+              size: 23,
+            ),
+          ),
           color: Colors.white,
         ),
       );
@@ -46,7 +61,7 @@ class TableQuestion extends StatelessWidget with ComponentTable {
           border: TableBorder.all(borderRadius: BorderRadius.circular(3), color: Colors.black26),
           columnWidths: const <int, TableColumnWidth>{
             0: IntrinsicColumnWidth(),
-            1: FlexColumnWidth(),
+            1: FlexColumnWidth(10),
             2: FixedColumnWidth(64),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,

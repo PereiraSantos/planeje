@@ -4,6 +4,7 @@ import '../../../entities/question.dart';
 
 class TableQuestionController with ChangeNotifier {
   List<Question> listQuestion = [];
+  List<Question> listQuestions = [];
 
   void update(Question element) {
     listQuestion.add(element);
@@ -25,6 +26,12 @@ class TableQuestionController with ChangeNotifier {
     for (var i = 0; i < listQuestion.length; i++) {
       listQuestion[i].answer = i == index ? value : false;
     }
+    notifyListeners();
+  }
+
+  void deleteAnwser(int i) {
+    listQuestions.add(listQuestion[i]);
+    listQuestion.removeAt(i);
     notifyListeners();
   }
 

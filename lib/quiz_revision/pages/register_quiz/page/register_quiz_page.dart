@@ -99,6 +99,7 @@ class RegisterQuizPage extends StatelessWidget {
                       listQuestion: controller.tableQuestionController.listQuestion,
                       onClick: (index, value) =>
                           controller.tableQuestionController.updateAnwser(index, value),
+                      onDelete: (index) => controller.tableQuestionController.deleteAnwser(index),
                     );
                   },
                 ),

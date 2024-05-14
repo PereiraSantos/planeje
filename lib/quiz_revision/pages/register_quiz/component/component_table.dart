@@ -14,6 +14,7 @@ mixin ComponentTable {
     String? answer,
     Color? color,
     Widget? child,
+    Widget? icon,
   }) {
     return TableRow(
       decoration: BoxDecoration(color: color),
@@ -21,7 +22,8 @@ mixin ComponentTable {
         row(label),
         row(description),
         if (answer != null) ...[row(answer)],
-        if (child != null) ...[child]
+        if (child != null) ...[child],
+        icon!,
       ],
     );
   }

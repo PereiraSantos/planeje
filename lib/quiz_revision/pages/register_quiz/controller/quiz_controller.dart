@@ -53,6 +53,10 @@ class QuizController {
           : await questionUsercase.insertQuestion(element);
     }
 
+    for (var element in tableQuestionController.listQuestions) {
+      questionUsercase.deleteQuestion(element.id!);
+    }
+
     return Future.value(1);
   }
 
