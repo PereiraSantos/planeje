@@ -54,6 +54,7 @@ class TextFormFieldWidget extends StatelessWidget {
           autofocus: false,
           keyboardType: keyboardType,
           inputFormatters: inputFormatter,
+          enableInteractiveSelection: false,
           textCapitalization: TextCapitalization.sentences,
           style: const TextStyle(fontSize: 22, color: Colors.black54),
           decoration: InputDecoration(

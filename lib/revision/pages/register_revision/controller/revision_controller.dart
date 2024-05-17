@@ -41,13 +41,13 @@ class RevisionRegisterController {
     return FormatDate().formatTime(DateTime.now());
   }
 
-  String nextRevision(String date) {
+  String nextRevision(String date, int day) {
     DateTime dateTemp;
 
     if (date == '') date = FormatDate().formatDate(DateTime.now());
 
     dateTemp = FormatDate().dateParse(date);
-    dateTemp = dateTemp.add(const Duration(days: 30));
+    dateTemp = dateTemp.add(Duration(days: day));
 
     return FormatDate().formatDate(dateTemp);
   }

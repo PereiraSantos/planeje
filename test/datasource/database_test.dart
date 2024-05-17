@@ -35,7 +35,6 @@ class DatabaseMock implements RevisionDataSourceRepository {
 
   @override
   Future<int?> updateRevision(Object revision) {
-    // TODO: implement updateRevision
     throw UnimplementedError();
   }
 }
