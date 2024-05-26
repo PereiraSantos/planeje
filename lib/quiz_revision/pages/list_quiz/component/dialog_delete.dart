@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
 import '../../../entities/quiz.dart';
-import '../controller/list_quiz_controller.dart';
 
 class DialogDelete {
-  static build(BuildContext context, Quiz quiz, ListQuizController listQuizController) async {
+  static build(BuildContext context, Quiz quiz) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -20,22 +18,16 @@ class DialogDelete {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                    onPressed: () async {
-                      var result = await listQuizController.onClickDelete(quiz.id!);
-                      if (result && context.mounted) {
-                        message(context, 'Removido com sucesso');
-                        Navigator.pop(context, true);
-                      }
-                    },
+                    onPressed: () => Navigator.of(context).pop(true),
                     style: ButtonStyle(
-                      side: MaterialStateProperty.all(
+                      side: WidgetStateProperty.all(
                         const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
                       ),
-                      foregroundColor: MaterialStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
-                      padding: MaterialStateProperty.all(
+                      foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
+                      padding: WidgetStateProperty.all(
                         const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                       ),
-                      textStyle: MaterialStateProperty.all(
+                      textStyle: WidgetStateProperty.all(
                         const TextStyle(fontSize: 18),
                       ),
                     ),
@@ -44,14 +36,14 @@ class DialogDelete {
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     style: ButtonStyle(
-                      side: MaterialStateProperty.all(
+                      side: WidgetStateProperty.all(
                         const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
                       ),
-                      foregroundColor: MaterialStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
-                      padding: MaterialStateProperty.all(
+                      foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
+                      padding: WidgetStateProperty.all(
                         const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                       ),
-                      textStyle: MaterialStateProperty.all(
+                      textStyle: WidgetStateProperty.all(
                         const TextStyle(fontSize: 18),
                       ),
                     ),
@@ -64,13 +56,5 @@ class DialogDelete {
         );
       },
     );
-  }
-
-  static void message(BuildContext context, String message) {
-    var snackBar = SnackBar(
-      content: Text(message),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

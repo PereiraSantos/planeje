@@ -11,7 +11,7 @@ class DialogDelete {
   ) async {
     var r = await revisionController.getAnnotationByIdRevision(revision.id!) ?? [];
     if (r.isNotEmpty) {
-      // ignore: use_build_context_synchronously
+      if (!context.mounted) return;
       return await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -27,14 +27,14 @@ class DialogDelete {
                   child: TextButton(
                     onPressed: () => Navigator.pop(context, false),
                     style: ButtonStyle(
-                      side: MaterialStateProperty.all(
+                      side: WidgetStateProperty.all(
                         const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
                       ),
-                      foregroundColor: MaterialStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
-                      padding: MaterialStateProperty.all(
+                      foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
+                      padding: WidgetStateProperty.all(
                         const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
                       ),
-                      textStyle: MaterialStateProperty.all(
+                      textStyle: WidgetStateProperty.all(
                         const TextStyle(fontSize: 18),
                       ),
                     ),
@@ -47,7 +47,7 @@ class DialogDelete {
         },
       );
     } else {
-      // ignore: use_build_context_synchronously
+      if (!context.mounted) return;
       return await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -71,14 +71,14 @@ class DialogDelete {
                         }
                       },
                       style: ButtonStyle(
-                        side: MaterialStateProperty.all(
+                        side: WidgetStateProperty.all(
                           const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
                         ),
-                        foregroundColor: MaterialStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
-                        padding: MaterialStateProperty.all(
+                        foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
+                        padding: WidgetStateProperty.all(
                           const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                         ),
-                        textStyle: MaterialStateProperty.all(
+                        textStyle: WidgetStateProperty.all(
                           const TextStyle(fontSize: 18),
                         ),
                       ),
@@ -87,14 +87,14 @@ class DialogDelete {
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
                       style: ButtonStyle(
-                        side: MaterialStateProperty.all(
+                        side: WidgetStateProperty.all(
                           const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
                         ),
-                        foregroundColor: MaterialStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
-                        padding: MaterialStateProperty.all(
+                        foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
+                        padding: WidgetStateProperty.all(
                           const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                         ),
-                        textStyle: MaterialStateProperty.all(
+                        textStyle: WidgetStateProperty.all(
                           const TextStyle(fontSize: 18),
                         ),
                       ),

@@ -41,14 +41,14 @@ class ViewAnnotation {
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     style: ButtonStyle(
-                      side: MaterialStateProperty.all(
+                      side: WidgetStateProperty.all(
                         const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
                       ),
-                      foregroundColor: MaterialStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
-                      padding: MaterialStateProperty.all(
+                      foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
+                      padding: WidgetStateProperty.all(
                         const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                       ),
-                      textStyle: MaterialStateProperty.all(
+                      textStyle: WidgetStateProperty.all(
                         const TextStyle(fontSize: 18),
                       ),
                     ),

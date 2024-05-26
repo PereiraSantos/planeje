@@ -21,12 +21,6 @@ class _ListQuestionState extends State<ListQuestion> {
   ListQuestionController listQuestionController = ListQuestionController();
 
   @override
-  void initState() {
-    super.initState();
-    listQuestionController.findValueAnswer(widget.listQuestion);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -49,7 +43,7 @@ class _ListQuestionState extends State<ListQuestion> {
                     child: CheckBoxCustom(
                       isChecked: listQuestionController.getCheck(widget.listQuestion, index),
                       onClick: (value) {
-                        listQuestionController.updateAwser(index, value, widget.listQuestion);
+                        listQuestionController.updateAnswer(index, value, widget.listQuestion);
                         setState(() {});
                       },
                     ),
@@ -79,7 +73,7 @@ class _ListQuestionState extends State<ListQuestion> {
             children: [
               GestureDetector(
                 onTap: () {
-                  listQuestionController.findAnswer(widget.listQuestion);
+                  listQuestionController.showAnswer = true;
                   setState(() {});
                 },
                 child: ButtonCuston(
@@ -96,7 +90,7 @@ class _ListQuestionState extends State<ListQuestion> {
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Visibility(
-                  visible: listQuestionController.showMessageYes,
+                  visible: listQuestionController.isAnswer(widget.listQuestion, true),
                   child: const Icon(
                     Icons.check,
                     color: Colors.green,
@@ -106,7 +100,7 @@ class _ListQuestionState extends State<ListQuestion> {
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Visibility(
-                  visible: listQuestionController.showMessageNo,
+                  visible: listQuestionController.isAnswer(widget.listQuestion, false),
                   child: const Icon(
                     Icons.close,
                     color: Colors.red,

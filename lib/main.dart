@@ -22,17 +22,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
+      theme: ThemeData(useMaterial3: false),
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('pt', 'BR'),
       ],
-      home: Home(),
+      home: const Home(),
     );
   }
 }

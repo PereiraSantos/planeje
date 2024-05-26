@@ -111,6 +111,7 @@ class RegisterRevision extends StatelessWidget {
                     Navigator.pop(context, true);
                   }
                 } catch (e) {
+                  if (!context.mounted) return;
                   controller.message(context, 'Erro ao registrar!!!');
                 }
               },

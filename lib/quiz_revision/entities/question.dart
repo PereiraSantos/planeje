@@ -34,4 +34,5 @@ class Question {
   void setLabel(String? value) => label = value;
   void setDescription(String? value) => description = value;
   void setAnswer(bool? value) => answer = value;
+  void setUniqueAnswer(bool? value) => uniqueAnswer = value;
 }

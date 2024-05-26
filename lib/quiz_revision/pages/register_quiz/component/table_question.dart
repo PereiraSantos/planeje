@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/quiz_revision/entities/question.dart';
+import 'package:planeje/quiz_revision/utils/register_question/question_list.dart';
 
 import '../../../../widgets/checkbox_custom.dart';
 import 'component_table.dart';
@@ -13,7 +13,7 @@ class TableQuestion extends StatelessWidget with ComponentTable {
     required this.onDelete,
   });
 
-  List<Question> listQuestion = [];
+  List<QuestionList> listQuestion = [];
   final Function(int, bool) onClick;
   final Function(int) onDelete;
 
@@ -29,23 +29,26 @@ class TableQuestion extends StatelessWidget with ComponentTable {
     ];
 
     for (var i = 0; i < listQuestion.length; i++) {
-      list.add(
-        getRow(
-          label: '${listQuestion[i].label}',
-          description: '${listQuestion[i].description}',
-          child: CheckBoxCustom(
-              isChecked: listQuestion[i].answer ?? false, onClick: (value) => onClick(i, value ?? false)),
-          icon: GestureDetector(
-            onTap: () => onDelete(i),
-            child: const Icon(
-              Icons.delete_forever,
-              color: Color.fromARGB(162, 244, 67, 54),
-              size: 23,
+      if (!listQuestion[i].delete) {
+        list.add(
+          getRow(
+            label: '${listQuestion[i].question?.label}',
+            description: '${listQuestion[i].question?.description}',
+            child: CheckBoxCustom(
+                isChecked: listQuestion[i].question?.answer ?? false,
+                onClick: (value) => onClick(i, value ?? false)),
+            icon: GestureDetector(
+              onTap: () => onDelete(i),
+              child: const Icon(
+                Icons.delete_forever,
+                color: Color.fromARGB(162, 244, 67, 54),
+                size: 23,
+              ),
             ),
+            color: Colors.white,
           ),
-          color: Colors.white,
-        ),
-      );
+        );
+      }
     }
 
     return list;

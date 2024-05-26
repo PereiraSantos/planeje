@@ -12,7 +12,7 @@ class TextButtonWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 15.0),
       child: TextButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
               side: const BorderSide(color: Colors.black54),

@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/quiz_revision/datasource/database/question_database.dart';
 import 'package:planeje/quiz_revision/entities/quiz.dart';
+import 'package:planeje/quiz_revision/utils/register_question/register_question.dart';
+import 'package:planeje/quiz_revision/utils/register_question/remove_question.dart';
+import 'package:planeje/quiz_revision/utils/register_question/table_question.dart';
+import 'package:planeje/quiz_revision/utils/register_quiz/find_list_quiz.dart';
+import 'package:planeje/quiz_revision/utils/register_quiz/remove_quiz.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
+import 'package:planeje/utils/message.dart';
 
 import '../../../../annotation/pages/list_annotation/page/list_annotation.dart';
 import '../../../../dashboard/pages/home.dart';
 import '../../../../usercase/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
+import '../../../datasource/database/quiz_database.dart';
 import '../../../entities/question.dart';
+import '../../../utils/register_quiz/register_quiz.dart';
 import '../../register_quiz/page/register_quiz_page.dart';
 import '../component/dialog_delete.dart';
 import '../component/list_question.dart';
-import '../controller/list_question_controller.dart';
-import '../controller/list_quiz_controller.dart';
 
 class ListQuiz extends StatefulWidget {
   const ListQuiz({super.key});
@@ -21,7 +28,6 @@ class ListQuiz extends StatefulWidget {
 }
 
 class _ListQuizState extends State<ListQuiz> {
-  ListQuizController listQuizController = ListQuizController();
   void reloadPage() => setState(() {});
 
   @override
@@ -38,7 +44,14 @@ class _ListQuizState extends State<ListQuiz> {
           callBackQuiz: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
           callbackAdd: () async {
             var result = await Navigator.of(context).push(
-              TransitionsBuilder.createRoute(RegisterQuizPage()),
+              TransitionsBuilder.createRoute(
+                RegisterQuizPage(
+                  registerQuiz: SaveQuiz(
+                    datasourceQuiz: QuizDatabase(),
+                    quiz: Quiz()..setTypeQuiz(TypeQuiz.Adicionar),
+                  ),
+                ),
+              ),
             );
 
             if (result) reloadPage();
@@ -51,7 +64,7 @@ class _ListQuizState extends State<ListQuiz> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: listQuizController.getAllQuiz(),
+          future: GetQuiz(QuizDatabase()).getAllQuiz(),
           builder: (BuildContext context, AsyncSnapshot<List<Quiz>?> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
@@ -64,7 +77,19 @@ class _ListQuizState extends State<ListQuiz> {
                       key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.startToEnd) {
-                          return await DialogDelete.build(context, snapshot.data![index], listQuizController);
+                          var result = await DialogDelete.build(context, snapshot.data![index]);
+
+                          if (result && context.mounted) {
+                            final TableQuestionNotifier tableQuestionNotifier = TableQuestionNotifier();
+                            tableQuestionNotifier.deleteQuestionByIdQuiz(snapshot.data![index].id!);
+
+                            await RemoveQuestion(QuestionDatabase()).delete(tableQuestionNotifier.questions);
+
+                            await DeleteQuiz(QuizDatabase()).deleteQuiz(snapshot.data![index].id!);
+                            if (!context.mounted) return;
+                            Message.message(context, 'Removido com sucesso');
+                            reloadPage();
+                          }
                         }
                         return null;
                       },
@@ -78,7 +103,12 @@ class _ListQuizState extends State<ListQuiz> {
                           onTap: () async {
                             var result = await Navigator.of(context).push(
                               TransitionsBuilder.createRoute(
-                                RegisterQuizPage(quizEntity: snapshot.data![index]),
+                                RegisterQuizPage(
+                                  registerQuiz: UpdateQuiz(
+                                    datasourceQuiz: QuizDatabase(),
+                                    quiz: (snapshot.data![index])..setTypeQuiz(TypeQuiz.Atualizar),
+                                  ),
+                                ),
                               ),
                             );
                             if (result) reloadPage();
@@ -102,8 +132,8 @@ class _ListQuizState extends State<ListQuiz> {
                                   ),
                                 ),
                                 FutureBuilder(
-                                  future: ListQuestionController()
-                                      .listQuestionByIdQuiz(snapshot.data![index].id!),
+                                  future: GetQuestion(QuestionDatabase())
+                                      .getQuestionByIdQuiz(snapshot.data![index].id!),
                                   builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
                                     if (snapshot.hasData) {
                                       if (snapshot.data!.isNotEmpty) {

@@ -1,33 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/quiz_revision/entities/quiz.dart';
+import 'package:planeje/quiz_revision/entities/question.dart';
+import 'package:planeje/quiz_revision/utils/register_question/table_question.dart';
+
+import 'package:planeje/utils/message.dart';
 
 import '../../../../../widgets/text_button_widget.dart';
 import '../../../../../widgets/text_form_field_widget.dart';
+import '../../../utils/register_quiz/register_quiz.dart';
 import '../component/table_question.dart';
-import '../controller/quiz_controller.dart';
 
 class RegisterQuizPage extends StatelessWidget {
-  RegisterQuizPage({super.key, this.quizEntity}) {
-    description.text = quizEntity?.description ?? "";
-    topic.text = quizEntity?.topic ?? "";
-
-    controller.quiz.setDescription(quizEntity?.description);
-    controller.quiz.setTopic(quizEntity?.topic);
-
-    if (quizEntity?.id != null) {
-      controller.quiz.setId(quizEntity!.id!);
-
-      controller.getQuestionByIdQuiz();
-    }
+  RegisterQuizPage({super.key, required this.registerQuiz}) {
+    description.text = registerQuiz.quiz.description ?? "";
+    topic.text = registerQuiz.quiz.topic ?? "";
+    _tableQuestionNotifier.initListQuestionEdit(registerQuiz.quiz.id);
   }
 
-  final Quiz? quizEntity;
-  final QuizController controller = QuizController();
+  final RegisterQuiz registerQuiz;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
   final TextEditingController topic = TextEditingController();
   final TextEditingController label = TextEditingController();
   final TextEditingController question = TextEditingController();
+  final TableQuestionNotifier _tableQuestionNotifier = TableQuestionNotifier();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +33,7 @@ class RegisterQuizPage extends StatelessWidget {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         title: Text(
-          quizEntity != null ? "Atualizar" : "Adicionar",
+          registerQuiz.quiz.getTypeQuiz?.name ?? '',
           style: const TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
@@ -53,7 +48,7 @@ class RegisterQuizPage extends StatelessWidget {
               children: [
                 TextFormFieldWidget(
                   controller: topic,
-                  onChange: controller.quiz.setTopic,
+                  onChange: registerQuiz.quiz.setTopic,
                   hintText: 'Assunto',
                   keyboardType: TextInputType.text,
                   textArea: false,
@@ -61,7 +56,7 @@ class RegisterQuizPage extends StatelessWidget {
                 ),
                 TextFormFieldWidget(
                   controller: description,
-                  onChange: controller.quiz.setDescription,
+                  onChange: registerQuiz.quiz.setDescription,
                   maxLine: 5,
                   hintText: 'Pergunta',
                   keyboardType: TextInputType.multiline,
@@ -69,7 +64,6 @@ class RegisterQuizPage extends StatelessWidget {
                 ),
                 TextFormFieldWidget(
                   controller: label,
-                  onChange: controller.question.setLabel,
                   hintText: 'Identificação',
                   keyboardType: TextInputType.text,
                   textArea: false,
@@ -77,7 +71,6 @@ class RegisterQuizPage extends StatelessWidget {
                 ),
                 TextFormFieldWidget(
                   controller: question,
-                  onChange: controller.question.setDescription,
                   maxLine: 5,
                   hintText: 'Questão',
                   keyboardType: TextInputType.multiline,
@@ -87,19 +80,21 @@ class RegisterQuizPage extends StatelessWidget {
                 TextButtonWidget(
                   label: 'Adicionar questão',
                   onClick: () {
-                    controller.setListQuestion();
+                    _tableQuestionNotifier.addQuestion(Question(
+                      label: label.text,
+                      description: question.text,
+                    ));
                     label.text = '';
                     question.text = '';
                   },
                 ),
                 ListenableBuilder(
-                  listenable: controller.tableQuestionController,
+                  listenable: _tableQuestionNotifier,
                   builder: (BuildContext context, Widget? child) {
                     return TableQuestion(
-                      listQuestion: controller.tableQuestionController.listQuestion,
-                      onClick: (index, value) =>
-                          controller.tableQuestionController.updateAnwser(index, value),
-                      onDelete: (index) => controller.tableQuestionController.deleteAnwser(index),
+                      listQuestion: _tableQuestionNotifier.questions,
+                      onClick: (index, value) => _tableQuestionNotifier.updateAnwser(index, value),
+                      onDelete: (index) => _tableQuestionNotifier.deleteQuestion(index),
                     );
                   },
                 ),
@@ -122,27 +117,27 @@ class RegisterQuizPage extends StatelessWidget {
                 try {
                   if (!formKey.currentState!.validate()) return;
 
-                  if (controller.tableQuestionController.listQuestion.isEmpty) {
-                    controller.message(context, 'Obrigatório adicionar registro');
-                    return;
-                  }
+                  if (!_tableQuestionNotifier.listQuestionuestionIsEmpty(context)) return;
 
-                  if (!controller.tableQuestionController.isAnwser()) {
-                    controller.message(context, 'Obrigatório marcar uma resposta');
-                    return;
-                  }
+                  if (!_tableQuestionNotifier.isAnwserByListQuestion(context)) return;
 
-                  var result = quizEntity?.id == null
-                      ? await controller.registerQuiz()
-                      : await controller.updateQuiz();
+                  registerQuiz.quiz.setId(registerQuiz.quiz.id);
+                  registerQuiz.quiz.setTopic(topic.text);
+                  registerQuiz.quiz.setDescription(description.text);
+
+                  var result = await registerQuiz.writeQuiz();
+
+                  if (result != null) {
+                    if (registerQuiz.quiz.id != null) result = registerQuiz.quiz.id;
+                    await _tableQuestionNotifier.updateIdQuiz(result!);
+                  }
 
                   if (context.mounted && result != null) {
-                    controller.message(context,
-                        quizEntity?.id != null ? 'Atualizado com sucesso' : 'Registrado com sucesso');
+                    Message.message(context, registerQuiz.quiz.message);
                     Navigator.pop(context, true);
                   }
                 } catch (e) {
-                  controller.message(context, 'Erro ao registrar!!!');
+                  if (context.mounted) Message.message(context, 'Erro ao registrar!!!');
                 }
               },
             ),
