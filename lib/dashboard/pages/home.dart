@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.dart';
-import 'package:planeje/revision/pages/register_revision/page/register_revision.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/entities/date_revision.dart';
+import 'package:planeje/revision/pages/register_revision/page/register_revision_page.dart';
+import 'package:planeje/revision/utils/register_date_revision.dart';
+import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/utils/type_message.dart';
 
 import '../../quiz_revision/pages/list_quiz/page/list_quiz.dart';
+import '../../revision/entities/revision.dart';
 import '../../revision/pages/list_revision/page/list_revision.dart';
 import '../../usercase/transitions_builder.dart';
 import '../../widgets/app_bar_widget.dart';
-import '../component/charts_revision/charts_revision.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';
 import '../controller/dashboard_controller.dart';
@@ -49,7 +55,10 @@ class _HomeState extends State<Home> {
               callbackAdd: () async {
                 var result = await Navigator.of(context).push(
                   TransitionsBuilder.createRoute(
-                    RegisterRevision(),
+                    RegisterRevisionPage(
+                      revision: Register(RevisionDatabaseDataSource(), Revision(), Message(),
+                          RegisterDateRevision(DateRevisionDatabaseDataSource(), DateRevision())),
+                    ),
                   ),
                 );
 
@@ -87,7 +96,6 @@ class _HomeState extends State<Home> {
                   text: 'Próxima revisão',
                   finishUpdaterReviser: () => reloadPage(),
                 ),
-                const ChartsRevision(),
               ],
             );
           },

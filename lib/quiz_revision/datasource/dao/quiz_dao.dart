@@ -1,6 +1,5 @@
 import 'package:floor/floor.dart';
-
-import '../../../entities/quiz.dart';
+import 'package:planeje/quiz_revision/entities/quiz.dart';
 
 @dao
 abstract class QuizDao {

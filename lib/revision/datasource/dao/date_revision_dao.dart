@@ -1,6 +1,5 @@
 import 'package:floor/floor.dart';
-
-import '../../../entities/date_revision.dart';
+import 'package:planeje/revision/entities/date_revision.dart';
 
 @dao
 abstract class DateRevisionDao {

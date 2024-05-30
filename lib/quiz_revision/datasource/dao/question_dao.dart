@@ -1,14 +1,10 @@
 import 'package:floor/floor.dart';
-
-import '../../../entities/question.dart';
+import 'package:planeje/quiz_revision/entities/question.dart';
 
 @dao
 abstract class QuestionDao {
   @Query('SELECT * FROM question')
   Future<List<Question>?> getAllQuestion();
-
-  @insert
-  Future<List<int>> insertQuestionList(List<Question> question);
 
   @insert
   Future<int> insertQuestion(Question question);

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
 
-import 'package:planeje/revision/datasource/repository/datasource_revision_repository.dart';
 import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/entities/revision_time.dart';

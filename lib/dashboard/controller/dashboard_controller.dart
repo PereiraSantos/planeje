@@ -1,16 +1,17 @@
-import '../../revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/utils/find_revision.dart';
+
 import '../../revision/entities/revision_time.dart';
-import '../../revision/usercase/revision_usercase.dart';
 import '../../utils/format_date.dart';
 import '../component/reviser_notifier.dart';
 
 class DashboardController {
   ReviserNotifier reviserNotifier = ReviserNotifier();
-  RevisionUsercase revisionUsercase = RevisionUsercase(RevisionDatabaseDataSource());
 
   Future<List<RevisionTime>?> getNextRevisionLate() async {
     List<RevisionTime> revision = [];
-    List<RevisionTime> revisionTimeTemp = await revisionUsercase.findRevisionByDescription('');
+    List<RevisionTime> revisionTimeTemp =
+        await GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription('');
 
     for (var element in revisionTimeTemp) {
       var dateRevision = FormatDate.dateParse(element.dateRevision.nextDate!);
@@ -24,7 +25,8 @@ class DashboardController {
 
   Future<List<RevisionTime>?> getNextRevision() async {
     List<RevisionTime> revision = [];
-    List<RevisionTime> revisionTimeTemp = await revisionUsercase.findRevisionByDescription('');
+    List<RevisionTime> revisionTimeTemp =
+        await GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription('');
 
     for (var element in revisionTimeTemp) {
       var dateRevision = FormatDate.dateParse(element.dateRevision.nextDate!);
@@ -37,7 +39,8 @@ class DashboardController {
 
   Future<void> getDelayedRevision() async {
     List<RevisionTime> revision = [];
-    List<RevisionTime> revisionTimeTemp = await revisionUsercase.findRevisionByDescription('');
+    List<RevisionTime> revisionTimeTemp =
+        await GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription('');
 
     for (var element in revisionTimeTemp) {
       revision.add(element);
@@ -55,7 +58,8 @@ class DashboardController {
 
   Future<void> getCompletedRevision() async {
     List<RevisionTime> revision = [];
-    List<RevisionTime> revisionTimeTemp = await revisionUsercase.findRevisionByDescription('');
+    List<RevisionTime> revisionTimeTemp =
+        await GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription('');
     var total = 0;
     for (var element in revisionTimeTemp) {
       var dateRevision = FormatDate.dateParse(element.dateRevision.nextDate!);
@@ -64,7 +68,6 @@ class DashboardController {
     }
 
     reviserNotifier.updateQuantityCompleted(total);
-    //getQuantityHour(revision);
   }
 
   void getQuantityHour(List<RevisionTime> listRevision) {

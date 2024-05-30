@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../controller/revision_controller.dart';
-
 // ignore: must_be_immutable
 class Timer extends StatefulWidget {
-  Timer({super.key, required this.controller});
-
-  RevisionRegisterController controller;
+  const Timer({super.key});
 
   @override
   State<Timer> createState() => _TimerState();
@@ -49,7 +45,6 @@ class _TimerState extends State<Timer> {
                   context: context,
                 );
 
-                // widget.controller.setTime(selectedTime!);
                 time = selectedTime;
                 setState(() {});
               },

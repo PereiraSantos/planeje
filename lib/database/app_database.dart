@@ -1,17 +1,18 @@
 import 'dart:async';
 import 'package:floor/floor.dart';
-import 'package:planeje/quiz_revision/datasource/database/question_dao/question_dao.dart';
-import 'package:planeje/quiz_revision/datasource/database/quiz_dao/quiz_dao.dart';
+import 'package:planeje/annotation/datasource/dao/annotation_dao.dart';
+import 'package:planeje/quiz_revision/datasource/dao/question_dao.dart';
+import 'package:planeje/quiz_revision/datasource/dao/quiz_dao.dart';
+import 'package:planeje/revision/datasource/dao/date_revision_dao.dart';
+import 'package:planeje/revision/datasource/dao/revision_dao.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:sqflite/sqflite.dart' as sqflite;
 
-import '../annotation/datasource/database/dao/annotation_dao.dart';
 import '../annotation/entities/annotation.dart';
 import '../quiz_revision/entities/question.dart';
 import '../quiz_revision/entities/quiz.dart';
-import '../revision/datasource/database/date_revisiom_dao/date_revision_dao.dart';
-import '../revision/datasource/database/revision_dao/revision_dao.dart';
+
 import '../revision/entities/date_revision.dart';
 import '../revision/entities/revision.dart';
 

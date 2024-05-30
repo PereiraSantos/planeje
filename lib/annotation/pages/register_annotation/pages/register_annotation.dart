@@ -1,31 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/entities/annotation.dart';
+import 'package:planeje/annotation/utils/register_annotation.dart';
+import 'package:planeje/utils/message_user.dart';
 
 import '../../../../widgets/text_button_widget.dart';
 import '../component/drop_down_revision.dart';
-import '../controller/register_annotation_controller.dart';
 
 // ignore: must_be_immutable
 class RegisterAnnotation extends StatelessWidget {
-  RegisterAnnotation({super.key, this.annotation}) {
-    textController.text = annotation?.text ?? '';
+  RegisterAnnotation({super.key, required this.registerAnnotation}) {
+    textController.text = registerAnnotation.annotation.text ?? '';
   }
 
-  final Annotation? annotation;
+  IRegisterAnnotation registerAnnotation;
   final formKey = GlobalKey<FormState>();
   final TextEditingController textController = TextEditingController();
-  final RegisterAnnotationController controller = RegisterAnnotationController();
-  int? idRevision;
-
-  void message(BuildContext context, String message) {
-    var snackBar = SnackBar(
-      content: Text(message),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  String title() => annotation != null ? "Atualizar" : "Adicionar";
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +24,7 @@ class RegisterAnnotation extends StatelessWidget {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         title: Text(
-          title(),
+          registerAnnotation.message.getTypeQuiz!.name,
           style: const TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
@@ -50,7 +38,9 @@ class RegisterAnnotation extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               DropDownButtonCustom(
-                  onClick: (value) => idRevision = value, idRevision: annotation?.idRevision),
+                onClick: (value) => registerAnnotation.annotation.setIdRevision(value),
+                idRevision: registerAnnotation.annotation.idRevision,
+              ),
               const Text(
                 "Descrição",
                 style: TextStyle(fontSize: 18, color: Colors.grey),
@@ -96,13 +86,15 @@ class RegisterAnnotation extends StatelessWidget {
               label: 'SALVAR',
               onClick: () async {
                 if (!formKey.currentState!.validate()) return;
-                if (!await controller.saveOrUpdate(textController.text,
-                    id: annotation?.id, idRevision: idRevision ?? annotation?.idRevision)) {
-                  return;
-                }
+
+                registerAnnotation.annotation.setId(registerAnnotation.annotation.id);
+                registerAnnotation.annotation.setText(textController.text);
+                registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
+
+                await registerAnnotation.writeAnnotation();
+
                 if (context.mounted) {
-                  message(
-                      context, annotation?.id != null ? 'Atualizado com sucesso' : 'Registrado com sucesso');
+                  MessageUser.message(context, registerAnnotation.message.message);
                   Navigator.pop(context, true);
                 }
               },

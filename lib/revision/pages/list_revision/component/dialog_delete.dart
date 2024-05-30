@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/entities/annotation.dart';
+import 'package:planeje/annotation/utils/find_annotation.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/utils/delete_revision.dart';
 
 import '../../../entities/revision.dart';
-import '../controller/revision_controller.dart';
 
 class DialogDelete {
   static build(
     BuildContext context,
-    RevisionListController revisionController,
     Revision revision,
   ) async {
-    var r = await revisionController.getAnnotationByIdRevision(revision.id!) ?? [];
-    if (r.isNotEmpty) {
+    List<Annotation> result =
+        await GetAnnotation(AnnotationDatabaseDatasource()).getAnnotationWidthIdRevision(revision.id!) ?? [];
+
+    if (result.isNotEmpty) {
       if (!context.mounted) return;
       return await showDialog(
         context: context,
@@ -64,8 +69,10 @@ class DialogDelete {
                   children: [
                     TextButton(
                       onPressed: () async {
-                        var result = await revisionController.onClickDelete(revision.id!);
-                        if (result && context.mounted) {
+                        var result = await DeleteRevision(RevisionDatabaseDataSource())
+                            .deleteRevisionById(revision.id!);
+
+                        if (result != null && context.mounted) {
                           message(context, 'Removido com sucesso');
                           Navigator.pop(context, true);
                         }

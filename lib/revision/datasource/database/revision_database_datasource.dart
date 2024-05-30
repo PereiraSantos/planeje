@@ -1,9 +1,17 @@
 import 'package:planeje/database/app_database.dart';
-import 'package:planeje/revision/datasource/database/revision_dao/find_revision_dao.dart';
+import 'package:planeje/revision/datasource/dao/find_revision_dao.dart';
 
 import '../../entities/revision.dart';
 import '../../entities/revision_time.dart';
-import '../repository/datasource_revision_repository.dart';
+
+abstract class RevisionDataSourceRepository {
+  Future<List<Revision>> findAllRevisions();
+  Future<Revision?> findRevisionById(int id);
+  Future<Revision?> deleteRevisionById(int id);
+  Future<List<RevisionTime>> findRevisionByDescription(String text);
+  Future<int?> updateRevision(Revision revision);
+  Future<int?> insertRevision(Revision revision);
+}
 
 class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
   Future<AppDatabase> getInstance() async {

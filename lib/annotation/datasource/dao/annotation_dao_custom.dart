@@ -1,7 +1,8 @@
 import 'dart:developer';
 
+import 'package:planeje/annotation/entities/annotation_revision.dart';
+
 import '../../../../database/app_database.dart';
-import '../../../entities/annotation_revision.dart';
 
 class AnnotationDaoCustom {
   Future<List<AnnotationRevision>> getAnnotationWidthRevision(AppDatabase databaseInstance) async {

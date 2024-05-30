@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.dart';
 import 'package:planeje/quiz_revision/pages/list_quiz/page/list_quiz.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/entities/date_revision.dart';
+import 'package:planeje/revision/entities/revision.dart';
+import 'package:planeje/revision/utils/find_revision.dart';
+import 'package:planeje/revision/utils/register_date_revision.dart';
+import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/utils/type_message.dart';
 
 import '../../../../dashboard/pages/home.dart';
 import '../../../../usercase/format_date.dart';
 import '../../../../usercase/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
 import '../../../entities/revision_time.dart';
-import '../../register_revision/page/register_revision.dart';
+import '../../register_revision/page/register_revision_page.dart';
 import '../component/dialog_delete.dart';
 import '../component/text_list.dart';
-import '../controller/revision_controller.dart';
 
 class ListRevision extends StatefulWidget {
   const ListRevision({super.key});
@@ -20,8 +27,6 @@ class ListRevision extends StatefulWidget {
 }
 
 class _ListRevisionState extends State<ListRevision> {
-  final RevisionListController revisionController = RevisionListController();
-
   var showFilter = false;
 
   int sizeList = 0;
@@ -53,14 +58,23 @@ class _ListRevisionState extends State<ListRevision> {
   Color? checkColorDate(String? date) {
     if (date == "") return null;
 
-    var result = revisionController.compareDate(date!, (nextDate, dateNow) => nextDate.isBefore(dateNow));
+    var result = compareDate(date!, (nextDate, dateNow) => nextDate.isBefore(dateNow));
     if (result) return const Color.fromARGB(255, 250, 194, 190);
 
-    result = revisionController.compareDate(
+    result = compareDate(
         date, (nextDate, dateNow) => nextDate.day == dateNow.day && nextDate.month == dateNow.month);
     if (result) return const Color.fromARGB(255, 110, 184, 245);
 
     return null;
+  }
+
+  bool compareDate(String date, bool Function(DateTime, DateTime) compare) {
+    DateTime nextDate = FormatDate().dateParse(date);
+    DateTime result = DateTime.now();
+    DateTime dateNow = DateTime(result.year, result.month, result.day);
+
+    if (compare(nextDate, dateNow)) return true;
+    return false;
   }
 
   @override
@@ -77,7 +91,12 @@ class _ListRevisionState extends State<ListRevision> {
           callBackQuiz: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
           callbackAdd: () async {
             var result = await Navigator.of(context).push(
-              TransitionsBuilder.createRoute(RegisterRevision()),
+              TransitionsBuilder.createRoute(
+                RegisterRevisionPage(
+                  revision: Register(RevisionDatabaseDataSource(), Revision(), Message(),
+                      RegisterDateRevision(DateRevisionDatabaseDataSource(), DateRevision())),
+                ),
+              ),
             );
 
             if (result) reloadPage();
@@ -93,7 +112,7 @@ class _ListRevisionState extends State<ListRevision> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: revisionController.getRevision(value: ''),
+          future: GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription(''),
           builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
@@ -106,8 +125,7 @@ class _ListRevisionState extends State<ListRevision> {
                       key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.startToEnd) {
-                          return await DialogDelete.build(
-                              context, revisionController, snapshot.data![index].revision);
+                          return await DialogDelete.build(context, snapshot.data![index].revision);
                         }
                         return null;
                       },
@@ -121,7 +139,15 @@ class _ListRevisionState extends State<ListRevision> {
                           onTap: () async {
                             var result = await Navigator.of(context).push(
                               TransitionsBuilder.createRoute(
-                                RegisterRevision(revisionEntity: snapshot.data![index]),
+                                RegisterRevisionPage(
+                                  revision: Update(
+                                    RevisionDatabaseDataSource(),
+                                    snapshot.data![index].revision,
+                                    Message(TypeMessage.Atualizar),
+                                    UpdateDateRevision(
+                                        DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
+                                  ),
+                                ),
                               ),
                             );
                             if (result) reloadPage();

@@ -1,9 +1,16 @@
-import 'package:planeje/annotation/datasource/repository/annotation_datasource_repository.dart';
+import 'package:planeje/annotation/datasource/dao/annotation_dao_custom.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 
 import '../../../database/app_database.dart';
 import '../../entities/annotation_revision.dart';
-import 'dao/annotation_dao_custom.dart';
+
+abstract class AnnotationDataSourceRepository {
+  Future<int?> insertAnnotation(Annotation annotationEntity);
+  Future<int?> updateAnnotation(Annotation annotationEntity);
+  Future<Annotation?> delete(int id);
+  Future<List<AnnotationRevision>?> getAnnotationWidthRevision();
+  Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
+}
 
 class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
   Future<AppDatabase> getInstance() async {
@@ -17,45 +24,15 @@ class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
   }
 
   @override
-  Future<List<Annotation>> findAllAnnotation() async {
-    final database = await getInstance();
-    return await database.annotationDao.findAllAnnotation();
-  }
-
-  @override
-  Future<Annotation?> findAnnotationById(int id) async {
-    final database = await getInstance();
-    return await database.annotationDao.findAnnotationById(id);
-  }
-
-  @override
   Future<int?> insertAnnotation(Annotation annotationEntity) async {
     final database = await getInstance();
     return await database.annotationDao.insertAnnotation(annotationEntity);
   }
 
   @override
-  Future<Annotation?> updateAnnotation(String text, int id) async {
+  Future<int?> updateAnnotation(Annotation annotationEntity) async {
     final database = await getInstance();
-    return await database.annotationDao.updateAnnotation(text, id);
-  }
-
-  @override
-  Future<Annotation?> updateAnnotationData(String data, int id) async {
-    final database = await getInstance();
-    return await database.annotationDao.updateAnnotationData(data, id);
-  }
-
-  @override
-  Future<Annotation?> updateAnnotationTime(String time, int id) async {
-    final database = await getInstance();
-    return await database.annotationDao.updateAnnotationTime(time, id);
-  }
-
-  @override
-  Future<Annotation?> updateAnnotationRevision(int idRevision, int id) async {
-    final database = await getInstance();
-    return await database.annotationDao.updateAnnotationRevision(idRevision, id);
+    return await database.annotationDao.insertAnnotation(annotationEntity);
   }
 
   @override
@@ -65,8 +42,8 @@ class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
   }
 
   @override
-  Future<List<Annotation>?> findAnnotationByIdRevision(int idRevision) async {
+  Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision) async {
     final database = await getInstance();
-    return await database.annotationDao.findAnnotationByIdRevision(idRevision);
+    return await database.annotationDao.getAnnotationWidthIdRevision(idRevision);
   }
 }

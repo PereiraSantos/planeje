@@ -1,18 +1,19 @@
 import 'package:floor/floor.dart';
+import 'package:planeje/utils/format_date.dart';
 
 @Entity(tableName: 'annotation')
 class Annotation {
   @PrimaryKey(autoGenerate: true)
-  final int? id;
+  int? id;
 
   @ColumnInfo(name: 'text')
-  final String? text;
+  String? text;
 
   @ColumnInfo(name: 'date_text')
-  final String? dateText;
+  String? dateText;
 
   @ColumnInfo(name: 'id_revision')
-  final int? idRevision;
+  int? idRevision;
 
   Annotation({
     this.id,
@@ -20,4 +21,9 @@ class Annotation {
     this.dateText,
     this.idRevision,
   });
+
+  void setId(int? value) => id = value;
+  void setText(String value) => text = value;
+  void setDateText(String? date) => dateText = date ?? FormatDate.formatDate(FormatDate.newDate());
+  void setIdRevision(int? value) => idRevision = value;
 }

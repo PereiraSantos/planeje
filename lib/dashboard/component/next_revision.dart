@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
+import 'package:planeje/revision/pages/register_revision/page/register_revision_page.dart';
+import 'package:planeje/revision/utils/register_date_revision.dart';
+import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/utils/type_message.dart';
 
 import '../../revision/pages/list_revision/component/text_list.dart';
-import '../../revision/pages/register_revision/page/register_revision.dart';
 import '../../usercase/transitions_builder.dart';
 import '../../utils/format_date.dart';
 
@@ -60,9 +65,15 @@ class NextRevision extends StatelessWidget {
                       onTap: () async {
                         var result = await Navigator.of(context).push(
                           TransitionsBuilder.createRoute(
-                            RegisterRevision(
-                                revisionEntity: RevisionTime(
-                                    snapshot.data![index].revision, snapshot.data![index].dateRevision)),
+                            RegisterRevisionPage(
+                              revision: Update(
+                                RevisionDatabaseDataSource(),
+                                snapshot.data![index].revision,
+                                Message(TypeMessage.Atualizar),
+                                UpdateDateRevision(
+                                    DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
+                              ),
+                            ),
                           ),
                         );
                         if (result) finishUpdaterReviser();

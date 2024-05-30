@@ -7,7 +7,8 @@ import 'package:planeje/quiz_revision/utils/register_question/table_question.dar
 import 'package:planeje/quiz_revision/utils/register_quiz/find_list_quiz.dart';
 import 'package:planeje/quiz_revision/utils/register_quiz/remove_quiz.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
-import 'package:planeje/utils/message.dart';
+import 'package:planeje/utils/message_user.dart';
+import 'package:planeje/utils/type_message.dart';
 
 import '../../../../annotation/pages/list_annotation/page/list_annotation.dart';
 import '../../../../dashboard/pages/home.dart';
@@ -46,10 +47,7 @@ class _ListQuizState extends State<ListQuiz> {
             var result = await Navigator.of(context).push(
               TransitionsBuilder.createRoute(
                 RegisterQuizPage(
-                  registerQuiz: SaveQuiz(
-                    datasourceQuiz: QuizDatabase(),
-                    quiz: Quiz()..setTypeQuiz(TypeQuiz.Adicionar),
-                  ),
+                  registerQuiz: SaveQuiz(QuizDatabase(), Quiz(), Message()),
                 ),
               ),
             );
@@ -87,7 +85,7 @@ class _ListQuizState extends State<ListQuiz> {
 
                             await DeleteQuiz(QuizDatabase()).deleteQuiz(snapshot.data![index].id!);
                             if (!context.mounted) return;
-                            Message.message(context, 'Removido com sucesso');
+                            MessageUser.message(context, 'Removido com sucesso');
                             reloadPage();
                           }
                         }
@@ -105,8 +103,9 @@ class _ListQuizState extends State<ListQuiz> {
                               TransitionsBuilder.createRoute(
                                 RegisterQuizPage(
                                   registerQuiz: UpdateQuiz(
-                                    datasourceQuiz: QuizDatabase(),
-                                    quiz: (snapshot.data![index])..setTypeQuiz(TypeQuiz.Atualizar),
+                                    QuizDatabase(),
+                                    (snapshot.data![index]),
+                                    Message(TypeMessage.Atualizar),
                                   ),
                                 ),
                               ),

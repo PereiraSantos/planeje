@@ -1,4 +1,4 @@
-import 'package:planeje/quiz_revision/datasource/repository/datasource_quiz_repository.dart';
+import 'package:planeje/quiz_revision/datasource/database/quiz_database.dart';
 import 'package:planeje/quiz_revision/entities/quiz.dart';
 
 abstract class FindListQuiz {

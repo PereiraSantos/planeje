@@ -335,97 +335,6 @@ class _$AnnotationDao extends AnnotationDao {
   final InsertionAdapter<Annotation> _annotationInsertionAdapter;
 
   @override
-  Future<List<Annotation>> findAllAnnotation() async {
-    return _queryAdapter.queryList('select * from annotation',
-        mapper: (Map<String, Object?> row) => Annotation(
-            id: row['id'] as int?,
-            text: row['text'] as String?,
-            dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?));
-  }
-
-  @override
-  Future<Annotation?> findAnnotationById(int id) async {
-    return _queryAdapter.query('SELECT * FROM annotation WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Annotation(
-            id: row['id'] as int?,
-            text: row['text'] as String?,
-            dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
-        arguments: [id]);
-  }
-
-  @override
-  Future<List<Annotation>?> findAnnotationByIdRevision(int idRevision) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM annotation WHERE id_revision = ?1',
-        mapper: (Map<String, Object?> row) => Annotation(
-            id: row['id'] as int?,
-            text: row['text'] as String?,
-            dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
-        arguments: [idRevision]);
-  }
-
-  @override
-  Future<Annotation?> updateAnnotation(
-    String text,
-    int id,
-  ) async {
-    return _queryAdapter.query('update annotation set text = ?1 WHERE id = ?2',
-        mapper: (Map<String, Object?> row) => Annotation(
-            id: row['id'] as int?,
-            text: row['text'] as String?,
-            dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
-        arguments: [text, id]);
-  }
-
-  @override
-  Future<Annotation?> updateAnnotationRevision(
-    int idRevision,
-    int id,
-  ) async {
-    return _queryAdapter.query(
-        'update annotation set id_revision = ?1 WHERE id = ?2',
-        mapper: (Map<String, Object?> row) => Annotation(
-            id: row['id'] as int?,
-            text: row['text'] as String?,
-            dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
-        arguments: [idRevision, id]);
-  }
-
-  @override
-  Future<Annotation?> updateAnnotationData(
-    String data,
-    int id,
-  ) async {
-    return _queryAdapter.query(
-        'update annotation set date_text = ?1 WHERE id = ?2',
-        mapper: (Map<String, Object?> row) => Annotation(
-            id: row['id'] as int?,
-            text: row['text'] as String?,
-            dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
-        arguments: [data, id]);
-  }
-
-  @override
-  Future<Annotation?> updateAnnotationTime(
-    String time,
-    int id,
-  ) async {
-    return _queryAdapter.query('update annotation set text = ?1 WHERE id = ?2',
-        mapper: (Map<String, Object?> row) => Annotation(
-            id: row['id'] as int?,
-            text: row['text'] as String?,
-            dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
-        arguments: [time, id]);
-  }
-
-  @override
   Future<Annotation?> delete(int id) async {
     return _queryAdapter.query('delete from annotation where id = ?1',
         mapper: (Map<String, Object?> row) => Annotation(
@@ -437,7 +346,25 @@ class _$AnnotationDao extends AnnotationDao {
   }
 
   @override
+  Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision) async {
+    return _queryAdapter.queryList(
+        'select * from  annotation where id_revision = ?1',
+        mapper: (Map<String, Object?> row) => Annotation(
+            id: row['id'] as int?,
+            text: row['text'] as String?,
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?),
+        arguments: [idRevision]);
+  }
+
+  @override
   Future<int> insertAnnotation(Annotation annotationEntity) {
+    return _annotationInsertionAdapter.insertAndReturnId(
+        annotationEntity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateAnnotation(Annotation annotationEntity) {
     return _annotationInsertionAdapter.insertAndReturnId(
         annotationEntity, OnConflictStrategy.abort);
   }
@@ -601,12 +528,6 @@ class _$QuestionDao extends QuestionDao {
   Future<void> deleteQuestionByIdQuiz(int idQuiz) async {
     await _queryAdapter.queryNoReturn('delete FROM question WHERE id_quiz = ?1',
         arguments: [idQuiz]);
-  }
-
-  @override
-  Future<List<int>> insertQuestionList(List<Question> question) {
-    return _questionInsertionAdapter.insertListAndReturnIds(
-        question, OnConflictStrategy.abort);
   }
 
   @override

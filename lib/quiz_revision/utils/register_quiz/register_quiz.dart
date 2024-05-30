@@ -1,19 +1,18 @@
-import 'package:planeje/quiz_revision/datasource/repository/datasource_quiz_repository.dart';
+import 'package:planeje/quiz_revision/datasource/database/quiz_database.dart';
+import 'package:planeje/utils/type_message.dart';
 
 import '../../entities/quiz.dart';
 
 abstract class RegisterQuiz {
   Future<int?> writeQuiz();
   late Quiz quiz;
+  late Message message;
 }
 
 class SaveQuiz implements RegisterQuiz {
   DatasourceQuizRepository datasourceQuiz;
 
-  SaveQuiz({
-    required this.datasourceQuiz,
-    required this.quiz,
-  });
+  SaveQuiz(this.datasourceQuiz, this.quiz, this.message);
 
   @override
   Future<int?> writeQuiz() async {
@@ -22,15 +21,15 @@ class SaveQuiz implements RegisterQuiz {
 
   @override
   Quiz quiz;
+
+  @override
+  Message message;
 }
 
 class UpdateQuiz implements RegisterQuiz {
   DatasourceQuizRepository datasourceQuiz;
 
-  UpdateQuiz({
-    required this.datasourceQuiz,
-    required this.quiz,
-  });
+  UpdateQuiz(this.datasourceQuiz, this.quiz, this.message);
 
   @override
   Future<int?> writeQuiz() async {
@@ -39,4 +38,7 @@ class UpdateQuiz implements RegisterQuiz {
 
   @override
   Quiz quiz;
+
+  @override
+  Message message;
 }

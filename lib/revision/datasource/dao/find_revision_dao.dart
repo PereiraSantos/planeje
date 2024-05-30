@@ -1,8 +1,8 @@
+import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/entities/revision.dart';
+import 'package:planeje/revision/entities/revision_time.dart';
 
 import '../../../../database/app_database.dart';
-import '../../../entities/date_revision.dart';
-import '../../../entities/revision_time.dart';
 
 class FindRevisionDao {
   Future<List<RevisionTime>> findRevision(AppDatabase database) async {

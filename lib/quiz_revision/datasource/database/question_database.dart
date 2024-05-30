@@ -1,7 +1,16 @@
 import 'package:planeje/quiz_revision/entities/question.dart';
 
 import '../../../database/app_database.dart';
-import '../repository/datasource_question_repository.dart';
+
+abstract class DatasourceQuestionRepository {
+  Future<List<Question>?> getAllQuestion();
+  Future<int> insertQuestion(Question question);
+  Future<Question?> getQuestionById(int id);
+  Future<void> deleteQuestion(int id);
+  Future<void> deleteQuestionByIdQuiz(int idQuiz);
+  Future<int> updateQuestion(Question question);
+  Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
+}
 
 class QuestionDatabase implements DatasourceQuestionRepository {
   Future<AppDatabase> getInstance() async {
@@ -24,12 +33,6 @@ class QuestionDatabase implements DatasourceQuestionRepository {
   Future<Question?> getQuestionById(int id) async {
     final database = await getInstance();
     return await database.questionDao.getQuestionById(id);
-  }
-
-  @override
-  Future<List<int>> insertQuestionList(List<Question> question) async {
-    final database = await getInstance();
-    return await database.questionDao.insertQuestionList(question);
   }
 
   @override

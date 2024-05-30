@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/utils/delete_annotation.dart';
+import 'package:planeje/utils/message_user.dart';
 
 import '../../../entities/annotation_revision.dart';
-import '../controller/list_annotation_controller.dart';
 
 class DialogDelete {
   static build(
     BuildContext context,
     AnnotationRevision annotationRevision,
-    ListAnnotattionController listAnnotattionController,
   ) async {
     return await showDialog(
       context: context,
@@ -25,9 +26,11 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var result = await listAnnotattionController.onClickDelete(annotationRevision.id!);
-                      if (result && context.mounted) {
-                        message(context, 'Removido com sucesso');
+                      var result = await DeleteAnnotation(AnnotationDatabaseDatasource())
+                          .delete(annotationRevision.id!);
+
+                      if (result != null && context.mounted) {
+                        MessageUser.message(context, 'Removido com sucesso');
                         Navigator.pop(context, true);
                       }
                     },

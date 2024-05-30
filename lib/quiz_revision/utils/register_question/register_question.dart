@@ -1,4 +1,4 @@
-import 'package:planeje/quiz_revision/datasource/repository/datasource_question_repository.dart';
+import 'package:planeje/quiz_revision/datasource/database/question_database.dart';
 import 'package:planeje/quiz_revision/entities/question.dart';
 import 'package:planeje/quiz_revision/utils/register_question/question_list.dart';
 

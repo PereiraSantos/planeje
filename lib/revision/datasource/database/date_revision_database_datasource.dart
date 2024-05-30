@@ -1,7 +1,14 @@
 import 'package:planeje/revision/entities/date_revision.dart';
 
 import '../../../database/app_database.dart';
-import '../repository/datasource_date_revision_repository.dart';
+
+abstract class DateRevisionDataSourceRepository {
+  Future<List<DateRevision>> findAllDateRevisions();
+  Future<DateRevision?> findDateRevisionById(int id);
+  Future<DateRevision?> deleteDateRevisionById(int id);
+  Future<int> insertDateRevision(DateRevision dateRevision);
+  Future<int> updateDateRevision(DateRevision dateRevision);
+}
 
 class DateRevisionDatabaseDataSource implements DateRevisionDataSourceRepository {
   Future<AppDatabase> getInstance() async {

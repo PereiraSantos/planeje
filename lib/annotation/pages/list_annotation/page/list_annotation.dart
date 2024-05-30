@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/pages/list_annotation/component/dialog_delete.dart';
 import 'package:planeje/annotation/pages/register_annotation/pages/register_annotation.dart';
+import 'package:planeje/annotation/utils/find_annotation.dart';
+import 'package:planeje/annotation/utils/register_annotation.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
+import 'package:planeje/utils/type_message.dart';
 
 import '../../../../dashboard/pages/home.dart';
 import '../../../../quiz_revision/pages/list_quiz/page/list_quiz.dart';
@@ -11,7 +16,6 @@ import '../../../../widgets/app_bar_widget.dart';
 import '../../../entities/annotation_revision.dart';
 import '../component/text_list.dart';
 import '../component/view_annotation.dart';
-import '../controller/list_annotation_controller.dart';
 
 class ListAnnotation extends StatefulWidget {
   const ListAnnotation({super.key});
@@ -21,7 +25,6 @@ class ListAnnotation extends StatefulWidget {
 }
 
 class _ListAnnotationState extends State<ListAnnotation> {
-  final ListAnnotattionController listAnnotattionController = ListAnnotattionController();
   void reloadPage() => setState(() {});
 
   @override
@@ -38,7 +41,15 @@ class _ListAnnotationState extends State<ListAnnotation> {
           callBackQuiz: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
           callbackAdd: () async {
             var result = await Navigator.of(context).push(
-              TransitionsBuilder.createRoute(RegisterAnnotation()),
+              TransitionsBuilder.createRoute(
+                RegisterAnnotation(
+                  registerAnnotation: InsertAnnotation(
+                    AnnotationDatabaseDatasource(),
+                    Annotation(),
+                    Message(),
+                  ),
+                ),
+              ),
             );
 
             if (result) reloadPage();
@@ -51,8 +62,8 @@ class _ListAnnotationState extends State<ListAnnotation> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: listAnnotattionController.getAnnotation(value: ''),
-          builder: (BuildContext context, AsyncSnapshot<List<AnnotationRevision>> snapshot) {
+          future: GetAnnotation(AnnotationDatabaseDatasource()).getAnnotationWidthRevision(),
+          builder: (BuildContext context, AsyncSnapshot<List<AnnotationRevision>?> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
                 return ListView.builder(
@@ -64,8 +75,7 @@ class _ListAnnotationState extends State<ListAnnotation> {
                       key: UniqueKey(),
                       confirmDismiss: (DismissDirection direction) async {
                         if (direction == DismissDirection.startToEnd) {
-                          return await DialogDelete.build(
-                              context, snapshot.data![index], listAnnotattionController);
+                          return await DialogDelete.build(context, snapshot.data![index]);
                         }
                         return null;
                       },
@@ -79,7 +89,13 @@ class _ListAnnotationState extends State<ListAnnotation> {
                           onTap: () async {
                             var result = await Navigator.of(context).push(
                               TransitionsBuilder.createRoute(
-                                RegisterAnnotation(annotation: snapshot.data![index]),
+                                RegisterAnnotation(
+                                  registerAnnotation: UpdateAnnotation(
+                                    AnnotationDatabaseDatasource(),
+                                    snapshot.data![index],
+                                    Message(TypeMessage.Atualizar),
+                                  ),
+                                ),
                               ),
                             );
                             if (result) reloadPage();

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:planeje/quiz_revision/entities/question.dart';
 import 'package:planeje/quiz_revision/utils/register_question/table_question.dart';
 
-import 'package:planeje/utils/message.dart';
+import 'package:planeje/utils/message_user.dart';
 
 import '../../../../../widgets/text_button_widget.dart';
 import '../../../../../widgets/text_form_field_widget.dart';
@@ -33,7 +33,7 @@ class RegisterQuizPage extends StatelessWidget {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         title: Text(
-          registerQuiz.quiz.getTypeQuiz?.name ?? '',
+          registerQuiz.message.getTypeQuiz?.name ?? '',
           style: const TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
@@ -133,11 +133,11 @@ class RegisterQuizPage extends StatelessWidget {
                   }
 
                   if (context.mounted && result != null) {
-                    Message.message(context, registerQuiz.quiz.message);
+                    MessageUser.message(context, registerQuiz.message.message);
                     Navigator.pop(context, true);
                   }
                 } catch (e) {
-                  if (context.mounted) Message.message(context, 'Erro ao registrar!!!');
+                  if (context.mounted) MessageUser.message(context, 'Erro ao registrar!!!');
                 }
               },
             ),

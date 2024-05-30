@@ -1,7 +1,14 @@
 import 'package:planeje/quiz_revision/entities/quiz.dart';
 
 import '../../../database/app_database.dart';
-import '../repository/datasource_quiz_repository.dart';
+
+abstract class DatasourceQuizRepository {
+  Future<List<Quiz>?> getAllQuiz();
+  Future<int> insertQuiz(Quiz quiz);
+  Future<Quiz?> getQuizById(int id);
+  Future<Quiz?> deleteQuiz(int id);
+  Future<int> updateQuiz(Quiz quiz);
+}
 
 class QuizDatabase implements DatasourceQuizRepository {
   Future<AppDatabase> getInstance() async {

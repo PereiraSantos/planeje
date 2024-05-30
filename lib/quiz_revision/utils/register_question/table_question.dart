@@ -4,7 +4,7 @@ import 'package:planeje/quiz_revision/entities/question.dart';
 import 'package:planeje/quiz_revision/utils/register_question/question_list.dart';
 import 'package:planeje/quiz_revision/utils/register_question/register_question.dart';
 import 'package:planeje/quiz_revision/utils/register_question/remove_question.dart';
-import 'package:planeje/utils/message.dart';
+import 'package:planeje/utils/message_user.dart';
 
 class TableQuestionNotifier with ChangeNotifier {
   RegisterQuestion registerQuestion = SaveQuestion(QuestionDatabase());
@@ -45,13 +45,13 @@ class TableQuestionNotifier with ChangeNotifier {
 
   bool listQuestionuestionIsEmpty(BuildContext context) {
     if (questions.isNotEmpty) return true;
-    Message.message(context, 'Obrigatório adicionar registro');
+    MessageUser.message(context, 'Obrigatório adicionar registro');
     return false;
   }
 
   bool isAnwserByListQuestion(BuildContext context) {
     if (_isAnwser()) return true;
-    Message.message(context, 'Obrigatório marcar uma resposta');
+    MessageUser.message(context, 'Obrigatório marcar uma resposta');
     return false;
   }
 

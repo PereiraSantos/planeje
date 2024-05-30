@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/utils/find_revision.dart';
 import '../../../../revision/entities/revision_time.dart';
-import '../../../../revision/pages/list_revision/controller/revision_controller.dart';
 
 // ignore: must_be_immutable
 class DropDownButtonCustom extends StatelessWidget {
@@ -19,7 +20,7 @@ class DropDownButtonCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: RevisionListController().getRevision(value: ''),
+      future: GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription(''),
       builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isNotEmpty) {
