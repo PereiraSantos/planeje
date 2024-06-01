@@ -16,6 +16,7 @@ class RegisterRevisionPage extends StatelessWidget {
   IRevision revision;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
+  String nextDate = '';
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class RegisterRevisionPage extends StatelessWidget {
                 ),
                 ChangeDateNextReview(
                   revisionEntity: revision.registerDate.date,
-                  onClickCalendar: (value) => revision.registerDate.date.setNextDate = value,
+                  onClickCalendar: (value) => nextDate = value,
                 ),
               ],
             ),
@@ -85,7 +86,7 @@ class RegisterRevisionPage extends StatelessWidget {
                   revision.registerDate.date.setHourInit = revision.registerDate.date.hourInit;
                   revision.registerDate.date.setHourEnd = revision.registerDate.date.hourEnd;
                   revision.registerDate.date.setIdRevision = revision.revision.id ?? idRevision;
-                  revision.registerDate.date.setNextDate = revision.registerDate.date.nextDate;
+                  revision.registerDate.date.setNextDate = nextDate;
 
                   await revision.registerDate.writeDateRevision();
 

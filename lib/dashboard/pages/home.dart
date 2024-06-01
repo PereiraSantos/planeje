@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.dart';
+import 'package:planeje/dashboard/utils/find_revision.dart';
+import 'package:planeje/dashboard/utils/next_revision_time.dart';
+import 'package:planeje/dashboard/controller/reviser_notifier.dart';
+import 'package:planeje/dashboard/utils/valid_date.dart';
 import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
 import 'package:planeje/revision/entities/date_revision.dart';
@@ -15,7 +19,6 @@ import '../../usercase/transitions_builder.dart';
 import '../../widgets/app_bar_widget.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';
-import '../controller/dashboard_controller.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -27,13 +30,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   void reloadPage() => setState(() {});
 
-  final DashboardController dashboardController = DashboardController();
+  final ReviserNotifier reviserNotifier = ReviserNotifier();
 
   @override
   void initState() {
     super.initState();
-    dashboardController.getDelayedRevision();
-    dashboardController.getCompletedRevision();
+
+    GetDelayedRevision(ValidateIsBefore(), reviserNotifier).getRevision();
+    GetCompletedRevision(ValidateIsAfter(), reviserNotifier).getRevision();
   }
 
   @override
@@ -42,7 +46,7 @@ class _HomeState extends State<Home> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55.0),
         child: ListenableBuilder(
-          listenable: dashboardController.reviserNotifier,
+          listenable: reviserNotifier,
           builder: (BuildContext context, Widget? child) {
             return AppBarWidget(
               callbackHome: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const Home())),
@@ -69,7 +73,7 @@ class _HomeState extends State<Home> {
               },
               colorHome: Colors.black54,
               showAction: false,
-              quantity: dashboardController.reviserNotifier.quantityDelayed,
+              quantity: reviserNotifier.quantityDelayed,
             );
           },
         ),
@@ -77,22 +81,19 @@ class _HomeState extends State<Home> {
       backgroundColor: const Color(0xffffffff),
       body: SingleChildScrollView(
         child: ListenableBuilder(
-          listenable: dashboardController.reviserNotifier,
+          listenable: reviserNotifier,
           builder: (BuildContext context, Widget? child) {
             return Column(
               children: [
                 ReviserLate(
-                    quantityCompleted: dashboardController.reviserNotifier.quantityCompleted,
-                    quantityDelayed: dashboardController.reviserNotifier.quantityDelayed),
-                /*  HourReviser(
-                    month: dashboardController.reviserNotifier.quantityHourMonth,
-                    week: dashboardController.reviserNotifier.quantityHourWeek),*/
+                    quantityCompleted: reviserNotifier.quantityCompleted,
+                    quantityDelayed: reviserNotifier.quantityDelayed),
                 NextRevision(
-                    future: dashboardController.getNextRevisionLate(),
+                    future: NetRevisionTime(ValidateIsBefore()).getNextRevision(),
                     text: 'Próxima revisão atrasada',
                     finishUpdaterReviser: () => reloadPage()),
                 NextRevision(
-                  future: dashboardController.getNextRevision(),
+                  future: NetRevisionTime(ValidateIsAfter()).getNextRevision(),
                   text: 'Próxima revisão',
                   finishUpdaterReviser: () => reloadPage(),
                 ),

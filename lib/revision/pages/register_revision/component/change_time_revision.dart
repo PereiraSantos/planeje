@@ -3,8 +3,12 @@ import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/pages/register_revision/component/time_revision.dart';
 
 class ChangeTimeRevision extends StatefulWidget {
-  const ChangeTimeRevision(
-      {super.key, required this.onClickTimeInit, required this.onClickTimeEnd, this.revisionEntity});
+  const ChangeTimeRevision({
+    super.key,
+    required this.onClickTimeInit,
+    required this.onClickTimeEnd,
+    this.revisionEntity,
+  });
 
   final Function(String time) onClickTimeInit;
   final Function(String time) onClickTimeEnd;

@@ -4,7 +4,6 @@ import 'package:planeje/revision/entities/date_revision.dart';
 import '../../../../utils/format_date.dart';
 import '../../../../widgets/text_form_field_widget.dart';
 
-import 'check_box.dart';
 import 'date_review.dart';
 
 class ChangeDateNextReview extends StatefulWidget {
@@ -23,31 +22,21 @@ class ChangeDateNextReview extends StatefulWidget {
 
 class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
   String dateNextRevision = '';
-  bool status = false;
-  final TextEditingController day = TextEditingController(text: '30');
+  final TextEditingController day = TextEditingController();
   bool show = false;
-  List<String> dates = [];
-  bool digitated = false;
 
   void generateNextRevision({int? value, bool? edit = false}) {
     var dateTemp = FormatDate.formatDate(FormatDate.newDate());
 
     if (widget.revisionEntity?.nextDate != null) dateTemp = widget.revisionEntity!.nextDate!;
-    if (status && dateNextRevision != '') dateTemp = dateNextRevision;
+    if (dateNextRevision != '') dateTemp = dateNextRevision;
     if (edit!) {
       dateTemp = widget.revisionEntity!.nextDate ?? FormatDate.formatDate(FormatDate.newDate());
     }
 
     dateNextRevision = nextRevision(dateTemp, value ?? int.parse(day.text));
 
-    dates.add(dateNextRevision);
-  }
-
-  void lastDate() {
-    if (!status) {
-      dates.removeLast();
-      dateNextRevision = dates.last;
-    }
+    widget.onClickCalendar(dateNextRevision);
   }
 
   String nextRevision(String date, int day) {
@@ -61,30 +50,15 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
     return FormatDate.formatDate(dateTemp);
   }
 
-  String review() {
-    try {
-      if (status && widget.revisionEntity?.nextDate != null && widget.revisionEntity?.nextDate != "") {
-        return 'em ${dates[dates.length - 2]}';
-      }
-    } catch (e) {
-      return '';
-    }
-    return '';
-  }
-
   void setDate(DateTime picked) {
     dateNextRevision = FormatDate.formatDate(picked);
     widget.onClickCalendar(dateNextRevision);
   }
 
-  bool validDayIsNull() {
-    if (day.text == '') return false;
-    return true;
-  }
-
   @override
   void initState() {
     super.initState();
+    day.text = widget.revisionEntity?.id != null ? '0' : '30';
     generateNextRevision();
   }
 
@@ -95,8 +69,6 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
         DateReview(
           dateNextRevision: dateNextRevision,
           onClickCalendar: (picked) {
-            if (picked.isBefore(DateTime.now())) status = false;
-
             setDate(picked);
             setState(() {});
           },
@@ -121,9 +93,17 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
                       controller: day,
                       keyboardType: TextInputType.number,
                       onChange: (value) {
-                        show = value != '' && (int.parse(value!) > 999 || value.length > 3) ? true : false;
+                        day.text = value.toString().trim().replaceAll(RegExp(r'[.,-]'), '');
 
-                        generateNextRevision(value: value != '' ? null : 0, edit: true);
+                        show = false;
+
+                        if ((day.text != '' && (int.parse(day.text) > 100)) || day.text.length > 2) {
+                          show = true;
+                          day.text = day.text.substring(0, day.text.length - 1);
+                        }
+
+                        if (!show) generateNextRevision(value: day.text != '' ? null : 0, edit: true);
+
                         setState(() {});
                       },
                       valid: false,
@@ -141,25 +121,10 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
               child: const Padding(
                 padding: EdgeInsets.only(left: 20, right: 20),
                 child: Text(
-                  'Máximo de dias 999.',
+                  'Permitido de 0 a 100 dias.',
                   style: TextStyle(fontSize: 14, color: Colors.red),
                 ),
               ),
-            ),
-            CheckBoxComponent(
-              label: 'Revisado ${review()}',
-              onClick: (value) {
-                if (!validDayIsNull()) {
-                  day.selection = TextSelection.fromPosition(TextPosition(offset: day.text.length));
-                }
-
-                status = value;
-                lastDate();
-                if (status) generateNextRevision(value: day.text != '' ? null : 0);
-                widget.onClickCalendar(dateNextRevision);
-                setState(() {});
-              },
-              isChecked: status,
             ),
           ],
         ),
