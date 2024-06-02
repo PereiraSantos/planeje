@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/usercase/string_extension.dart';
+import 'package:planeje/utils/string_extension.dart';
 
 class TextList extends StatelessWidget {
   final String annotationEntity;

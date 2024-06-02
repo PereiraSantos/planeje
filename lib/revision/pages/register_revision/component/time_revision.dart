@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/utils/format_date.dart';
 
-import '../../../../usercase/time_mask.dart';
+import '../../../../utils/time_mask.dart';
 import '../../../../widgets/text_form_field_widget.dart';
 
 // ignore: must_be_immutable

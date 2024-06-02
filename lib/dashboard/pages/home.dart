@@ -15,7 +15,7 @@ import 'package:planeje/utils/type_message.dart';
 import '../../quiz_revision/pages/list_quiz/page/list_quiz.dart';
 import '../../revision/entities/revision.dart';
 import '../../revision/pages/list_revision/page/list_revision.dart';
-import '../../usercase/transitions_builder.dart';
+import '../../utils/transitions_builder.dart';
 import '../../widgets/app_bar_widget.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';

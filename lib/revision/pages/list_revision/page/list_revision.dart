@@ -8,11 +8,11 @@ import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/utils/find_revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/utils/format_date.dart';
 import 'package:planeje/utils/type_message.dart';
 
 import '../../../../dashboard/pages/home.dart';
-import '../../../../usercase/format_date.dart';
-import '../../../../usercase/transitions_builder.dart';
+import '../../../../utils/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
 import '../../../entities/revision_time.dart';
 import '../../register_revision/page/register_revision_page.dart';
@@ -69,7 +69,7 @@ class _ListRevisionState extends State<ListRevision> {
   }
 
   bool compareDate(String date, bool Function(DateTime, DateTime) compare) {
-    DateTime nextDate = FormatDate().dateParse(date);
+    DateTime nextDate = FormatDate.dateParse(date);
     DateTime result = DateTime.now();
     DateTime dateNow = DateTime(result.year, result.month, result.day);
 
@@ -191,7 +191,7 @@ class _ListRevisionState extends State<ListRevision> {
                                         width: double.maxFinite,
                                         child: TextCard(
                                           padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                          revisionEntity: FormatDate().formatDateString(
+                                          revisionEntity: FormatDate.formatDateString(
                                               '${snapshot.data![index].revision.dateCreational}'),
                                           maxLines: 5,
                                         ),
@@ -211,7 +211,7 @@ class _ListRevisionState extends State<ListRevision> {
                                         child: TextCard(
                                           padding:
                                               const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                          revisionEntity: FormatDate().formatDateString(
+                                          revisionEntity: FormatDate.formatDateString(
                                               '${snapshot.data![index].dateRevision.nextDate}'),
                                           maxLines: 5,
                                         ),
@@ -225,7 +225,7 @@ class _ListRevisionState extends State<ListRevision> {
                                         child: TextCard(
                                           padding:
                                               const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                          revisionEntity: FormatDate().formatTimeString(
+                                          revisionEntity: FormatDate.formatTimeString(
                                               '${snapshot.data![index].dateRevision.hourInit}'),
                                           maxLines: 5,
                                         ),
@@ -239,7 +239,7 @@ class _ListRevisionState extends State<ListRevision> {
                                         child: TextCard(
                                           padding:
                                               const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                          revisionEntity: FormatDate().formatTimeString(
+                                          revisionEntity: FormatDate.formatTimeString(
                                               '${snapshot.data![index].dateRevision.hourEnd}'),
                                           maxLines: 5,
                                         ),

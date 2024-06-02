@@ -12,7 +12,7 @@ import 'package:planeje/utils/type_message.dart';
 
 import '../../../../annotation/pages/list_annotation/page/list_annotation.dart';
 import '../../../../dashboard/pages/home.dart';
-import '../../../../usercase/transitions_builder.dart';
+import '../../../../utils/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
 import '../../../datasource/database/quiz_database.dart';
 import '../../../entities/question.dart';

@@ -6,12 +6,12 @@ import 'package:planeje/annotation/pages/register_annotation/pages/register_anno
 import 'package:planeje/annotation/utils/find_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
+import 'package:planeje/utils/format_date.dart';
 import 'package:planeje/utils/type_message.dart';
 
 import '../../../../dashboard/pages/home.dart';
 import '../../../../quiz_revision/pages/list_quiz/page/list_quiz.dart';
-import '../../../../usercase/format_date.dart';
-import '../../../../usercase/transitions_builder.dart';
+import '../../../../utils/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget.dart';
 import '../../../entities/annotation_revision.dart';
 import '../component/text_list.dart';
@@ -160,8 +160,7 @@ class _ListAnnotationState extends State<ListAnnotation> {
                                     )
                                   ],
                                 ),
-                                TextList.date(
-                                    FormatDate().formatDateWek(snapshot.data![index].dateText ?? "")),
+                                TextList.date(FormatDate.formatDateWek(snapshot.data![index].dateText ?? "")),
                               ],
                             ),
                           ),

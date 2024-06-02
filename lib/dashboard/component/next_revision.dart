@@ -8,7 +8,7 @@ import 'package:planeje/revision/utils/register_revision.dart';
 import 'package:planeje/utils/type_message.dart';
 
 import '../../revision/pages/list_revision/component/text_list.dart';
-import '../../usercase/transitions_builder.dart';
+import '../../utils/transitions_builder.dart';
 import '../../utils/format_date.dart';
 
 class NextRevision extends StatelessWidget {
