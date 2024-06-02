@@ -88,9 +88,9 @@ class RegisterRevisionPage extends StatelessWidget {
                   revision.registerDate.date.setIdRevision = revision.revision.id ?? idRevision;
                   revision.registerDate.date.setNextDate = nextDate;
 
-                  await revision.registerDate.writeDateRevision();
+                  var result = await revision.registerDate.writeDateRevision();
 
-                  if (context.mounted) {
+                  if (result != null && context.mounted) {
                     MessageUser.message(context, revision.message.message);
                     Navigator.pop(context, true);
                   }

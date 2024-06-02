@@ -6,14 +6,14 @@ import 'package:planeje/quiz_revision/utils/register_question/remove_question.da
 import 'package:planeje/quiz_revision/utils/register_question/table_question.dart';
 import 'package:planeje/quiz_revision/utils/register_quiz/find_list_quiz.dart';
 import 'package:planeje/quiz_revision/utils/register_quiz/remove_quiz.dart';
-import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
+import 'package:planeje/utils/app_bar/annotation_app_bar.dart';
+import 'package:planeje/utils/app_bar/home_app_bar.dart';
+import 'package:planeje/utils/app_bar/quiz_app_bar.dart';
+import 'package:planeje/utils/app_bar/revision_app_bar.dart';
 import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/type_message.dart';
-
-import '../../../../annotation/pages/list_annotation/page/list_annotation.dart';
-import '../../../../dashboard/pages/home.dart';
 import '../../../../utils/transitions_builder.dart';
-import '../../../../widgets/app_bar_widget.dart';
+import '../../../../widgets/app_bar_widget/app_bar_widget.dart';
 import '../../../datasource/database/quiz_database.dart';
 import '../../../entities/question.dart';
 import '../../../utils/register_quiz/register_quiz.dart';
@@ -37,27 +37,13 @@ class _ListQuizState extends State<ListQuiz> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55.0),
         child: AppBarWidget(
-          callbackHome: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const Home())),
-          callbackReviser: () =>
-              Navigator.of(context).push(TransitionsBuilder.createRoute(const ListRevision())),
-          callbackAnnotation: () =>
-              Navigator.of(context).push(TransitionsBuilder.createRoute(const ListAnnotation())),
-          callBackQuiz: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
-          callbackAdd: () async {
-            var result = await Navigator.of(context).push(
-              TransitionsBuilder.createRoute(
-                RegisterQuizPage(
-                  registerQuiz: SaveQuiz(QuizDatabase(), Quiz(), Message()),
-                ),
-              ),
-            );
-
-            if (result) reloadPage();
-          },
-          callbackFilter: () {
-            reloadPage();
-          },
-          colorQuiz: Colors.black54,
+          actions: [QuizAppBar(reloadPage: reloadPage).buildAdd(context)],
+          child: [
+            HomeAppBar().build(context),
+            RevisionAppBar(reloadPage: reloadPage).build(context),
+            AnnotationAppBar(reloadPage: reloadPage).build(context),
+            QuizAppBar(reloadPage: reloadPage, color: Colors.black54).build(context),
+          ],
         ),
       ),
       body: SingleChildScrollView(

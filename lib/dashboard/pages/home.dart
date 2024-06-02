@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.dart';
 import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/utils/next_revision_time.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
 import 'package:planeje/dashboard/utils/valid_date.dart';
-import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
-import 'package:planeje/revision/entities/date_revision.dart';
-import 'package:planeje/revision/pages/register_revision/page/register_revision_page.dart';
-import 'package:planeje/revision/utils/register_date_revision.dart';
-import 'package:planeje/revision/utils/register_revision.dart';
-import 'package:planeje/utils/type_message.dart';
-
-import '../../quiz_revision/pages/list_quiz/page/list_quiz.dart';
-import '../../revision/entities/revision.dart';
-import '../../revision/pages/list_revision/page/list_revision.dart';
-import '../../utils/transitions_builder.dart';
-import '../../widgets/app_bar_widget.dart';
+import 'package:planeje/utils/app_bar/annotation_app_bar.dart';
+import 'package:planeje/utils/app_bar/home_app_bar.dart';
+import 'package:planeje/utils/app_bar/quiz_app_bar.dart';
+import 'package:planeje/utils/app_bar/revision_app_bar.dart';
+import '../../widgets/app_bar_widget/app_bar_widget.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';
 
@@ -49,31 +40,13 @@ class _HomeState extends State<Home> {
           listenable: reviserNotifier,
           builder: (BuildContext context, Widget? child) {
             return AppBarWidget(
-              callbackHome: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const Home())),
-              callbackReviser: () =>
-                  Navigator.of(context).push(TransitionsBuilder.createRoute(const ListRevision())),
-              callbackAnnotation: () =>
-                  Navigator.of(context).push(TransitionsBuilder.createRoute(const ListAnnotation())),
-              callBackQuiz: () =>
-                  Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
-              callbackAdd: () async {
-                var result = await Navigator.of(context).push(
-                  TransitionsBuilder.createRoute(
-                    RegisterRevisionPage(
-                      revision: Register(RevisionDatabaseDataSource(), Revision(), Message(),
-                          RegisterDateRevision(DateRevisionDatabaseDataSource(), DateRevision())),
-                    ),
-                  ),
-                );
-
-                if (result) reloadPage();
-              },
-              callbackFilter: () {
-                reloadPage();
-              },
-              colorHome: Colors.black54,
-              showAction: false,
-              quantity: reviserNotifier.quantityDelayed,
+              actions: [HomeAppBar(quantity: reviserNotifier.quantityDelayed).buildNotification(context)],
+              child: [
+                HomeAppBar(quantity: reviserNotifier.quantityDelayed, color: Colors.black54).build(context),
+                RevisionAppBar(reloadPage: reloadPage).build(context),
+                AnnotationAppBar(reloadPage: reloadPage).build(context),
+                QuizAppBar(reloadPage: reloadPage).build(context),
+              ],
             );
           },
         ),

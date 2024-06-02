@@ -13,8 +13,8 @@ abstract class DateRevisionDao {
   Future<DateRevision?> deleteDateRevisionById(int id);
 
   @update
-  Future<int> updateDateRevision(DateRevision dateRevision);
+  Future<int?> updateDateRevision(DateRevision dateRevision);
 
   @insert
-  Future<int> insertDateRevision(DateRevision dateRevision);
+  Future<int?> insertDateRevision(DateRevision dateRevision);
 }

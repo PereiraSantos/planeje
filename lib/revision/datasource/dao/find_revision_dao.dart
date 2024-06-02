@@ -32,6 +32,3 @@ class FindRevisionDao {
     return listRevisionTime;
   }
 }
-
-
-// database.query('SELECT * FROM revision');

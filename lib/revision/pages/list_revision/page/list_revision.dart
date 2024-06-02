@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.dart';
-import 'package:planeje/quiz_revision/pages/list_quiz/page/list_quiz.dart';
 import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
-import 'package:planeje/revision/entities/date_revision.dart';
-import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/utils/find_revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/utils/app_bar/annotation_app_bar.dart';
+import 'package:planeje/utils/app_bar/home_app_bar.dart';
+import 'package:planeje/utils/app_bar/quiz_app_bar.dart';
+import 'package:planeje/utils/app_bar/revision_app_bar.dart';
 import 'package:planeje/utils/format_date.dart';
 import 'package:planeje/utils/type_message.dart';
 
-import '../../../../dashboard/pages/home.dart';
 import '../../../../utils/transitions_builder.dart';
-import '../../../../widgets/app_bar_widget.dart';
+import '../../../../widgets/app_bar_widget/app_bar_widget.dart';
 import '../../../entities/revision_time.dart';
 import '../../register_revision/page/register_revision_page.dart';
 import '../component/dialog_delete.dart';
@@ -83,31 +82,13 @@ class _ListRevisionState extends State<ListRevision> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55.0),
         child: AppBarWidget(
-          callbackHome: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const Home())),
-          callbackReviser: () =>
-              Navigator.of(context).push(TransitionsBuilder.createRoute(const ListRevision())),
-          callbackAnnotation: () =>
-              Navigator.of(context).push(TransitionsBuilder.createRoute(const ListAnnotation())),
-          callBackQuiz: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
-          callbackAdd: () async {
-            var result = await Navigator.of(context).push(
-              TransitionsBuilder.createRoute(
-                RegisterRevisionPage(
-                  revision: Register(RevisionDatabaseDataSource(), Revision(), Message(),
-                      RegisterDateRevision(DateRevisionDatabaseDataSource(), DateRevision())),
-                ),
-              ),
-            );
-
-            if (result) reloadPage();
-          },
-          callbackFilter: () {
-            if (sizeList > 0) {
-              showFilter = !showFilter;
-              reloadPage();
-            }
-          },
-          colorReviser: Colors.black54,
+          actions: [RevisionAppBar(reloadPage: reloadPage).buildAdd(context)],
+          child: [
+            HomeAppBar().build(context),
+            RevisionAppBar(reloadPage: reloadPage, color: Colors.black54).build(context),
+            AnnotationAppBar(reloadPage: reloadPage).build(context),
+            QuizAppBar(reloadPage: reloadPage).build(context),
+          ],
         ),
       ),
       body: SingleChildScrollView(

@@ -6,8 +6,8 @@ abstract class DateRevisionDataSourceRepository {
   Future<List<DateRevision>> findAllDateRevisions();
   Future<DateRevision?> findDateRevisionById(int id);
   Future<DateRevision?> deleteDateRevisionById(int id);
-  Future<int> insertDateRevision(DateRevision dateRevision);
-  Future<int> updateDateRevision(DateRevision dateRevision);
+  Future<int?> insertDateRevision(DateRevision dateRevision);
+  Future<int?> updateDateRevision(DateRevision dateRevision);
 }
 
 class DateRevisionDatabaseDataSource implements DateRevisionDataSourceRepository {
@@ -34,13 +34,13 @@ class DateRevisionDatabaseDataSource implements DateRevisionDataSourceRepository
   }
 
   @override
-  Future<int> insertDateRevision(DateRevision dateRevision) async {
+  Future<int?> insertDateRevision(DateRevision dateRevision) async {
     final database = await getInstance();
     return await database.dateRevisionDao.insertDateRevision(dateRevision);
   }
 
   @override
-  Future<int> updateDateRevision(DateRevision dateRevision) async {
+  Future<int?> updateDateRevision(DateRevision dateRevision) async {
     final database = await getInstance();
     return await database.dateRevisionDao.updateDateRevision(dateRevision);
   }

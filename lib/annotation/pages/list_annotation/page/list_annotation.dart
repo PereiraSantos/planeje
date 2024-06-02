@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/datasource/database/database_datasource.dart';
-import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/pages/list_annotation/component/dialog_delete.dart';
 import 'package:planeje/annotation/pages/register_annotation/pages/register_annotation.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
-import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
+import 'package:planeje/utils/app_bar/annotation_app_bar.dart';
+import 'package:planeje/utils/app_bar/home_app_bar.dart';
+import 'package:planeje/utils/app_bar/quiz_app_bar.dart';
+import 'package:planeje/utils/app_bar/revision_app_bar.dart';
 import 'package:planeje/utils/format_date.dart';
 import 'package:planeje/utils/type_message.dart';
-
-import '../../../../dashboard/pages/home.dart';
-import '../../../../quiz_revision/pages/list_quiz/page/list_quiz.dart';
 import '../../../../utils/transitions_builder.dart';
-import '../../../../widgets/app_bar_widget.dart';
+import '../../../../widgets/app_bar_widget/app_bar_widget.dart';
 import '../../../entities/annotation_revision.dart';
 import '../component/text_list.dart';
 import '../component/view_annotation.dart';
@@ -33,31 +32,13 @@ class _ListAnnotationState extends State<ListAnnotation> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55.0),
         child: AppBarWidget(
-          callbackHome: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const Home())),
-          callbackReviser: () =>
-              Navigator.of(context).push(TransitionsBuilder.createRoute(const ListRevision())),
-          callbackAnnotation: () =>
-              Navigator.of(context).push(TransitionsBuilder.createRoute(const ListAnnotation())),
-          callBackQuiz: () => Navigator.of(context).push(TransitionsBuilder.createRoute(const ListQuiz())),
-          callbackAdd: () async {
-            var result = await Navigator.of(context).push(
-              TransitionsBuilder.createRoute(
-                RegisterAnnotation(
-                  registerAnnotation: InsertAnnotation(
-                    AnnotationDatabaseDatasource(),
-                    Annotation(),
-                    Message(),
-                  ),
-                ),
-              ),
-            );
-
-            if (result) reloadPage();
-          },
-          callbackFilter: () {
-            reloadPage();
-          },
-          colorAnnotation: Colors.black54,
+          actions: [AnnotationAppBar(reloadPage: reloadPage).buildAdd(context)],
+          child: [
+            HomeAppBar().build(context),
+            RevisionAppBar(reloadPage: reloadPage).build(context),
+            AnnotationAppBar(reloadPage: reloadPage, color: Colors.black54).build(context),
+            QuizAppBar(reloadPage: reloadPage).build(context),
+          ],
         ),
       ),
       body: SingleChildScrollView(
