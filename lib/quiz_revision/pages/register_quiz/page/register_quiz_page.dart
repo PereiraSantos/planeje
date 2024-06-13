@@ -3,6 +3,7 @@ import 'package:planeje/quiz_revision/entities/question.dart';
 import 'package:planeje/quiz_revision/utils/register_question/table_question.dart';
 
 import 'package:planeje/utils/message_user.dart';
+import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
 
 import '../../../../../widgets/text_button_widget.dart';
 import '../../../../../widgets/text_form_field_widget.dart';
@@ -104,45 +105,39 @@ class RegisterQuizPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: Container(
-        color: const Color(0xffffffff),
-        padding: const EdgeInsets.only(bottom: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButtonWidget(label: 'CANCELA', onClick: () => Navigator.pop(context, false)),
-            TextButtonWidget(
-              label: 'SALVAR',
-              onClick: () async {
-                try {
-                  if (!formKey.currentState!.validate()) return;
+      bottomSheet: BottomSheetWidget(
+        children: [
+          TextButtonWidget.cancel(() => Navigator.pop(context, false)),
+          TextButtonWidget.save(
+            () async {
+              try {
+                if (!formKey.currentState!.validate()) return;
 
-                  if (!_tableQuestionNotifier.listQuestionuestionIsEmpty(context)) return;
+                if (!_tableQuestionNotifier.listQuestionuestionIsEmpty(context)) return;
 
-                  if (!_tableQuestionNotifier.isAnwserByListQuestion(context)) return;
+                if (!_tableQuestionNotifier.isAnwserByListQuestion(context)) return;
 
-                  registerQuiz.quiz.setId(registerQuiz.quiz.id);
-                  registerQuiz.quiz.setTopic(topic.text);
-                  registerQuiz.quiz.setDescription(description.text);
+                registerQuiz.quiz.setId(registerQuiz.quiz.id);
+                registerQuiz.quiz.setTopic(topic.text);
+                registerQuiz.quiz.setDescription(description.text);
 
-                  var result = await registerQuiz.writeQuiz();
+                var result = await registerQuiz.writeQuiz();
 
-                  if (result != null) {
-                    if (registerQuiz.quiz.id != null) result = registerQuiz.quiz.id;
-                    await _tableQuestionNotifier.updateIdQuiz(result!);
-                  }
-
-                  if (context.mounted && result != null) {
-                    MessageUser.message(context, registerQuiz.message.message);
-                    Navigator.pop(context, true);
-                  }
-                } catch (e) {
-                  if (context.mounted) MessageUser.message(context, 'Erro ao registrar!!!');
+                if (result != null) {
+                  if (registerQuiz.quiz.id != null) result = registerQuiz.quiz.id;
+                  await _tableQuestionNotifier.updateIdQuiz(result!);
                 }
-              },
-            ),
-          ],
-        ),
+
+                if (context.mounted && result != null) {
+                  MessageUser.message(context, registerQuiz.message.message);
+                  Navigator.pop(context, true);
+                }
+              } catch (e) {
+                if (context.mounted) MessageUser.message(context, 'Erro ao registrar!!!');
+              }
+            },
+          ),
+        ],
       ),
     );
   }

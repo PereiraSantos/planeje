@@ -6,6 +6,9 @@ class TextButtonWidget extends StatelessWidget {
   final String label;
   final Function onClick;
 
+  factory TextButtonWidget.cancel(Function onClick) => TextButtonWidget(label: 'CANCELA', onClick: onClick);
+  factory TextButtonWidget.save(Function onClick) => TextButtonWidget(label: 'SALVAR', onClick: onClick);
+
   @override
   Widget build(BuildContext context) {
     return Padding(

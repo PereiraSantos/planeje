@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
 import 'package:planeje/utils/message_user.dart';
+import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
 
 import '../../../../widgets/text_button_widget.dart';
 import '../component/drop_down_revision.dart';
@@ -75,32 +76,26 @@ class RegisterAnnotation extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: Container(
-        color: const Color(0xffffffff),
-        padding: const EdgeInsets.only(bottom: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButtonWidget(label: 'CANCELA', onClick: () => Navigator.pop(context, false)),
-            TextButtonWidget(
-              label: 'SALVAR',
-              onClick: () async {
-                if (!formKey.currentState!.validate()) return;
+      bottomSheet: BottomSheetWidget(
+        children: [
+          TextButtonWidget.cancel(() => Navigator.pop(context, false)),
+          TextButtonWidget.save(
+            () async {
+              if (!formKey.currentState!.validate()) return;
 
-                registerAnnotation.annotation.setId(registerAnnotation.annotation.id);
-                registerAnnotation.annotation.setText(textController.text);
-                registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
+              registerAnnotation.annotation.setId(registerAnnotation.annotation.id);
+              registerAnnotation.annotation.setText(textController.text);
+              registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
 
-                await registerAnnotation.writeAnnotation();
+              await registerAnnotation.writeAnnotation();
 
-                if (context.mounted) {
-                  MessageUser.message(context, registerAnnotation.message.message);
-                  Navigator.pop(context, true);
-                }
-              },
-            ),
-          ],
-        ),
+              if (context.mounted) {
+                MessageUser.message(context, registerAnnotation.message.message);
+                Navigator.pop(context, true);
+              }
+            },
+          ),
+        ],
       ),
     );
   }

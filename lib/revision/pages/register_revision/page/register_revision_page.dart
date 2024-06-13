@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
 import '../../../../utils/message_user.dart';
 import '../../../../widgets/text_button_widget.dart';
 import '../../../../widgets/text_form_field_widget.dart';
@@ -61,47 +62,41 @@ class RegisterRevisionPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: Container(
-        color: const Color(0xffffffff),
-        padding: const EdgeInsets.only(bottom: 15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButtonWidget(label: 'CANCELA', onClick: () => Navigator.pop(context, false)),
-            TextButtonWidget(
-              label: 'SALVAR',
-              onClick: () async {
-                try {
-                  if (!formKey.currentState!.validate()) return;
+      bottomSheet: BottomSheetWidget(
+        children: [
+          TextButtonWidget.cancel(() => Navigator.pop(context, false)),
+          TextButtonWidget.save(
+            () async {
+              try {
+                if (!formKey.currentState!.validate()) return;
 
-                  revision.revision.setId = revision.revision.id;
-                  revision.revision.setDescription = description.text;
-                  revision.revision.setDateCreational = revision.revision.dateCreational;
+                revision.revision.setId = revision.revision.id;
+                revision.revision.setDescription = description.text;
+                revision.revision.setDateCreational = revision.revision.dateCreational;
 
-                  var idRevision = await revision.writeRevision();
+                var idRevision = await revision.writeRevision();
 
-                  if (idRevision == null) return;
+                if (idRevision == null) return;
 
-                  revision.registerDate.date.setDate = revision.registerDate.date.dateRevision;
-                  revision.registerDate.date.setHourInit = revision.registerDate.date.hourInit;
-                  revision.registerDate.date.setHourEnd = revision.registerDate.date.hourEnd;
-                  revision.registerDate.date.setIdRevision = revision.revision.id ?? idRevision;
-                  revision.registerDate.date.setNextDate = nextDate;
+                revision.registerDate.date.setDate = revision.registerDate.date.dateRevision;
+                revision.registerDate.date.setHourInit = revision.registerDate.date.hourInit;
+                revision.registerDate.date.setHourEnd = revision.registerDate.date.hourEnd;
+                revision.registerDate.date.setIdRevision = revision.revision.id ?? idRevision;
+                revision.registerDate.date.setNextDate = nextDate;
 
-                  var result = await revision.registerDate.writeDateRevision();
+                var result = await revision.registerDate.writeDateRevision();
 
-                  if (result != null && context.mounted) {
-                    MessageUser.message(context, revision.message.message);
-                    Navigator.pop(context, true);
-                  }
-                } catch (e) {
-                  if (!context.mounted) return;
-                  MessageUser.message(context, 'Erro ao registrar!!!');
+                if (result != null && context.mounted) {
+                  MessageUser.message(context, revision.message.message);
+                  Navigator.pop(context, true);
                 }
-              },
-            ),
-          ],
-        ),
+              } catch (e) {
+                if (!context.mounted) return;
+                MessageUser.message(context, 'Erro ao registrar!!!');
+              }
+            },
+          ),
+        ],
       ),
     );
   }
