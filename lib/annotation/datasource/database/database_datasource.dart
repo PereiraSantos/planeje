@@ -8,7 +8,7 @@ abstract class AnnotationDataSourceRepository {
   Future<int?> insertAnnotation(Annotation annotationEntity);
   Future<int?> updateAnnotation(Annotation annotationEntity);
   Future<Annotation?> delete(int id);
-  Future<List<AnnotationRevision>?> getAnnotationWidthRevision();
+  Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text);
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
 }
 
@@ -36,9 +36,9 @@ class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
   }
 
   @override
-  Future<List<AnnotationRevision>?> getAnnotationWidthRevision() async {
+  Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text) async {
     final database = await getInstance();
-    return await AnnotationDaoCustom().getAnnotationWidthRevision(database);
+    return await AnnotationDaoCustom().getAnnotationWidthRevision(database, text);
   }
 
   @override

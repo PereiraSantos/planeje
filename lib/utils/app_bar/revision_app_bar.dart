@@ -13,11 +13,12 @@ import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/app_bar_widget/add_app_bar_widget.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
 import 'package:planeje/utils/transitions_builder.dart';
+import 'package:planeje/widgets/app_bar_widget/search_app_bar_widget.dart';
 
-class RevisionAppBar implements IAppBarNavigator, IAppBarNavigatorAdd {
-  RevisionAppBar({required this.reloadPage, this.color});
+class RevisionAppBar implements IAppBarNavigator, IAppBarNavigatorAdd, IAppBarSearch {
+  RevisionAppBar({required this.onClick, this.color});
 
-  Function() reloadPage;
+  Function() onClick;
 
   @override
   void navigator(BuildContext context) {
@@ -49,9 +50,14 @@ class RevisionAppBar implements IAppBarNavigator, IAppBarNavigatorAdd {
       ),
     );
 
-    if (result) reloadPage();
+    if (result) onClick();
   }
 
   @override
   Color? color;
+
+  @override
+  Widget buildIcon(BuildContext context) {
+    return SearchAppBarWidget(onClick: onClick);
+  }
 }

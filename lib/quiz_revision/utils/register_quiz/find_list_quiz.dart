@@ -2,7 +2,7 @@ import 'package:planeje/quiz_revision/datasource/database/quiz_database.dart';
 import 'package:planeje/quiz_revision/entities/quiz.dart';
 
 abstract class FindListQuiz {
-  Future<List<Quiz>?> getAllQuiz();
+  Future<List<Quiz>?> getAllQuiz(String text);
 }
 
 class GetQuiz implements FindListQuiz {
@@ -11,7 +11,7 @@ class GetQuiz implements FindListQuiz {
   GetQuiz(this.datasourceQuiz);
 
   @override
-  Future<List<Quiz>?> getAllQuiz() async {
-    return await datasourceQuiz.getAllQuiz();
+  Future<List<Quiz>?> getAllQuiz(String text) async {
+    return await datasourceQuiz.getAllQuiz(text);
   }
 }

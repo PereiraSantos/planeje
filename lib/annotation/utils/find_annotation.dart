@@ -3,7 +3,7 @@ import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/entities/annotation_revision.dart';
 
 abstract class IFindAnnotation {
-  Future<List<AnnotationRevision>?> getAnnotationWidthRevision();
+  Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text);
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
 }
 
@@ -13,8 +13,8 @@ class GetAnnotation implements IFindAnnotation {
   GetAnnotation(this.annotationDatabase);
 
   @override
-  Future<List<AnnotationRevision>?> getAnnotationWidthRevision() async {
-    return await annotationDatabase.getAnnotationWidthRevision();
+  Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text) async {
+    return await annotationDatabase.getAnnotationWidthRevision(text);
   }
 
   @override

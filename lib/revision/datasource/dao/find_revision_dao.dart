@@ -5,11 +5,13 @@ import 'package:planeje/revision/entities/revision_time.dart';
 import '../../../../database/app_database.dart';
 
 class FindRevisionDao {
-  Future<List<RevisionTime>> findRevision(AppDatabase database) async {
+  Future<List<RevisionTime>> findRevision(AppDatabase database, String text) async {
     List<RevisionTime> listRevisionTime = [];
-
-    List<Map> list = await database.database.rawQuery(
-        'SELECT * FROM revision inner join date_revision on revision.id = date_revision.id_revision');
+    List<Map> list = text != ''
+        ? await database.database.rawQuery(
+            'SELECT * FROM revision  inner join date_revision on revision.id = date_revision.id_revision where description LIKE \'%$text%\'')
+        : await database.database.rawQuery(
+            'SELECT * FROM revision inner join date_revision on revision.id = date_revision.id_revision');
 
     for (var element in list) {
       listRevisionTime.add(

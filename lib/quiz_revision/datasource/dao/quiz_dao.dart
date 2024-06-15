@@ -6,6 +6,9 @@ abstract class QuizDao {
   @Query('SELECT * FROM quiz')
   Future<List<Quiz>?> getAllQuiz();
 
+  @Query('SELECT * FROM quiz where topic LIKE :text')
+  Future<List<Quiz>?> getAllQuizSearch(String text);
+
   @insert
   Future<int> insertQuiz(Quiz quiz);
 

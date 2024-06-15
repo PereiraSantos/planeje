@@ -413,6 +413,16 @@ class _$QuizDao extends QuizDao {
   }
 
   @override
+  Future<List<Quiz>?> getAllQuizSearch(String text) async {
+    return _queryAdapter.queryList('SELECT * FROM quiz where topic LIKE ?1',
+        mapper: (Map<String, Object?> row) => Quiz(
+            id: row['id'] as int?,
+            topic: row['topic'] as String?,
+            description: row['description'] as String?),
+        arguments: [text]);
+  }
+
+  @override
   Future<Quiz?> getQuizById(int id) async {
     return _queryAdapter.query('SELECT * FROM quiz WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Quiz(

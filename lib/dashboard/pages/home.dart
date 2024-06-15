@@ -43,9 +43,9 @@ class _HomeState extends State<Home> {
               actions: [HomeAppBar(quantity: reviserNotifier.quantityDelayed).buildNotification(context)],
               child: [
                 HomeAppBar(quantity: reviserNotifier.quantityDelayed, color: Colors.black54).build(context),
-                RevisionAppBar(reloadPage: reloadPage).build(context),
-                AnnotationAppBar(reloadPage: reloadPage).build(context),
-                QuizAppBar(reloadPage: reloadPage).build(context),
+                RevisionAppBar(onClick: reloadPage).build(context),
+                AnnotationAppBar(onClick: reloadPage).build(context),
+                QuizAppBar(onClick: reloadPage).build(context),
               ],
             );
           },

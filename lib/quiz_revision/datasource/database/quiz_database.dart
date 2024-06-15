@@ -3,7 +3,7 @@ import 'package:planeje/quiz_revision/entities/quiz.dart';
 import '../../../database/app_database.dart';
 
 abstract class DatasourceQuizRepository {
-  Future<List<Quiz>?> getAllQuiz();
+  Future<List<Quiz>?> getAllQuiz(String text);
   Future<int> insertQuiz(Quiz quiz);
   Future<Quiz?> getQuizById(int id);
   Future<Quiz?> deleteQuiz(int id);
@@ -22,9 +22,9 @@ class QuizDatabase implements DatasourceQuizRepository {
   }
 
   @override
-  Future<List<Quiz>?> getAllQuiz() async {
+  Future<List<Quiz>?> getAllQuiz(String text) async {
     final database = await getInstance();
-    return await database.quizDao.getAllQuiz();
+    return text != '' ? await database.quizDao.getAllQuizSearch(text) : await database.quizDao.getAllQuiz();
   }
 
   @override

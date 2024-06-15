@@ -33,7 +33,7 @@ class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
   @override
   Future<List<RevisionTime>> findRevisionByDescription(String text) async {
     final database = await getInstance();
-    return await FindRevisionDao().findRevision(database);
+    return await FindRevisionDao().findRevision(database, text);
   }
 
   @override

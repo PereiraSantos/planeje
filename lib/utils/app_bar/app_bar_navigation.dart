@@ -16,3 +16,7 @@ abstract class IAppBarNavigatorNotification {
   int? quantity;
   Color? color;
 }
+
+abstract class IAppBarSearch {
+  Widget buildIcon(BuildContext context);
+}

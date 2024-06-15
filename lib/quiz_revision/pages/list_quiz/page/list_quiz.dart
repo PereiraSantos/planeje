@@ -12,6 +12,7 @@ import 'package:planeje/utils/app_bar/quiz_app_bar.dart';
 import 'package:planeje/utils/app_bar/revision_app_bar.dart';
 import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/type_message.dart';
+import 'package:planeje/widgets/text_form_field_widget.dart';
 import '../../../../utils/transitions_builder.dart';
 import '../../../../widgets/app_bar_widget/app_bar_widget.dart';
 import '../../../datasource/database/quiz_database.dart';
@@ -29,7 +30,15 @@ class ListQuiz extends StatefulWidget {
 }
 
 class _ListQuizState extends State<ListQuiz> {
+  var showFilter = false;
+  final TextEditingController controller = TextEditingController();
   void reloadPage() => setState(() {});
+
+  void hideFilter() {
+    showFilter = !showFilter;
+    if (!showFilter) controller.text = '';
+    reloadPage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,124 +46,144 @@ class _ListQuizState extends State<ListQuiz> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55.0),
         child: AppBarWidget(
-          actions: [QuizAppBar(reloadPage: reloadPage).buildAdd(context)],
+          actions: [
+            QuizAppBar(onClick: hideFilter).buildIcon(context),
+            QuizAppBar(onClick: reloadPage).buildAdd(context)
+          ],
           child: [
             HomeAppBar().build(context),
-            RevisionAppBar(reloadPage: reloadPage).build(context),
-            AnnotationAppBar(reloadPage: reloadPage).build(context),
-            QuizAppBar(reloadPage: reloadPage, color: Colors.black54).build(context),
+            RevisionAppBar(onClick: reloadPage).build(context),
+            AnnotationAppBar(onClick: reloadPage).build(context),
+            QuizAppBar(onClick: reloadPage, color: Colors.black54).build(context),
           ],
         ),
       ),
       body: SingleChildScrollView(
-        child: FutureBuilder(
-          future: GetQuiz(QuizDatabase()).getAllQuiz(),
-          builder: (BuildContext context, AsyncSnapshot<List<Quiz>?> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data!.isNotEmpty) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Dismissible(
-                      key: UniqueKey(),
-                      confirmDismiss: (DismissDirection direction) async {
-                        if (direction == DismissDirection.startToEnd) {
-                          var result = await DialogDelete.build(context, snapshot.data![index]);
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Visibility(
+              visible: showFilter,
+              child: TextFormFieldWidget(
+                controller: controller,
+                hintText: 'Filtra quiz',
+                valid: false,
+                onChange: (v) => reloadPage(),
+              ),
+            ),
+            FutureBuilder(
+              future: GetQuiz(QuizDatabase()).getAllQuiz('%${controller.text}%'),
+              builder: (BuildContext context, AsyncSnapshot<List<Quiz>?> snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isNotEmpty) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          confirmDismiss: (DismissDirection direction) async {
+                            if (direction == DismissDirection.startToEnd) {
+                              var result = await DialogDelete.build(context, snapshot.data![index]);
 
-                          if (result && context.mounted) {
-                            final TableQuestionNotifier tableQuestionNotifier = TableQuestionNotifier();
-                            tableQuestionNotifier.deleteQuestionByIdQuiz(snapshot.data![index].id!);
+                              if (result && context.mounted) {
+                                final TableQuestionNotifier tableQuestionNotifier = TableQuestionNotifier();
+                                tableQuestionNotifier.deleteQuestionByIdQuiz(snapshot.data![index].id!);
 
-                            await RemoveQuestion(QuestionDatabase()).delete(tableQuestionNotifier.questions);
+                                await RemoveQuestion(QuestionDatabase())
+                                    .delete(tableQuestionNotifier.questions);
 
-                            await DeleteQuiz(QuizDatabase()).deleteQuiz(snapshot.data![index].id!);
-                            if (!context.mounted) return;
-                            MessageUser.message(context, 'Removido com sucesso');
-                            reloadPage();
-                          }
-                        }
-                        return null;
-                      },
-                      background: const Align(
-                        alignment: Alignment(-0.9, 0),
-                        child: Icon(Icons.delete, color: Colors.red, size: 30),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-                        child: GestureDetector(
-                          onTap: () async {
-                            var result = await Navigator.of(context).push(
-                              TransitionsBuilder.createRoute(
-                                RegisterQuizPage(
-                                  registerQuiz: UpdateQuiz(
-                                    QuizDatabase(),
-                                    (snapshot.data![index]),
-                                    Message(TypeMessage.Atualizar),
+                                await DeleteQuiz(QuizDatabase()).deleteQuiz(snapshot.data![index].id!);
+                                if (!context.mounted) return;
+                                MessageUser.message(context, 'Removido com sucesso');
+                                reloadPage();
+                              }
+                            }
+                            return null;
+                          },
+                          background: const Align(
+                            alignment: Alignment(-0.9, 0),
+                            child: Icon(Icons.delete, color: Colors.red, size: 30),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+                            child: GestureDetector(
+                              onTap: () async {
+                                var result = await Navigator.of(context).push(
+                                  TransitionsBuilder.createRoute(
+                                    RegisterQuizPage(
+                                      registerQuiz: UpdateQuiz(
+                                        QuizDatabase(),
+                                        (snapshot.data![index]),
+                                        Message(TypeMessage.Atualizar),
+                                      ),
+                                    ),
                                   ),
+                                );
+                                if (result) reloadPage();
+                              },
+                              child: Card(
+                                elevation: 8,
+                                shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                                      child: Text("Assunto: ${snapshot.data![index].topic ?? ''}"),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 05),
+                                      child: Text(
+                                        "Pergunta: ${snapshot.data![index].description}",
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    FutureBuilder(
+                                      future: GetQuestion(QuestionDatabase())
+                                          .getQuestionByIdQuiz(snapshot.data![index].id!),
+                                      builder:
+                                          (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
+                                        if (snapshot.hasData) {
+                                          if (snapshot.data!.isNotEmpty) {
+                                            return ListQuestion(listQuestion: snapshot.data ?? []);
+                                          }
+
+                                          return const SizedBox();
+                                        }
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
-                            );
-                            if (result) reloadPage();
-                          },
-                          child: Card(
-                            elevation: 8,
-                            shape: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-                                  child: Text("Assunto: ${snapshot.data![index].topic ?? ''}"),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 05),
-                                  child: Text(
-                                    "Pergunta: ${snapshot.data![index].description}",
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                FutureBuilder(
-                                  future: GetQuestion(QuestionDatabase())
-                                      .getQuestionByIdQuiz(snapshot.data![index].id!),
-                                  builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
-                                    if (snapshot.hasData) {
-                                      if (snapshot.data!.isNotEmpty) {
-                                        return ListQuestion(listQuestion: snapshot.data ?? []);
-                                      }
-
-                                      return const SizedBox();
-                                    }
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  },
-                                ),
-                              ],
                             ),
                           ),
-                        ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Container(
+                      padding: const EdgeInsets.only(left: 18.0),
+                      child: const Text(
+                        "Não há quiz!!!",
+                        style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
                       ),
                     );
-                  },
-                );
-              } else {
-                return Container(
-                  padding: const EdgeInsets.only(left: 18.0),
-                  child: const Text(
-                    "Não há quiz!!!",
-                    style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
-                  ),
-                );
-              }
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
+                  }
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
