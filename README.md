@@ -2,6 +2,7 @@
 
 Projeto para controlar suas revisões
 
-[mais informação](https://iscodemaker.blogspot.com/2024/04/planeje.html)
-
-<img src="https://github.com/PereiraSantos/algoritmos/blob/main/20240207162653.png" width="200" />
+<img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_1.jpg" width="200" />
+<img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_2.jpg" width="200" />
+<img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_3.jpg" width="200" />
+<img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_4.jpg" width="200" />
