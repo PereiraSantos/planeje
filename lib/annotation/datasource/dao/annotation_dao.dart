@@ -6,7 +6,7 @@ abstract class AnnotationDao {
   @insert
   Future<int?> insertAnnotation(Annotation annotationEntity);
 
-  @insert
+  @update
   Future<int?> updateAnnotation(Annotation annotationEntity);
 
   @Query('delete from annotation where id = :id')

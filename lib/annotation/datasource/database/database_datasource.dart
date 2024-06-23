@@ -32,7 +32,7 @@ class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
   @override
   Future<int?> updateAnnotation(Annotation annotationEntity) async {
     final database = await getInstance();
-    return await database.annotationDao.insertAnnotation(annotationEntity);
+    return await database.annotationDao.updateAnnotation(annotationEntity);
   }
 
   @override

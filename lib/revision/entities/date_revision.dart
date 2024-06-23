@@ -31,10 +31,10 @@ class DateRevision {
     this.idRevision,
   });
 
-  set setId(int? value) => id = value;
-  set setDate(String? value) => dateRevision = value ?? FormatDate.formatDate(DateTime.now());
-  set setNextDate(String? value) => nextDate = value ?? FormatDate.formatDate(DateTime.now());
-  set setHourInit(String? value) => hourInit = value ?? FormatDate.formatTimeByString(DateTime.now());
-  set setHourEnd(String? value) => hourEnd = value ?? FormatDate.formatTimeByString(DateTime.now());
-  set setIdRevision(int? value) => idRevision = value;
+  void setId(int? value) => id = value;
+  void setDate(String? value) => dateRevision = value ?? FormatDate.formatDate(DateTime.now());
+  void setNextDate(String? value) => nextDate = value ?? FormatDate.formatDate(DateTime.now());
+  void setHourInit(String? value) => hourInit = value ?? FormatDate.formatTimeByString(DateTime.now());
+  void setHourEnd(String? value) => hourEnd = value ?? FormatDate.formatTimeByString(DateTime.now());
+  void setIdRevision(int? value) => idRevision = value;
 }

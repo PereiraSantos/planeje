@@ -71,6 +71,8 @@ class _$AppDatabase extends AppDatabase {
 
   QuestionDao? _questionDaoInstance;
 
+  LearnDao? _learnDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -93,7 +95,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `date_creational` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `date_creational` TEXT, `id_learn` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER)');
         await database.execute(
@@ -102,6 +104,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `label` TEXT, `description` TEXT, `answer` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `learn` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -134,6 +138,11 @@ class _$AppDatabase extends AppDatabase {
   QuestionDao get questionDao {
     return _questionDaoInstance ??= _$QuestionDao(database, changeListener);
   }
+
+  @override
+  LearnDao get learnDao {
+    return _learnDaoInstance ??= _$LearnDao(database, changeListener);
+  }
 }
 
 class _$RevisionDao extends RevisionDao {
@@ -147,7 +156,8 @@ class _$RevisionDao extends RevisionDao {
             (Revision item) => <String, Object?>{
                   'id': item.id,
                   'description': item.description,
-                  'date_creational': item.dateCreational
+                  'date_creational': item.dateCreational,
+                  'id_learn': item.idLearn
                 }),
         _revisionUpdateAdapter = UpdateAdapter(
             database,
@@ -156,7 +166,8 @@ class _$RevisionDao extends RevisionDao {
             (Revision item) => <String, Object?>{
                   'id': item.id,
                   'description': item.description,
-                  'date_creational': item.dateCreational
+                  'date_creational': item.dateCreational,
+                  'id_learn': item.idLearn
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -175,7 +186,8 @@ class _$RevisionDao extends RevisionDao {
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?));
+            dateCreational: row['date_creational'] as String?,
+            idLearn: row['id_learn'] as int?));
   }
 
   @override
@@ -184,7 +196,8 @@ class _$RevisionDao extends RevisionDao {
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?),
+            dateCreational: row['date_creational'] as String?,
+            idLearn: row['id_learn'] as int?),
         arguments: [id]);
   }
 
@@ -194,7 +207,8 @@ class _$RevisionDao extends RevisionDao {
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?),
+            dateCreational: row['date_creational'] as String?,
+            idLearn: row['id_learn'] as int?),
         arguments: [id]);
   }
 
@@ -204,7 +218,8 @@ class _$RevisionDao extends RevisionDao {
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?),
+            dateCreational: row['date_creational'] as String?,
+            idLearn: row['id_learn'] as int?),
         arguments: [text]);
   }
 
@@ -324,6 +339,16 @@ class _$AnnotationDao extends AnnotationDao {
                   'text': item.text,
                   'date_text': item.dateText,
                   'id_revision': item.idRevision
+                }),
+        _annotationUpdateAdapter = UpdateAdapter(
+            database,
+            'annotation',
+            ['id'],
+            (Annotation item) => <String, Object?>{
+                  'id': item.id,
+                  'text': item.text,
+                  'date_text': item.dateText,
+                  'id_revision': item.idRevision
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -333,6 +358,8 @@ class _$AnnotationDao extends AnnotationDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<Annotation> _annotationInsertionAdapter;
+
+  final UpdateAdapter<Annotation> _annotationUpdateAdapter;
 
   @override
   Future<Annotation?> delete(int id) async {
@@ -365,7 +392,7 @@ class _$AnnotationDao extends AnnotationDao {
 
   @override
   Future<int> updateAnnotation(Annotation annotationEntity) {
-    return _annotationInsertionAdapter.insertAndReturnId(
+    return _annotationUpdateAdapter.updateAndReturnChangedRows(
         annotationEntity, OnConflictStrategy.abort);
   }
 }
@@ -550,5 +577,81 @@ class _$QuestionDao extends QuestionDao {
   Future<int> updateQuestion(Question question) {
     return _questionUpdateAdapter.updateAndReturnChangedRows(
         question, OnConflictStrategy.abort);
+  }
+}
+
+class _$LearnDao extends LearnDao {
+  _$LearnDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _learnInsertionAdapter = InsertionAdapter(
+            database,
+            'learn',
+            (Learn item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description
+                }),
+        _learnUpdateAdapter = UpdateAdapter(
+            database,
+            'learn',
+            ['id'],
+            (Learn item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Learn> _learnInsertionAdapter;
+
+  final UpdateAdapter<Learn> _learnUpdateAdapter;
+
+  @override
+  Future<List<Learn>?> getAllLearn() async {
+    return _queryAdapter.queryList('SELECT * FROM learn',
+        mapper: (Map<String, Object?> row) => Learn(
+            id: row['id'] as int?, description: row['description'] as String?));
+  }
+
+  @override
+  Future<List<Learn>?> getLearn(String text) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM learn where description LIKE ?1',
+        mapper: (Map<String, Object?> row) => Learn(
+            id: row['id'] as int?, description: row['description'] as String?),
+        arguments: [text]);
+  }
+
+  @override
+  Future<Learn?> getLearnId(int id) async {
+    return _queryAdapter.query('SELECT * FROM learn WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Learn(
+            id: row['id'] as int?, description: row['description'] as String?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<Learn?> deleteLearnById(int id) async {
+    return _queryAdapter.query('delete FROM learn WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Learn(
+            id: row['id'] as int?, description: row['description'] as String?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> insertLearn(Learn learn) {
+    return _learnInsertionAdapter.insertAndReturnId(
+        learn, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateLearn(Learn learn) {
+    return _learnUpdateAdapter.updateAndReturnChangedRows(
+        learn, OnConflictStrategy.abort);
   }
 }

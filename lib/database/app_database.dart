@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:planeje/annotation/datasource/dao/annotation_dao.dart';
+import 'package:planeje/learn/datasource/dao/learn_dao.dart';
+import 'package:planeje/learn/entities/learn.dart';
 import 'package:planeje/quiz_revision/datasource/dao/question_dao.dart';
 import 'package:planeje/quiz_revision/datasource/dao/quiz_dao.dart';
 import 'package:planeje/revision/datasource/dao/date_revision_dao.dart';
@@ -18,11 +20,19 @@ import '../revision/entities/revision.dart';
 
 part 'app_database.g.dart'; // the generated code will be there
 
-@Database(version: 1, entities: [Revision, DateRevision, Annotation, Quiz, Question])
+@Database(version: 1, entities: [
+  Revision,
+  DateRevision,
+  Annotation,
+  Quiz,
+  Question,
+  Learn,
+])
 abstract class AppDatabase extends FloorDatabase {
   RevisionDao get revisionDao;
   DateRevisionDao get dateRevisionDao;
   AnnotationDao get annotationDao;
   QuizDao get quizDao;
   QuestionDao get questionDao;
+  LearnDao get learnDao;
 }

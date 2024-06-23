@@ -13,14 +13,19 @@ class Revision {
   @ColumnInfo(name: 'date_creational')
   String? dateCreational;
 
+  @ColumnInfo(name: 'id_learn')
+  int? idLearn;
+
   Revision({
     this.id,
     this.description,
     this.dateCreational,
+    this.idLearn,
   });
 
-  set setId(int? value) => id = value;
-  set setDescription(String value) => description = value;
-  set setDateCreational(String? value) =>
+  void setId(int? value) => id = value;
+  void setDescription(String value) => description = value;
+  void setDateCreational(String? value) =>
       dateCreational = value ?? FormatDate.formatDate(FormatDate.newDate());
+  void setIdLearn(int? value) => idLearn = value;
 }

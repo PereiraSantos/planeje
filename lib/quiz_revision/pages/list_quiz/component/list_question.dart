@@ -73,6 +73,7 @@ class _ListQuestionState extends State<ListQuestion> {
             children: [
               GestureDetector(
                 onTap: () {
+                  if (listQuestionController.index == -1) return;
                   listQuestionController.showAnswer = true;
                   setState(() {});
                 },

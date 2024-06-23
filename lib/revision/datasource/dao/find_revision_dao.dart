@@ -20,6 +20,7 @@ class FindRevisionDao {
             dateCreational: element['date_creational'],
             description: element['description'],
             id: element['id'],
+            idLearn: element['id_learn'],
           ),
           DateRevision(
               dateRevision: element['date_revision'],

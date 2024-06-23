@@ -23,7 +23,7 @@ class TextList extends StatelessWidget {
         padding: EdgeInsets.only(left: left!, top: top, bottom: bottom),
         child: Text(
           annotationEntity.capitalize(),
-          maxLines: 5,
+          maxLines: null,
           style: TextStyle(
             fontSize: MediaQuery.of(context).size.width * size,
             color: Colors.black54,

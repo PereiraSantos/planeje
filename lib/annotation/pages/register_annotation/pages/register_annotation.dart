@@ -49,15 +49,11 @@ class RegisterAnnotation extends StatelessWidget {
               Flexible(
                 child: TextFormField(
                   controller: textController,
-                  maxLines: 40,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  maxLength: 1000,
                   style: const TextStyle(fontSize: 22, color: Colors.black54),
                   decoration: InputDecoration(
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black12, width: 1.0),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black12, width: 1.0),
-                    ),
                     hintStyle: TextStyle(
                       color: Colors.grey.shade500,
                       fontSize: 22.0,
@@ -83,7 +79,6 @@ class RegisterAnnotation extends StatelessWidget {
             () async {
               if (!formKey.currentState!.validate()) return;
 
-              registerAnnotation.annotation.setId(registerAnnotation.annotation.id);
               registerAnnotation.annotation.setText(textController.text);
               registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
 

@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
-import 'package:planeje/annotation/utils/delete_annotation.dart';
-import 'package:planeje/utils/message_user.dart';
-
-import '../../../entities/annotation_revision.dart';
+import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
+import 'package:planeje/learn/entities/learn.dart';
+import 'package:planeje/learn/utils/delete_learn.dart';
 
 class DialogDelete {
-  static build(
-    BuildContext context,
-    AnnotationRevision annotationRevision,
-  ) async {
+  static build(BuildContext context, Learn learn) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Text(
-            "Deseja excluir? \n${annotationRevision.text!}",
+            "Deseja excluir? \n${learn.description!}",
             style: const TextStyle(color: Colors.black45, fontSize: 20),
           ),
           actions: <Widget>[
@@ -26,11 +21,10 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var result = await DeleteAnnotation(AnnotationDatabaseDatasource())
-                          .delete(annotationRevision.id!);
+                      var result = await DeleteLearn(LearnDatabase()).deleteLearnById(learn.id!);
 
                       if (result != null && context.mounted) {
-                        MessageUser.message(context, 'Removido com sucesso');
+                        message(context, 'Removido com sucesso');
                         Navigator.pop(context, true);
                       }
                     },
@@ -49,7 +43,7 @@ class DialogDelete {
                     child: const Text("SIM"),
                   ),
                   TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
+                    onPressed: () => Navigator.pop(context, false),
                     style: ButtonStyle(
                       side: WidgetStateProperty.all(
                         const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
@@ -71,5 +65,13 @@ class DialogDelete {
         );
       },
     );
+  }
+
+  static void message(BuildContext context, String message) {
+    var snackBar = SnackBar(
+      content: Text(message),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
