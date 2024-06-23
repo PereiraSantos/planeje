@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/revision/pages/register_revision/component/drop_down_button_custom_revision.dart';
 
 import 'package:planeje/revision/utils/register_revision.dart';
 import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
@@ -41,16 +42,20 @@ class RegisterRevisionPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                DropDownButtonCustomRevision(
+                  onClick: (value) => revision.revision.setIdLearn(value),
+                  idLearn: revision.revision.idLearn,
+                ),
                 TextFormFieldWidget(
                   controller: description,
                   maxLine: 5,
-                  hintText: 'Descrição',
+                  hintText: 'Revisão',
                   keyboardType: TextInputType.multiline,
                   textArea: true,
                 ),
                 ChangeTimeRevision(
-                  onClickTimeInit: (time) => revision.registerDate.date.setHourInit = time,
-                  onClickTimeEnd: (time) => revision.registerDate.date.setHourEnd = time,
+                  onClickTimeInit: (time) => revision.registerDate.date.setHourInit(time),
+                  onClickTimeEnd: (time) => revision.registerDate.date.setHourEnd(time),
                   revisionEntity: revision.registerDate.date,
                 ),
                 ChangeDateNextReview(
@@ -70,19 +75,17 @@ class RegisterRevisionPage extends StatelessWidget {
               try {
                 if (!formKey.currentState!.validate()) return;
 
-                revision.revision.setId = revision.revision.id;
-                revision.revision.setDescription = description.text;
-                revision.revision.setDateCreational = revision.revision.dateCreational;
+                revision.revision.setDescription(description.text);
 
                 var idRevision = await revision.writeRevision();
 
                 if (idRevision == null) return;
 
-                revision.registerDate.date.setDate = revision.registerDate.date.dateRevision;
-                revision.registerDate.date.setHourInit = revision.registerDate.date.hourInit;
-                revision.registerDate.date.setHourEnd = revision.registerDate.date.hourEnd;
-                revision.registerDate.date.setIdRevision = revision.revision.id ?? idRevision;
-                revision.registerDate.date.setNextDate = nextDate;
+                revision.registerDate.date.setDate(revision.registerDate.date.dateRevision);
+                revision.registerDate.date.setHourInit(revision.registerDate.date.hourInit);
+                revision.registerDate.date.setHourEnd(revision.registerDate.date.hourEnd);
+                revision.registerDate.date.setIdRevision(revision.revision.id ?? idRevision);
+                revision.registerDate.date.setNextDate(nextDate);
 
                 var result = await revision.registerDate.writeDateRevision();
 

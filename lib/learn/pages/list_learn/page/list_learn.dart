@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
-import 'package:planeje/annotation/pages/list_annotation/component/dialog_delete.dart';
-import 'package:planeje/annotation/pages/register_annotation/pages/register_annotation.dart';
-import 'package:planeje/annotation/utils/find_annotation.dart';
-import 'package:planeje/annotation/utils/register_annotation.dart';
+import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
+import 'package:planeje/learn/entities/learn.dart';
+import 'package:planeje/learn/pages/register_learn/register_learn.dart';
+import 'package:planeje/learn/utils/find_learn.dart';
+import 'package:planeje/learn/utils/register_learn.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
 import '../../../../utils/transitions_builder.dart';
-
-import '../../../entities/annotation_revision.dart';
+import '../component/dialog_delete.dart';
 import '../component/text_list.dart';
 
 // ignore: must_be_immutable
-class ListAnnotation extends StatelessWidget {
-  ListAnnotation(this.annotationNotifier, {super.key});
-  Notifier annotationNotifier;
+class ListLearn extends StatelessWidget {
+  ListLearn(this.learnNotifier, {super.key});
+
+  Notifier learnNotifier;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: FutureBuilder(
-        future: GetAnnotation(AnnotationDatabaseDatasource())
-            .getAnnotationWidthRevision(annotationNotifier.search ?? ''),
-        builder: (BuildContext context, AsyncSnapshot<List<AnnotationRevision>?> snapshot) {
+        future: GetLearn(LearnDatabase()).getAllLearn(learnNotifier.search ?? ''),
+        builder: (BuildContext context, AsyncSnapshot<List<Learn>?> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
               return ListView.builder(
@@ -48,45 +47,30 @@ class ListAnnotation extends StatelessWidget {
                         onTap: () async {
                           var result = await Navigator.of(context).push(
                             TransitionsBuilder.createRoute(
-                              RegisterAnnotation(
-                                registerAnnotation: UpdateAnnotation(
-                                  AnnotationDatabaseDatasource(),
+                              RegisterLearnPage(
+                                registerLearn: UpdateLearn(
+                                  LearnDatabase(),
                                   snapshot.data![index],
                                   Message(TypeMessage.Atualizar),
                                 ),
                               ),
                             ),
                           );
-                          if (result) annotationNotifier.update();
+                          if (result) learnNotifier.update();
                         },
                         child: Card(
                           elevation: 8,
                           shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Visibility(
-                                visible: snapshot.data![index].idRevision != null ? true : false,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const TextList("Revisão:", flex: 2),
-                                    TextList("${snapshot.data![index].description}", flex: 6),
-                                  ],
-                                ),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  TextList(snapshot.data![index].text ?? ""),
-                                ],
-                              ),
-                              const Padding(padding: EdgeInsets.all(3))
-                            ],
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide.none,
+                          ),
+                          child: SizedBox(
+                            width: double.maxFinite,
+                            child: TextCard(
+                              padding: const EdgeInsets.only(left: 8, top: 05, right: 5, bottom: 5),
+                              revisionEntity: snapshot.data![index].description ?? "",
+                              maxLines: 5,
+                            ),
                           ),
                         ),
                       ),
@@ -97,7 +81,7 @@ class ListAnnotation extends StatelessWidget {
             } else {
               return const Center(
                 child: Text(
-                  "Não há anotação!!!",
+                  "Não há item!!!",
                   style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
                 ),
               );

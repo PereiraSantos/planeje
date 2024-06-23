@@ -17,6 +17,9 @@ class TextFormFieldWidget extends StatelessWidget {
     this.suffixIcon,
     this.textArea = false,
     this.readOnly = false,
+    this.padding = const EdgeInsets.only(left: 20.0, top: 10, right: 20, bottom: 10),
+    this.fontSize = 22,
+    this.autofocus,
   });
 
   final TextEditingController controller;
@@ -31,6 +34,9 @@ class TextFormFieldWidget extends StatelessWidget {
   final bool textArea;
   final bool readOnly;
   final Function(String?)? onChange;
+  final EdgeInsetsGeometry? padding;
+  final double? fontSize;
+  final bool? autofocus;
 
   InputBorder theme(double value) {
     return OutlineInputBorder(
@@ -45,29 +51,29 @@ class TextFormFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20, bottom: 10),
+      padding: padding!,
       child: TextFormField(
           controller: controller,
           maxLines: maxLine,
           minLines: minLine,
           readOnly: readOnly,
-          autofocus: false,
+          autofocus: autofocus ?? true,
           keyboardType: keyboardType,
           inputFormatters: inputFormatter,
           enableInteractiveSelection: false,
           textCapitalization: TextCapitalization.sentences,
-          style: const TextStyle(fontSize: 22, color: Colors.black54),
+          style: TextStyle(fontSize: fontSize!, color: Colors.black54),
           decoration: InputDecoration(
             labelText: hintText,
-            labelStyle: const TextStyle(
+            labelStyle: TextStyle(
               color: Colors.black54,
-              fontSize: 22.0,
+              fontSize: fontSize!,
               fontWeight: FontWeight.w300,
             ),
             suffixIcon: suffixIcon,
-            hintStyle: const TextStyle(
+            hintStyle: TextStyle(
               color: Colors.black,
-              fontSize: 22.0,
+              fontSize: fontSize!,
               fontFamily: 'helvetica_neue_light',
             ),
             border: borderRadius != null ? theme(borderRadius!) : null,

@@ -3,16 +3,18 @@ import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/utils/next_revision_time.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
 import 'package:planeje/dashboard/utils/valid_date.dart';
-import 'package:planeje/utils/app_bar/annotation_app_bar.dart';
 import 'package:planeje/utils/app_bar/home_app_bar.dart';
-import 'package:planeje/utils/app_bar/quiz_app_bar.dart';
-import 'package:planeje/utils/app_bar/revision_app_bar.dart';
-import '../../widgets/app_bar_widget/app_bar_widget.dart';
+import 'package:planeje/utils/transitions_builder.dart';
+import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
+import 'package:planeje/widgets/app_bar_widget/app_bar_widget.dart';
+import 'package:planeje/widgets/app_bar_widget/home_app_bar_widget.dart';
+import 'package:planeje/widgets/tab_bar_widget/tab_bar_widget.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  // ignore: prefer_const_constructors_in_immutables
+  Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
@@ -42,16 +44,16 @@ class _HomeState extends State<Home> {
             return AppBarWidget(
               actions: [HomeAppBar(quantity: reviserNotifier.quantityDelayed).buildNotification(context)],
               child: [
-                HomeAppBar(quantity: reviserNotifier.quantityDelayed, color: Colors.black54).build(context),
-                RevisionAppBar(onClick: reloadPage).build(context),
-                AnnotationAppBar(onClick: reloadPage).build(context),
-                QuizAppBar(onClick: reloadPage).build(context),
+                HomeAppBarWidget(onClick: () => null, color: Colors.black54),
+                AppBarButtonWidget(
+                    onClick: () async => await Navigator.of(context)
+                        .push(TransitionsBuilder.createRoute(const TabBarWidget())),
+                    title: 'Planejamento'),
               ],
             );
           },
         ),
       ),
-      backgroundColor: const Color(0xffffffff),
       body: SingleChildScrollView(
         child: ListenableBuilder(
           listenable: reviserNotifier,

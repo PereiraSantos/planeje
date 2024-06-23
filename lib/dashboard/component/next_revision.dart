@@ -92,7 +92,6 @@ class NextRevision extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  labelText("Descrição:"),
                                   Expanded(
                                     flex: 2,
                                     child: SizedBox(
@@ -110,7 +109,7 @@ class NextRevision extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  labelText("Revisa:"),
+                                  labelText("Data:"),
                                   Expanded(
                                     flex: 2,
                                     child: SizedBox(

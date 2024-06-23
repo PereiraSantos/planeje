@@ -20,7 +20,7 @@ class AppBarButtonWidget extends StatelessWidget {
       onTap: () => onClick(),
       child: ButtonCuston(
         color: color ?? Colors.black12,
-        width: MediaQuery.of(context).size.width * 0.2,
+        width: MediaQuery.of(context).size.width * 0.3,
         margin: const EdgeInsets.only(left: 05),
         child: Text(
           title,

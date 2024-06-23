@@ -24,7 +24,9 @@ class QuizDatabase implements DatasourceQuizRepository {
   @override
   Future<List<Quiz>?> getAllQuiz(String text) async {
     final database = await getInstance();
-    return text != '' ? await database.quizDao.getAllQuizSearch(text) : await database.quizDao.getAllQuiz();
+    return text != ''
+        ? await database.quizDao.getAllQuizSearch('%$text%')
+        : await database.quizDao.getAllQuiz();
   }
 
   @override
