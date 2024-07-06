@@ -1,7 +1,17 @@
-# planeje
+# Planeje
 
-Projeto para controlar suas revisões
-
-[mais informação](https://iscodemaker.blogspot.com/2024/04/planeje.html)
-
-<img src="https://github.com/PereiraSantos/algoritmos/blob/main/20240207162653.png" width="200" />
+Aplicativo desenvolvido para controle dos meus estudos em programação.
+Controlava as revisões em planilha e ferramentas online, decidi desenvolver a minha própria. 
+## Finalidade do aplicativo
+- `Conhecimento` - Cria item para estudo.
+- `Revisão` - Cria revisão vinculada a conhecimento ou não.
+- `Anotação` - Cria anotação de uma revisão, vinculada a revisão ou não.
+- `Quiz` - Cria quiz, jogo de quiz, para medir seu conhecimento sobre os seus estudos.
+## Google Play
+https://play.google.com/store/apps/details?id=com.br.planeje&pcampaignid=web_share
+<p align="left">
+  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_3.jpg" width="230" />
+  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_2.jpg" width="230" />
+  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_4.jpg" width="230" />
+  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_1.jpg" width="230" />
+</p>
