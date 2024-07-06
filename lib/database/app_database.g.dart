@@ -99,7 +99,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT)');
         await database.execute(
@@ -336,6 +336,7 @@ class _$AnnotationDao extends AnnotationDao {
             'annotation',
             (Annotation item) => <String, Object?>{
                   'id': item.id,
+                  'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
                   'id_revision': item.idRevision
@@ -346,6 +347,7 @@ class _$AnnotationDao extends AnnotationDao {
             ['id'],
             (Annotation item) => <String, Object?>{
                   'id': item.id,
+                  'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
                   'id_revision': item.idRevision
@@ -366,6 +368,7 @@ class _$AnnotationDao extends AnnotationDao {
     return _queryAdapter.query('delete from annotation where id = ?1',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
+            title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?),
@@ -378,6 +381,7 @@ class _$AnnotationDao extends AnnotationDao {
         'select * from  annotation where id_revision = ?1',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
+            title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?),

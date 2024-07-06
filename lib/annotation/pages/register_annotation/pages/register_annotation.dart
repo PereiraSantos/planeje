@@ -10,11 +10,13 @@ import '../component/drop_down_revision.dart';
 class RegisterAnnotation extends StatelessWidget {
   RegisterAnnotation({super.key, required this.registerAnnotation}) {
     textController.text = registerAnnotation.annotation.text ?? '';
+    titleController.text = registerAnnotation.annotation.title ?? '';
   }
 
   IRegisterAnnotation registerAnnotation;
   final formKey = GlobalKey<FormState>();
   final TextEditingController textController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,26 @@ class RegisterAnnotation extends StatelessWidget {
               DropDownButtonCustom(
                 onClick: (value) => registerAnnotation.annotation.setIdRevision(value),
                 idRevision: registerAnnotation.annotation.idRevision,
+              ),
+              const Text(
+                "Título",
+                style: TextStyle(fontSize: 18, color: Colors.grey),
+              ),
+              Flexible(
+                child: TextFormField(
+                  controller: titleController,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  maxLength: 200,
+                  style: const TextStyle(fontSize: 22, color: Colors.black54),
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 22.0,
+                      fontFamily: 'helvetica_neue_light',
+                    ),
+                  ),
+                ),
               ),
               const Text(
                 "Descrição",
@@ -79,6 +101,7 @@ class RegisterAnnotation extends StatelessWidget {
             () async {
               if (!formKey.currentState!.validate()) return;
 
+              registerAnnotation.annotation.setTitle(titleController.text);
               registerAnnotation.annotation.setText(textController.text);
               registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
 

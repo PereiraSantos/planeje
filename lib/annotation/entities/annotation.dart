@@ -6,6 +6,9 @@ class Annotation {
   @PrimaryKey(autoGenerate: true)
   int? id;
 
+  @ColumnInfo(name: 'title')
+  String? title;
+
   @ColumnInfo(name: 'text')
   String? text;
 
@@ -17,12 +20,14 @@ class Annotation {
 
   Annotation({
     this.id,
+    this.title,
     this.text,
     this.dateText,
     this.idRevision,
   });
 
   void setId(int? value) => id = value;
+  void setTitle(String value) => title = value;
   void setText(String value) => text = value;
   void setDateText(String? date) => dateText = date ?? FormatDate.formatDate(FormatDate.newDate());
   void setIdRevision(int? value) => idRevision = value;

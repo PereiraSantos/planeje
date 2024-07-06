@@ -8,9 +8,19 @@ class TextList extends StatelessWidget {
   final double size;
   final double? left = 10;
   final double bottom;
+  final Color? color;
+  final FontWeight? fontWeight;
 
-  const TextList(this.annotationEntity,
-      {super.key, this.flex = 5, this.top = 10, this.size = 0.05, this.bottom = 0});
+  const TextList(
+    this.annotationEntity, {
+    super.key,
+    this.flex = 5,
+    this.top = 10,
+    this.size = 0.05,
+    this.bottom = 0,
+    this.color,
+    this.fontWeight,
+  });
 
   factory TextList.date(String annotationEntity) =>
       TextList(annotationEntity, flex: 0, top: 15.0, size: 0.030, bottom: 5);
@@ -26,7 +36,8 @@ class TextList extends StatelessWidget {
           maxLines: null,
           style: TextStyle(
             fontSize: MediaQuery.of(context).size.width * size,
-            color: Colors.black54,
+            color: color ?? Colors.black54,
+            fontWeight: fontWeight,
           ),
         ),
       ),

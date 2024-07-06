@@ -67,13 +67,27 @@ class ListAnnotation extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Visibility(
-                                visible: snapshot.data![index].idRevision != null ? true : false,
+                                visible: snapshot.data![index].idRevision != null,
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const TextList("Revisão:", flex: 2),
                                     TextList("${snapshot.data![index].description}", flex: 6),
+                                  ],
+                                ),
+                              ),
+                              Visibility(
+                                visible: snapshot.data![index].title != "",
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    TextList(
+                                      "${snapshot.data![index].title}",
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ],
                                 ),
                               ),
