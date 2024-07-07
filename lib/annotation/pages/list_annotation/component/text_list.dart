@@ -5,7 +5,7 @@ class TextList extends StatelessWidget {
   final String annotationEntity;
   final int flex;
   final double top;
-  final double size;
+  final double fontSize;
   final double? left = 10;
   final double bottom;
   final Color? color;
@@ -16,14 +16,11 @@ class TextList extends StatelessWidget {
     super.key,
     this.flex = 5,
     this.top = 10,
-    this.size = 0.05,
+    this.fontSize = 14,
     this.bottom = 0,
     this.color,
     this.fontWeight,
   });
-
-  factory TextList.date(String annotationEntity) =>
-      TextList(annotationEntity, flex: 0, top: 15.0, size: 0.030, bottom: 5);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +32,7 @@ class TextList extends StatelessWidget {
           annotationEntity.capitalize(),
           maxLines: null,
           style: TextStyle(
-            fontSize: MediaQuery.of(context).size.width * size,
+            fontSize: fontSize,
             color: color ?? Colors.black54,
             fontWeight: fontWeight,
           ),

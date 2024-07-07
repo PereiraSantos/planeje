@@ -73,7 +73,7 @@ class ListAnnotation extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     const TextList("Revisão:", flex: 2),
-                                    TextList("${snapshot.data![index].description}", flex: 6),
+                                    TextList("${snapshot.data![index].description}", flex: 6, fontSize: 15),
                                   ],
                                 ),
                               ),
@@ -87,6 +87,7 @@ class ListAnnotation extends StatelessWidget {
                                       "${snapshot.data![index].title}",
                                       color: Colors.black54,
                                       fontWeight: FontWeight.w500,
+                                      fontSize: 15,
                                     ),
                                   ],
                                 ),

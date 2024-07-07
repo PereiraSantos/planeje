@@ -44,29 +44,22 @@ class RegisterAnnotation extends StatelessWidget {
                 onClick: (value) => registerAnnotation.annotation.setIdRevision(value),
                 idRevision: registerAnnotation.annotation.idRevision,
               ),
-              const Text(
-                "Título",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
               Flexible(
                 child: TextFormField(
                   controller: titleController,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   maxLength: 200,
-                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  style: const TextStyle(fontSize: 16, color: Colors.black54),
                   decoration: InputDecoration(
+                    labelText: 'Título',
                     hintStyle: TextStyle(
                       color: Colors.grey.shade500,
-                      fontSize: 22.0,
+                      fontSize: 16,
                       fontFamily: 'helvetica_neue_light',
                     ),
                   ),
                 ),
-              ),
-              const Text(
-                "Descrição",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               Flexible(
                 child: TextFormField(
@@ -74,11 +67,12 @@ class RegisterAnnotation extends StatelessWidget {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   maxLength: 1000,
-                  style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  style: const TextStyle(fontSize: 16, color: Colors.black54),
                   decoration: InputDecoration(
+                    labelText: 'Descrição',
                     hintStyle: TextStyle(
                       color: Colors.grey.shade500,
-                      fontSize: 22.0,
+                      fontSize: 16.0,
                       fontFamily: 'helvetica_neue_light',
                     ),
                   ),
