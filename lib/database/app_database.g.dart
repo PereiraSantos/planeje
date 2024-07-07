@@ -103,7 +103,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `label` TEXT, `description` TEXT, `answer` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `learn` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
 
@@ -497,7 +497,6 @@ class _$QuestionDao extends QuestionDao {
             (Question item) => <String, Object?>{
                   'id': item.id,
                   'id_quiz': item.idQuiz,
-                  'label': item.label,
                   'description': item.description,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0)
                 }),
@@ -508,7 +507,6 @@ class _$QuestionDao extends QuestionDao {
             (Question item) => <String, Object?>{
                   'id': item.id,
                   'id_quiz': item.idQuiz,
-                  'label': item.label,
                   'description': item.description,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0)
                 });
@@ -529,7 +527,6 @@ class _$QuestionDao extends QuestionDao {
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
             idQuiz: row['id_quiz'] as int?,
-            label: row['label'] as String?,
             description: row['description'] as String?,
             answer:
                 row['answer'] == null ? null : (row['answer'] as int) != 0));
@@ -541,7 +538,6 @@ class _$QuestionDao extends QuestionDao {
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
             idQuiz: row['id_quiz'] as int?,
-            label: row['label'] as String?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0),
         arguments: [id]);
@@ -553,7 +549,6 @@ class _$QuestionDao extends QuestionDao {
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
             idQuiz: row['id_quiz'] as int?,
-            label: row['label'] as String?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0),
         arguments: [idQuiz]);

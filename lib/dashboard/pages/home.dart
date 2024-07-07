@@ -65,11 +65,11 @@ class _HomeState extends State<Home> {
                     quantityDelayed: reviserNotifier.quantityDelayed),
                 NextRevision(
                     future: NetRevisionTime(ValidateIsBefore()).getNextRevision(),
-                    text: 'Próxima revisão atrasada',
+                    text: 'Atrasadas',
                     finishUpdaterReviser: () => reloadPage()),
                 NextRevision(
                   future: NetRevisionTime(ValidateIsAfter()).getNextRevision(),
-                  text: 'Próxima revisão',
+                  text: 'Próximas',
                   finishUpdaterReviser: () => reloadPage(),
                 ),
               ],

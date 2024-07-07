@@ -25,7 +25,7 @@ class RegisterLearnPage extends StatelessWidget {
         elevation: 0,
         title: Text(
           registerLearn.message.getTypeQuiz!.name,
-          style: const TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(

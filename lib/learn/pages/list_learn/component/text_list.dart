@@ -4,7 +4,7 @@ class TextCard extends StatelessWidget {
   const TextCard({
     super.key,
     required this.revisionEntity,
-    this.fontSize = 16,
+    this.fontSize = 14,
     this.color = Colors.black54,
     this.maxLines = 1,
     this.fontWeight = FontWeight.normal,

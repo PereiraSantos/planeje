@@ -28,7 +28,7 @@ class RegisterAnnotation extends StatelessWidget {
         elevation: 0,
         title: Text(
           registerAnnotation.message.getTypeQuiz!.name,
-          style: const TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(
@@ -46,7 +46,7 @@ class RegisterAnnotation extends StatelessWidget {
               ),
               const Text(
                 "Título",
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               Flexible(
                 child: TextFormField(
@@ -54,7 +54,7 @@ class RegisterAnnotation extends StatelessWidget {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   maxLength: 200,
-                  style: const TextStyle(fontSize: 22, color: Colors.black54),
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
                   decoration: InputDecoration(
                     hintStyle: TextStyle(
                       color: Colors.grey.shade500,
@@ -66,7 +66,7 @@ class RegisterAnnotation extends StatelessWidget {
               ),
               const Text(
                 "Descrição",
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
               Flexible(
                 child: TextFormField(
@@ -74,7 +74,7 @@ class RegisterAnnotation extends StatelessWidget {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   maxLength: 1000,
-                  style: const TextStyle(fontSize: 22, color: Colors.black54),
+                  style: const TextStyle(fontSize: 14, color: Colors.black54),
                   decoration: InputDecoration(
                     hintStyle: TextStyle(
                       color: Colors.grey.shade500,

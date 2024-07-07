@@ -20,7 +20,6 @@ class TableQuestion extends StatelessWidget with ComponentTable {
   List<TableRow> table() {
     List<TableRow> list = [
       getRow(
-        label: 'Id*',
         description: 'Descrição',
         answer: 'Resposta',
         icon: const SizedBox(),
@@ -32,7 +31,6 @@ class TableQuestion extends StatelessWidget with ComponentTable {
       if (!listQuestion[i].delete) {
         list.add(
           getRow(
-            label: '${listQuestion[i].question?.label}',
             description: '${listQuestion[i].question?.description}',
             child: CheckBoxCustom(
                 isChecked: listQuestion[i].question?.answer ?? false,
@@ -42,7 +40,7 @@ class TableQuestion extends StatelessWidget with ComponentTable {
               child: const Icon(
                 Icons.delete_forever,
                 color: Color.fromARGB(162, 244, 67, 54),
-                size: 23,
+                size: 20,
               ),
             ),
             color: Colors.white,
@@ -63,9 +61,9 @@ class TableQuestion extends StatelessWidget with ComponentTable {
         child: Table(
           border: TableBorder.all(borderRadius: BorderRadius.circular(3), color: Colors.black26),
           columnWidths: const <int, TableColumnWidth>{
-            0: IntrinsicColumnWidth(),
-            1: FlexColumnWidth(10),
-            2: FixedColumnWidth(64),
+            0: FractionColumnWidth(.7),
+            1: FractionColumnWidth(.2),
+            2: FractionColumnWidth(.1),
           },
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: table(),

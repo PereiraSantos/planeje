@@ -21,7 +21,6 @@ class RegisterQuizPage extends StatelessWidget {
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
   final TextEditingController topic = TextEditingController();
-  final TextEditingController label = TextEditingController();
   final TextEditingController question = TextEditingController();
   final TableQuestionNotifier _tableQuestionNotifier = TableQuestionNotifier();
 
@@ -35,7 +34,7 @@ class RegisterQuizPage extends StatelessWidget {
         elevation: 0,
         title: Text(
           registerQuiz.message.getTypeQuiz?.name ?? '',
-          style: const TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -64,13 +63,6 @@ class RegisterQuizPage extends StatelessWidget {
                   textArea: true,
                 ),
                 TextFormFieldWidget(
-                  controller: label,
-                  hintText: 'Identificação',
-                  keyboardType: TextInputType.text,
-                  textArea: false,
-                  valid: false,
-                ),
-                TextFormFieldWidget(
                   controller: question,
                   maxLine: 5,
                   hintText: 'Questão',
@@ -82,10 +74,8 @@ class RegisterQuizPage extends StatelessWidget {
                   label: 'Adicionar questão',
                   onClick: () {
                     _tableQuestionNotifier.addQuestion(Question(
-                      label: label.text,
                       description: question.text,
                     ));
-                    label.text = '';
                     question.text = '';
                   },
                 ),

@@ -60,9 +60,9 @@ class ListAnnotation extends StatelessWidget {
                           if (result) annotationNotifier.update();
                         },
                         child: Card(
-                          elevation: 8,
+                          elevation: 2,
                           shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
+                              borderRadius: BorderRadius.circular(3), borderSide: BorderSide.none),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -85,7 +85,7 @@ class ListAnnotation extends StatelessWidget {
                                   children: [
                                     TextList(
                                       "${snapshot.data![index].title}",
-                                      color: Colors.black87,
+                                      color: Colors.black54,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ],

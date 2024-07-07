@@ -18,7 +18,7 @@ class TextFormFieldWidget extends StatelessWidget {
     this.textArea = false,
     this.readOnly = false,
     this.padding = const EdgeInsets.only(left: 20.0, top: 10, right: 20, bottom: 10),
-    this.fontSize = 22,
+    this.fontSize = 16,
     this.autofocus,
   });
 

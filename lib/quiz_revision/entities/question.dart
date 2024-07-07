@@ -9,9 +9,6 @@ class Question {
   @ColumnInfo(name: 'id_quiz')
   int? idQuiz;
 
-  @ColumnInfo(name: 'label')
-  String? label;
-
   @ColumnInfo(name: 'description')
   String? description;
 
@@ -24,14 +21,12 @@ class Question {
   Question({
     this.id,
     this.idQuiz,
-    this.label,
     this.description,
     this.answer = false,
     this.uniqueAnswer,
   });
 
   void setIdQuiz(int? value) => idQuiz = id;
-  void setLabel(String? value) => label = value;
   void setDescription(String? value) => description = value;
   void setAnswer(bool? value) => answer = value;
   void setUniqueAnswer(bool? value) => uniqueAnswer = value;

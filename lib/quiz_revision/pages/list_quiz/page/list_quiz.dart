@@ -78,22 +78,22 @@ class ListQuiz extends StatelessWidget {
                           if (result) quizNotifier.update();
                         },
                         child: Card(
-                          elevation: 8,
+                          elevation: 2,
                           shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
+                              borderRadius: BorderRadius.circular(3), borderSide: BorderSide.none),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: Text("Assunto: ${snapshot.data![index].topic ?? ''}"),
+                                child: Text("Assunto: ${snapshot.data![index].topic ?? ''}",
+                                    style: const TextStyle(fontSize: 14, color: Colors.black54)),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 05),
-                                child: Text(
-                                  "Pergunta: ${snapshot.data![index].description}",
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                child: Text("${snapshot.data![index].description}?",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontSize: 14, color: Colors.black54)),
                               ),
                               FutureBuilder(
                                 future: GetQuestion(QuestionDatabase())

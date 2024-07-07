@@ -101,10 +101,10 @@ class ListRevision extends StatelessWidget {
                           if (result) revisionNotifier.update();
                         },
                         child: Card(
-                          elevation: 8,
+                          elevation: 2,
                           color: checkColorDate(snapshot.data![index].dateRevision.nextDate),
                           shape: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(3),
                             borderSide: BorderSide.none,
                           ),
                           child: Column(
@@ -119,7 +119,7 @@ class ListRevision extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        labelText("Conhecimento:"),
+                                        labelText("Aprender:"),
                                         Expanded(
                                           flex: 2,
                                           child: SizedBox(
@@ -138,29 +138,18 @@ class ListRevision extends StatelessWidget {
                                   }
                                 },
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  labelText("Revisão:"),
-                                  Expanded(
-                                    flex: 2,
-                                    child: SizedBox(
-                                      width: double.maxFinite,
-                                      child: TextCard(
-                                        padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                        revisionEntity: snapshot.data![index].revision.description ?? "",
-                                        maxLines: 5,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                width: double.maxFinite,
+                                child: TextCard(
+                                  padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
+                                  revisionEntity: snapshot.data![index].revision.description ?? "",
+                                  maxLines: 5,
+                                ),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  labelText("Data:"),
                                   Expanded(
                                     flex: 2,
                                     child: SizedBox(

@@ -53,7 +53,7 @@ class NextRevision extends StatelessWidget {
                   alignment: Alignment.bottomLeft,
                   child: Text(
                     text,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black54),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
                   ),
                 ),
                 ListView.builder(
@@ -88,41 +88,24 @@ class NextRevision extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: SizedBox(
-                                      width: double.maxFinite,
-                                      child: TextCard(
-                                        padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                        revisionEntity: snapshot.data![index].revision.description ?? "",
-                                        maxLines: 5,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                width: double.maxFinite,
+                                child: TextCard(
+                                  padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
+                                  revisionEntity: snapshot.data![index].revision.description ?? "",
+                                  maxLines: 5,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                ),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  labelText("Data:"),
-                                  Expanded(
-                                    flex: 2,
-                                    child: SizedBox(
-                                      width: double.maxFinite,
-                                      child: TextCard(
-                                        padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                        revisionEntity: FormatDate.formatDateString(
-                                            "${snapshot.data![index].dateRevision.nextDate}"),
-                                        maxLines: 5,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                width: double.maxFinite,
+                                child: TextCard(
+                                  padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
+                                  revisionEntity: FormatDate.formatDateString(
+                                      "${snapshot.data![index].dateRevision.nextDate}"),
+                                  maxLines: 5,
+                                ),
                               )
                             ],
                           ),

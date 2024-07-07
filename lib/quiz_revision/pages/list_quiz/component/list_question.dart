@@ -49,17 +49,13 @@ class _ListQuestionState extends State<ListQuestion> {
                     ),
                   ),
                   Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: Text('${widget.listQuestion[index].label}:'),
-                    ),
-                  ),
-                  Expanded(
                     flex: 10,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 2),
-                      child: Text('${widget.listQuestion[index].description}'),
+                      child: Text(
+                        '${widget.listQuestion[index].description}',
+                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                      ),
                     ),
                   )
                 ],

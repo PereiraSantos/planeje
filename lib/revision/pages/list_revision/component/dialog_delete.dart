@@ -23,7 +23,7 @@ class DialogDelete {
           return AlertDialog(
             content: Text(
               "Existe anotação vinculada a \n${revision.description!}.\nNão pode ser excluida.",
-              style: const TextStyle(color: Colors.black45, fontSize: 20),
+              style: const TextStyle(color: Colors.black45, fontSize: 16),
             ),
             actions: <Widget>[
               Padding(
@@ -32,15 +32,12 @@ class DialogDelete {
                   child: TextButton(
                     onPressed: () => Navigator.pop(context, false),
                     style: ButtonStyle(
-                      side: WidgetStateProperty.all(
-                        const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
-                      ),
                       foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
                       padding: WidgetStateProperty.all(
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 40),
                       ),
                       textStyle: WidgetStateProperty.all(
-                        const TextStyle(fontSize: 18),
+                        const TextStyle(fontSize: 16),
                       ),
                     ),
                     child: const Text("Ok"),
@@ -59,7 +56,7 @@ class DialogDelete {
           return AlertDialog(
             content: Text(
               "Deseja excluir? \n${revision.description!}",
-              style: const TextStyle(color: Colors.black45, fontSize: 20),
+              style: const TextStyle(color: Colors.black45, fontSize: 16),
             ),
             actions: <Widget>[
               Padding(
@@ -78,15 +75,12 @@ class DialogDelete {
                         }
                       },
                       style: ButtonStyle(
-                        side: WidgetStateProperty.all(
-                          const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
-                        ),
                         foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
                         padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                          const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                         ),
                         textStyle: WidgetStateProperty.all(
-                          const TextStyle(fontSize: 18),
+                          const TextStyle(fontSize: 16),
                         ),
                       ),
                       child: const Text("SIM"),
@@ -94,15 +88,12 @@ class DialogDelete {
                     TextButton(
                       onPressed: () => Navigator.pop(context, false),
                       style: ButtonStyle(
-                        side: WidgetStateProperty.all(
-                          const BorderSide(width: 2, color: Color.fromARGB(80, 0, 0, 0)),
-                        ),
                         foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
                         padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                          const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                         ),
                         textStyle: WidgetStateProperty.all(
-                          const TextStyle(fontSize: 18),
+                          const TextStyle(fontSize: 16),
                         ),
                       ),
                       child: const Text("NÃO"),

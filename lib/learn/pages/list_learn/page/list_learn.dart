@@ -59,9 +59,9 @@ class ListLearn extends StatelessWidget {
                           if (result) learnNotifier.update();
                         },
                         child: Card(
-                          elevation: 8,
+                          elevation: 2,
                           shape: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(3),
                             borderSide: BorderSide.none,
                           ),
                           child: SizedBox(

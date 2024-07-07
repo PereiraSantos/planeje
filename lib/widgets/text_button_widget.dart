@@ -18,7 +18,7 @@ class TextButtonWidget extends StatelessWidget {
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),
           child: Text(
             label,
-            style: const TextStyle(fontSize: 14.0, fontFamily: 'helvetica_neue_light', color: Colors.black54),
+            style: const TextStyle(fontSize: 12.0, fontFamily: 'helvetica_neue_light', color: Colors.black54),
           ),
         ),
         onPressed: () => onClick(),

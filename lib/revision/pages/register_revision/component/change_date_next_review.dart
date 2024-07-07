@@ -84,7 +84,7 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
                 children: [
                   const Text(
                     "Próxima revisão em",
-                    style: TextStyle(color: Colors.black45, fontSize: 17),
+                    style: TextStyle(color: Colors.black45, fontSize: 14),
                   ),
                   SizedBox(
                     width: 90,
@@ -111,7 +111,7 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
                   ),
                   const Text(
                     "dias.",
-                    style: TextStyle(color: Colors.black45, fontSize: 17),
+                    style: TextStyle(color: Colors.black45, fontSize: 14),
                   ),
                 ],
               ),

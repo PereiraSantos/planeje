@@ -27,10 +27,10 @@ class DropDownButtonCustom extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(bottom: 20),
               child: DropdownButtonFormField<int>(
-                hint: const Text("Revisão", style: TextStyle(fontSize: 18, color: Colors.grey)),
+                hint: const Text("Revisão", style: TextStyle(fontSize: 15, color: Colors.grey)),
                 value: dropdownValue,
                 icon: const Icon(Icons.expand_more),
-                elevation: 16,
+                elevation: 14,
                 isExpanded: true,
                 isDense: true,
                 style: const TextStyle(color: Colors.black54),
