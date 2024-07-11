@@ -86,7 +86,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
                     AppBarButtonWidget(
                       onClick: () async => await Navigator.of(context)
                           .push(TransitionsBuilder.createRoute(const TabBarWidget())),
-                      title: 'Planejamento',
+                      title: 'Cronograma',
                       color: Colors.black54,
                     ),
                   ]

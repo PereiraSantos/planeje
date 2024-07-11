@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
                 AppBarButtonWidget(
                     onClick: () async => await Navigator.of(context)
                         .push(TransitionsBuilder.createRoute(const TabBarWidget())),
-                    title: 'Planejamento'),
+                    title: 'Cronograma'),
               ],
             );
           },
