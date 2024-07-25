@@ -26,10 +26,10 @@ class HourReviser extends StatelessWidget {
             ),
           ),
           Card(
-            elevation: 6,
+            elevation: 2,
             color: Colors.white,
             shape: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(3.0),
               borderSide: BorderSide.none,
             ),
             child: Column(

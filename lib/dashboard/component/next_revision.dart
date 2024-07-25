@@ -82,9 +82,9 @@ class NextRevision extends StatelessWidget {
                         width: double.maxFinite,
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: Card(
-                          elevation: 8,
+                          elevation: 2,
                           shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0), borderSide: BorderSide.none),
+                              borderRadius: BorderRadius.circular(3.0), borderSide: BorderSide.none),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [

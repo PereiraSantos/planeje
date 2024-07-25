@@ -27,7 +27,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
   dynamic notifier;
 
   static const List<Tab> tabs = <Tab>[
-    Tab(child: Text('Aprender', style: TextStyle(color: Colors.grey))),
+    Tab(child: Text('Conhecimento', style: TextStyle(color: Colors.grey))),
     Tab(child: Text('Revisão', style: TextStyle(color: Colors.grey))),
     Tab(child: Text('Anotação', style: TextStyle(color: Colors.grey))),
     Tab(child: Text('Quiz', style: TextStyle(color: Colors.grey))),

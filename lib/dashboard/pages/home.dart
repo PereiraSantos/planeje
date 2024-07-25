@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
                     quantityDelayed: reviserNotifier.quantityDelayed),
                 NextRevision(
                     future: NetRevisionTime(ValidateIsBefore()).getNextRevision(),
-                    text: 'Atrasadas',
+                    text: 'Realizar',
                     finishUpdaterReviser: () => reloadPage()),
                 NextRevision(
                   future: NetRevisionTime(ValidateIsAfter()).getNextRevision(),

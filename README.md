@@ -3,7 +3,7 @@
 Aplicativo desenvolvido para controle dos meus estudos em programação.
 Controlava as revisões em planilha e ferramentas online, decidi desenvolver a minha própria. 
 ## Finalidade do aplicativo
-- `Aprender` - Cria item para estudo.
+- `Conhecimento` - Cria item para estudo.
 - `Revisão` - Cria revisão vinculada a conhecimento ou não.
 - `Anotação` - Cria anotação de uma revisão, vinculada a revisão ou não.
 - `Quiz` - Cria quiz, jogo de quiz, para medir seu conhecimento sobre os seus estudos.

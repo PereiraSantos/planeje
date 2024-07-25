@@ -27,10 +27,10 @@ class ReviserLate extends StatelessWidget {
             ),
           ),
           Card(
-            elevation: 6,
+            elevation: 2,
             color: Colors.white,
             shape: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(3.0),
               borderSide: BorderSide.none,
             ),
             child: Column(
@@ -48,7 +48,7 @@ class ReviserLate extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(left: 5, bottom: 10),
                   child: Text(
-                    "Concluída: $quantityCompleted",
+                    "Próximas: $quantityCompleted",
                     style: const TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                 ),
