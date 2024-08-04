@@ -16,7 +16,7 @@ class AddAppBarWidget extends StatelessWidget {
           icon: const Icon(
             Icons.add,
             color: Colors.black54,
-            size: 20,
+            size: 22,
           ),
         ),
       ),

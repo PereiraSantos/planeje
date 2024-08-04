@@ -16,7 +16,7 @@ class SearchAppBarWidget extends StatelessWidget {
           icon: const Icon(
             Icons.search,
             color: Colors.black54,
-            size: 20,
+            size: 22,
           ),
         ),
       ),

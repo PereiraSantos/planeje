@@ -30,7 +30,7 @@ class NextRevision extends StatelessWidget {
         child: Text(
           label,
           style: const TextStyle(
-            fontSize: 15,
+            fontSize: 17,
             color: Colors.black54,
           ),
         ),
@@ -53,7 +53,7 @@ class NextRevision extends StatelessWidget {
                   alignment: Alignment.bottomLeft,
                   child: Text(
                     text,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
                   ),
                 ),
                 ListView.builder(
@@ -95,7 +95,7 @@ class NextRevision extends StatelessWidget {
                                   revisionEntity: snapshot.data![index].revision.description ?? "",
                                   maxLines: 5,
                                   fontWeight: FontWeight.w600,
-                                  fontSize: 15,
+                                  fontSize: 17,
                                 ),
                               ),
                               SizedBox(

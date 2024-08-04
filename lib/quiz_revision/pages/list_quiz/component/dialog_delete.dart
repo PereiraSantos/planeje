@@ -9,7 +9,7 @@ class DialogDelete {
         return AlertDialog(
           content: Text(
             "Deseja excluir? \n${quiz.topic ?? quiz.description}",
-            style: const TextStyle(color: Colors.black45, fontSize: 16),
+            style: const TextStyle(color: Colors.black45, fontSize: 18),
           ),
           actions: <Widget>[
             Padding(
@@ -25,7 +25,7 @@ class DialogDelete {
                         const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                       ),
                       textStyle: WidgetStateProperty.all(
-                        const TextStyle(fontSize: 16),
+                        const TextStyle(fontSize: 18),
                       ),
                     ),
                     child: const Text("SIM"),
@@ -38,7 +38,7 @@ class DialogDelete {
                         const EdgeInsets.symmetric(vertical: 6, horizontal: 30),
                       ),
                       textStyle: WidgetStateProperty.all(
-                        const TextStyle(fontSize: 16),
+                        const TextStyle(fontSize: 18),
                       ),
                     ),
                     child: const Text("NÃO"),

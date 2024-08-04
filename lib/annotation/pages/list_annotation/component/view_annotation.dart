@@ -22,13 +22,13 @@ class ViewAnnotation {
                   padding: const EdgeInsets.only(bottom: 05),
                   child: Text(
                     "Revisão: ${annotationRevision.description}",
-                    style: const TextStyle(color: Colors.black45, fontSize: 20),
+                    style: const TextStyle(color: Colors.black45, fontSize: 22),
                   ),
                 ),
               ),
               Text(
                 annotationRevision.text!,
-                style: const TextStyle(color: Colors.black45, fontSize: 20),
+                style: const TextStyle(color: Colors.black45, fontSize: 22),
               ),
             ],
           ),
@@ -49,7 +49,7 @@ class ViewAnnotation {
                         const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                       ),
                       textStyle: WidgetStateProperty.all(
-                        const TextStyle(fontSize: 18),
+                        const TextStyle(fontSize: 20),
                       ),
                     ),
                     child: const Text("FECHAR"),

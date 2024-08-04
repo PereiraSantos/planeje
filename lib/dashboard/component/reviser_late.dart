@@ -23,7 +23,7 @@ class ReviserLate extends StatelessWidget {
             padding: const EdgeInsets.only(left: 5, top: 10),
             child: const Text(
               "Revisões",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black54),
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black54),
             ),
           ),
           Card(
@@ -42,14 +42,14 @@ class ReviserLate extends StatelessWidget {
                   width: double.maxFinite,
                   child: Text(
                     "Atrasadas: $quantityDelayed",
-                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                    style: const TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(left: 5, bottom: 10),
                   child: Text(
                     "Próximas: $quantityCompleted",
-                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                    style: const TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ),
               ],

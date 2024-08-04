@@ -29,7 +29,7 @@ class ListRevisionComponet extends StatelessWidget {
       child: SizedBox(
         child: Text(
           label,
-          style: const TextStyle(fontSize: 15, color: Colors.black54),
+          style: const TextStyle(fontSize: 17, color: Colors.black54),
         ),
       ),
     );
@@ -218,7 +218,7 @@ class ListRevisionComponet extends StatelessWidget {
               return const Center(
                 child: Text(
                   "Não há revisão!!!",
-                  style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
+                  style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.w300),
                 ),
               );
             }

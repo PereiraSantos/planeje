@@ -20,7 +20,7 @@ class NotificationAppBarWidget extends StatelessWidget {
             child: const Icon(
               Icons.notifications,
               color: Colors.black54,
-              size: 20,
+              size: 22,
             ),
           ),
         ),

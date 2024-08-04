@@ -32,7 +32,7 @@ class _TimerState extends State<Timer> {
             child: Text(
               getTime(),
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 24,
                 color: Colors.black54,
               ),
             ),

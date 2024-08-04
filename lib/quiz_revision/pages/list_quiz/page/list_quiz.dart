@@ -44,11 +44,13 @@ class ListQuiz extends StatelessWidget {
 
                         if (result && context.mounted) {
                           final TableQuestionNotifier tableQuestionNotifier = TableQuestionNotifier();
-                          tableQuestionNotifier.deleteQuestionByIdQuiz(snapshot.data![index].id!);
+                          await tableQuestionNotifier.deleteQuestionByIdQuiz(snapshot.data![index].id!);
 
                           await RemoveQuestion(QuestionDatabase()).delete(tableQuestionNotifier.questions);
 
                           await DeleteQuiz(QuizDatabase()).deleteQuiz(snapshot.data![index].id!);
+                          tableQuestionNotifier.clearList();
+
                           if (!context.mounted) return;
                           MessageUser.message(context, 'Removido com sucesso');
                           quizNotifier.update();
@@ -123,7 +125,7 @@ class ListQuiz extends StatelessWidget {
               return const Center(
                 child: Text(
                   "Não há quiz!!!",
-                  style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
+                  style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.w300),
                 ),
               );
             }

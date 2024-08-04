@@ -34,7 +34,7 @@ class RegisterQuizPage extends StatelessWidget {
         elevation: 0,
         title: Text(
           registerQuiz.message.getTypeQuiz?.name ?? '',
-          style: const TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -73,9 +73,10 @@ class RegisterQuizPage extends StatelessWidget {
                 TextButtonWidget(
                   label: 'Adicionar questão',
                   onClick: () {
-                    _tableQuestionNotifier.addQuestion(Question(
-                      description: question.text,
-                    ));
+                    question.text.trim() == ''
+                        ? MessageUser.message(context, 'Obrigatório ter uma questão.')
+                        : _tableQuestionNotifier.addQuestion(Question(description: question.text));
+
                     question.text = '';
                   },
                 ),

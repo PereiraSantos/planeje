@@ -73,13 +73,15 @@ class _$AppDatabase extends AppDatabase {
 
   LearnDao? _learnDaoInstance;
 
+  CategoryDao? _categoryDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -99,13 +101,15 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `id_category` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `learn` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -142,6 +146,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   LearnDao get learnDao {
     return _learnDaoInstance ??= _$LearnDao(database, changeListener);
+  }
+
+  @override
+  CategoryDao get categoryDao {
+    return _categoryDaoInstance ??= _$CategoryDao(database, changeListener);
   }
 }
 
@@ -339,7 +348,8 @@ class _$AnnotationDao extends AnnotationDao {
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
-                  'id_revision': item.idRevision
+                  'id_revision': item.idRevision,
+                  'id_category': item.idCategory
                 }),
         _annotationUpdateAdapter = UpdateAdapter(
             database,
@@ -350,7 +360,8 @@ class _$AnnotationDao extends AnnotationDao {
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
-                  'id_revision': item.idRevision
+                  'id_revision': item.idRevision,
+                  'id_category': item.idCategory
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -371,7 +382,8 @@ class _$AnnotationDao extends AnnotationDao {
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
+            idRevision: row['id_revision'] as int?,
+            idCategory: row['id_category'] as int?),
         arguments: [id]);
   }
 
@@ -384,7 +396,8 @@ class _$AnnotationDao extends AnnotationDao {
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
+            idRevision: row['id_revision'] as int?,
+            idCategory: row['id_category'] as int?),
         arguments: [idRevision]);
   }
 
@@ -652,5 +665,81 @@ class _$LearnDao extends LearnDao {
   Future<int> updateLearn(Learn learn) {
     return _learnUpdateAdapter.updateAndReturnChangedRows(
         learn, OnConflictStrategy.abort);
+  }
+}
+
+class _$CategoryDao extends CategoryDao {
+  _$CategoryDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _categoryInsertionAdapter = InsertionAdapter(
+            database,
+            'category',
+            (Category item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description
+                }),
+        _categoryUpdateAdapter = UpdateAdapter(
+            database,
+            'category',
+            ['id'],
+            (Category item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Category> _categoryInsertionAdapter;
+
+  final UpdateAdapter<Category> _categoryUpdateAdapter;
+
+  @override
+  Future<List<Category>?> getAllCategory() async {
+    return _queryAdapter.queryList('SELECT * FROM category',
+        mapper: (Map<String, Object?> row) => Category(
+            id: row['id'] as int?, description: row['description'] as String?));
+  }
+
+  @override
+  Future<List<Category>?> getCategory(String text) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM category where description LIKE ?1',
+        mapper: (Map<String, Object?> row) => Category(
+            id: row['id'] as int?, description: row['description'] as String?),
+        arguments: [text]);
+  }
+
+  @override
+  Future<Category?> getCategoryId(int id) async {
+    return _queryAdapter.query('SELECT * FROM category WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Category(
+            id: row['id'] as int?, description: row['description'] as String?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<Category?> deleteCategoryById(int id) async {
+    return _queryAdapter.query('delete FROM category WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Category(
+            id: row['id'] as int?, description: row['description'] as String?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> insertCategory(Category category) {
+    return _categoryInsertionAdapter.insertAndReturnId(
+        category, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateCategory(Category category) {
+    return _categoryUpdateAdapter.updateAndReturnChangedRows(
+        category, OnConflictStrategy.abort);
   }
 }

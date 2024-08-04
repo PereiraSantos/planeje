@@ -82,7 +82,7 @@ class ListLearn extends StatelessWidget {
               return const Center(
                 child: Text(
                   "Não há item!!!",
-                  style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
+                  style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.w300),
                 ),
               );
             }

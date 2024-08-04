@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class TabBarNotifier with ChangeNotifier {
   Notifier learnNotifier = Notifier();
   Notifier revisionNotifier = Notifier();
+  Notifier categoryNotifier = Notifier();
   Notifier annotationNotifier = Notifier();
   Notifier quizNotifier = Notifier();
   SearchNotifier searchNotifier = SearchNotifier();

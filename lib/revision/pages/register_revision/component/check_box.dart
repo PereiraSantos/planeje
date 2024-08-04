@@ -27,7 +27,7 @@ class CheckBoxComponent extends StatelessWidget {
           Text(
             label,
             style: const TextStyle(
-              fontSize: 17,
+              fontSize: 19,
               color: Color.fromARGB(255, 134, 134, 134),
             ),
           ),

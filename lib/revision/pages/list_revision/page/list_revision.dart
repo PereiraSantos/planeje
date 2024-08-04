@@ -13,8 +13,8 @@ class ListRevision extends StatefulWidget {
 
 class _ListRevisionState extends State<ListRevision> with SingleTickerProviderStateMixin {
   static const List<Tab> tabs = <Tab>[
-    Tab(child: Text('Realizar', style: TextStyle(color: Colors.grey))),
-    Tab(child: Text('Próximas', style: TextStyle(color: Colors.grey))),
+    Tab(child: Text('Realizar', style: TextStyle(color: Colors.grey, fontSize: 16))),
+    Tab(child: Text('Próximas', style: TextStyle(color: Colors.grey, fontSize: 16))),
   ];
 
   late TabController _tabController;

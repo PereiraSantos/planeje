@@ -10,7 +10,7 @@ class TableQuestionNotifier with ChangeNotifier {
   RegisterQuestion registerQuestion = SaveQuestion(QuestionDatabase());
   List<QuestionList> questions = [];
 
-  void deleteQuestionByIdQuiz(int idQUiz) async {
+  Future<void> deleteQuestionByIdQuiz(int idQUiz) async {
     List<Question>? list = await GetQuestion(QuestionDatabase()).getQuestionByIdQuiz(idQUiz) ?? [];
     for (var question in list) {
       questions.add(QuestionList(delete: true, question: question));
@@ -69,4 +69,6 @@ class TableQuestionNotifier with ChangeNotifier {
 
     notifyListeners();
   }
+
+  void clearList() => questions.clear();
 }

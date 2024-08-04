@@ -13,10 +13,6 @@ abstract class AnnotationDataSourceRepository {
 }
 
 class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
-  Future<AppDatabase> getInstance() async {
-    return await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-  }
-
   @override
   Future<Annotation?> delete(int id) async {
     final database = await getInstance();

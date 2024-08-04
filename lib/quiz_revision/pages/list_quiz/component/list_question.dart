@@ -54,7 +54,7 @@ class _ListQuestionState extends State<ListQuestion> {
                       padding: const EdgeInsets.only(top: 2),
                       child: Text(
                         '${widget.listQuestion[index].description}',
-                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                        style: const TextStyle(fontSize: 16, color: Colors.black54),
                       ),
                     ),
                   )

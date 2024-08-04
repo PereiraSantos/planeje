@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.dart';
+import 'package:planeje/category/pages/list_category/list_category.dart';
 import 'package:planeje/dashboard/pages/home.dart';
 import 'package:planeje/learn/pages/list_learn/page/list_learn.dart';
 import 'package:planeje/quiz_revision/pages/list_quiz/page/list_quiz.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
 import 'package:planeje/utils/app_bar/annotation_app_bar.dart';
+import 'package:planeje/utils/app_bar/category_app_bar.dart';
 import 'package:planeje/utils/app_bar/learn_app_bar.dart';
 import 'package:planeje/utils/app_bar/quiz_app_bar.dart';
 import 'package:planeje/utils/app_bar/revision_app_bar.dart';
@@ -27,10 +29,11 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
   dynamic notifier;
 
   static const List<Tab> tabs = <Tab>[
-    Tab(child: Text('Conhecimento', style: TextStyle(color: Colors.grey))),
-    Tab(child: Text('Revisão', style: TextStyle(color: Colors.grey))),
-    Tab(child: Text('Anotação', style: TextStyle(color: Colors.grey))),
-    Tab(child: Text('Quiz', style: TextStyle(color: Colors.grey))),
+    Tab(child: Text('Conhecimento', style: TextStyle(color: Colors.grey, fontSize: 16))),
+    Tab(child: Text('Revisão', style: TextStyle(color: Colors.grey, fontSize: 16))),
+    Tab(child: Text('Categoria', style: TextStyle(color: Colors.grey, fontSize: 16))),
+    Tab(child: Text('Anotação', style: TextStyle(color: Colors.grey, fontSize: 16))),
+    Tab(child: Text('Quiz', style: TextStyle(color: Colors.grey, fontSize: 16))),
   ];
 
   late TabController _tabController;
@@ -51,7 +54,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: 1,
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -78,7 +81,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
                           autofocus: false,
                           borderRadius: 15,
                           padding: const EdgeInsets.only(left: 0, top: 2, right: 0, bottom: 3.5),
-                          fontSize: 14,
+                          fontSize: 15,
                           onChange: (value) => notifier.setSearch(value)),
                     )
                   ],
@@ -99,7 +102,16 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
               listenable: tabBarNotifier.searchNotifier,
               builder: (BuildContext context, Widget? child) {
                 return tabBarNotifier.searchNotifier.hideSearch
-                    ? const SizedBox()
+                    ? IconButton(
+                        onPressed: () => tabBarNotifier.searchNotifier.updateHideSearch(false),
+                        icon: const Padding(
+                          padding: EdgeInsets.only(right: 5),
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.red,
+                            size: 22,
+                          ),
+                        ))
                     : Padding(
                         padding: const EdgeInsets.only(top: 3),
                         child: IconButton(
@@ -107,7 +119,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
                           icon: const Icon(
                             Icons.search,
                             color: Colors.black54,
-                            size: 20,
+                            size: 22,
                           ),
                         ),
                       );
@@ -126,11 +138,16 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
                       .buildAdd(context);
                 }
                 if (_tabController.index == 2) {
+                  notifier = tabBarNotifier.categoryNotifier;
+                  return CategoryAppBar(onClick: () => tabBarNotifier.categoryNotifier.update())
+                      .buildAdd(context);
+                }
+                if (_tabController.index == 3) {
                   notifier = tabBarNotifier.annotationNotifier;
                   return AnnotationAppBar(onClick: () => tabBarNotifier.annotationNotifier.update())
                       .buildAdd(context);
                 }
-                if (_tabController.index == 3) {
+                if (_tabController.index == 4) {
                   notifier = tabBarNotifier.quizNotifier;
                   return QuizAppBar(onClick: () => tabBarNotifier.quizNotifier.update()).buildAdd(context);
                 }
@@ -158,10 +175,13 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
               builder: (BuildContext context, Widget? child) => ListRevision(tabBarNotifier.revisionNotifier),
             ),
             ListenableBuilder(
-              listenable: tabBarNotifier.annotationNotifier,
-              builder: (BuildContext context, Widget? child) =>
-                  ListAnnotation(tabBarNotifier.annotationNotifier),
-            ),
+                listenable: tabBarNotifier.categoryNotifier,
+                builder: (BuildContext context, Widget? child) =>
+                    ListCategory(tabBarNotifier.categoryNotifier)),
+            ListenableBuilder(
+                listenable: tabBarNotifier.annotationNotifier,
+                builder: (BuildContext context, Widget? child) =>
+                    ListAnnotation(tabBarNotifier.annotationNotifier)),
             ListenableBuilder(
               listenable: tabBarNotifier.quizNotifier,
               builder: (BuildContext context, Widget? child) => ListQuiz(tabBarNotifier.quizNotifier),

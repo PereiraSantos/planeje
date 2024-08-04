@@ -11,10 +11,6 @@ abstract class DatasourceQuizRepository {
 }
 
 class QuizDatabase implements DatasourceQuizRepository {
-  Future<AppDatabase> getInstance() async {
-    return await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-  }
-
   @override
   Future<Quiz?> deleteQuiz(int id) async {
     final database = await getInstance();

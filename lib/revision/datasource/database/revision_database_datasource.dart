@@ -14,10 +14,6 @@ abstract class RevisionDataSourceRepository {
 }
 
 class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
-  Future<AppDatabase> getInstance() async {
-    return await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-  }
-
   @override
   Future<Revision?> deleteRevisionById(int id) async {
     final database = await getInstance();

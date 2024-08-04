@@ -11,7 +11,7 @@ class RegisterLearnPage extends StatelessWidget {
     description.text = registerLearn.learn.description ?? '';
   }
 
-  RegsiterLearn registerLearn;
+  RegisterLearn registerLearn;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
 
@@ -25,7 +25,7 @@ class RegisterLearnPage extends StatelessWidget {
         elevation: 0,
         title: Text(
           registerLearn.message.getTypeQuiz!.name,
-          style: const TextStyle(fontSize: 16, color: Colors.black54, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(

@@ -13,7 +13,11 @@ class RemoveQuestion implements DeleteQuestion {
   @override
   Future<bool> delete(List<QuestionList> questionList) async {
     for (var item in questionList) {
-      if (item.delete) await datasourceQuestion.deleteQuestion(item.question!.id!);
+      if (item.delete) {
+        item.question?.id != null
+            ? await datasourceQuestion.deleteQuestion(item.question!.id!)
+            : await datasourceQuestion.deleteQuestionByIdQuiz(item.question!.idQuiz!);
+      }
     }
     return true;
   }

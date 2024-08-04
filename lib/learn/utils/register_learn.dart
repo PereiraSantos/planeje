@@ -2,13 +2,13 @@ import 'package:planeje/learn/datasource/database/datasource_learn_repository.da
 import 'package:planeje/learn/entities/learn.dart';
 import 'package:planeje/utils/type_message.dart';
 
-abstract class RegsiterLearn {
+abstract class RegisterLearn {
   Future<int?> writeLearn();
   late Learn learn;
   late Message message;
 }
 
-class SaveLearn implements RegsiterLearn {
+class SaveLearn implements RegisterLearn {
   DatasourceLearnRepository datasourceLearnRepository;
   SaveLearn(this.datasourceLearnRepository, this.learn, this.message);
 
@@ -24,7 +24,7 @@ class SaveLearn implements RegsiterLearn {
   Message message;
 }
 
-class UpdateLearn implements RegsiterLearn {
+class UpdateLearn implements RegisterLearn {
   DatasourceLearnRepository datasourceLearnRepository;
   UpdateLearn(this.datasourceLearnRepository, this.learn, this.message);
 

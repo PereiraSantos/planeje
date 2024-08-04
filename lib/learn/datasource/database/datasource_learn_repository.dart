@@ -10,10 +10,6 @@ abstract class DatasourceLearnRepository {
 }
 
 class LearnDatabase implements DatasourceLearnRepository {
-  Future<AppDatabase> getInstance() async {
-    return await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-  }
-
   @override
   Future<List<Learn>?> getAllLearn(String text) async {
     final database = await getInstance();

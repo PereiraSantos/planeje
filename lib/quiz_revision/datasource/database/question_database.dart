@@ -13,10 +13,6 @@ abstract class DatasourceQuestionRepository {
 }
 
 class QuestionDatabase implements DatasourceQuestionRepository {
-  Future<AppDatabase> getInstance() async {
-    return await $FloorAppDatabase.databaseBuilder('app_database.db').build();
-  }
-
   @override
   Future<void> deleteQuestion(int id) async {
     final database = await getInstance();

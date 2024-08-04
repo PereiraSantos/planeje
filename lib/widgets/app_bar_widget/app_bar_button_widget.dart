@@ -25,7 +25,7 @@ class AppBarButtonWidget extends StatelessWidget {
         child: Text(
           title,
           style: const TextStyle(
-            fontSize: 13,
+            fontSize: 15,
             color: Color.fromARGB(137, 10, 5, 5),
             fontWeight: FontWeight.bold,
           ),

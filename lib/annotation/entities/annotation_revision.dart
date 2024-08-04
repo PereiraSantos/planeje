@@ -2,11 +2,13 @@ import 'annotation.dart';
 
 class AnnotationRevision extends Annotation {
   final String? description;
+  final String? descriptionCategory;
   final bool? status;
   final String? date;
   final String? nextDate;
 
   AnnotationRevision({
+    this.descriptionCategory,
     this.description,
     this.status,
     this.date,
@@ -16,11 +18,14 @@ class AnnotationRevision extends Annotation {
     super.text,
     super.dateText,
     super.idRevision,
+    super.idCategory,
   });
 
   static AnnotationRevision fromJson(Map<String, dynamic> json) => AnnotationRevision(
         title: json['title'] != null ? json['title'] as String? : null,
         description: json['description'] != null ? json['description'] as String? : null,
+        descriptionCategory:
+            json['descriptionCategory'] != null ? json['descriptionCategory'] as String? : null,
         status: json['status'] != null
             ? json['status'] == 0
                 ? true
@@ -32,5 +37,6 @@ class AnnotationRevision extends Annotation {
         text: json['text'] as String?,
         dateText: json['date_text'] as String?,
         idRevision: json['id_revision'] != null ? json['id_revision'] as int? : null,
+        idCategory: json['id_category'] != null ? json['id_category'] as int? : null,
       );
 }
