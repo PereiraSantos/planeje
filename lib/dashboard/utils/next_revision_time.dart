@@ -8,24 +8,24 @@ class NetRevisionTime {
   NetRevisionTime(this.revisionValid);
 
   IRevisionValid revisionValid;
+  List<RevisionTime> nextRevisions = [];
   List<RevisionTime> revisions = [];
-  List<RevisionTime> revisionTimes = [];
   var total = 0;
 
   Future<void> findNextRevision() async =>
-      revisionTimes = await GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription('');
+      revisions = await GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription('');
 
   Future<List<RevisionTime>?> getNextRevision() async {
     await findNextRevision();
 
-    for (var element in revisionTimes) {
+    for (var element in revisions) {
       if (revisionValid.validate(FormatDate.dateParse(element.dateRevision.nextDate!))) {
-        revisions.add(element);
+        nextRevisions.add(element);
       }
 
-      if (revisions.length > 2) break;
+      if (nextRevisions.length > 2) break;
     }
 
-    return revisions;
+    return nextRevisions;
   }
 }

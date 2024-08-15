@@ -7,13 +7,13 @@ import 'package:planeje/category/utils/find_category.dart';
 class DropDownButtonCategory extends StatelessWidget {
   DropDownButtonCategory({
     super.key,
-    required this.onClick,
+    required this.onChanged,
     this.idCategory,
   }) {
     if (idCategory != null) dropdownValue = idCategory;
   }
 
-  final Function(int?) onClick;
+  final Function(int?) onChanged;
   final int? idCategory;
   int? dropdownValue;
 
@@ -34,7 +34,7 @@ class DropDownButtonCategory extends StatelessWidget {
                 isExpanded: true,
                 isDense: true,
                 style: const TextStyle(color: Colors.black54),
-                onChanged: (int? value) => onClick(value),
+                onChanged: (int? value) => onChanged(value),
                 items: snapshot.data!.map<DropdownMenuItem<int>>((value) {
                   return DropdownMenuItem<int>(
                     value: value.id,

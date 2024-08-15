@@ -5,7 +5,7 @@ import 'package:planeje/utils/type_message.dart';
 abstract class RegisterLearn {
   Future<int?> writeLearn();
   late Learn learn;
-  late Message message;
+  late StatusNotification message;
 }
 
 class SaveLearn implements RegisterLearn {
@@ -21,7 +21,7 @@ class SaveLearn implements RegisterLearn {
   Learn learn;
 
   @override
-  Message message;
+  StatusNotification message;
 }
 
 class UpdateLearn implements RegisterLearn {
@@ -37,5 +37,5 @@ class UpdateLearn implements RegisterLearn {
   Learn learn;
 
   @override
-  Message message;
+  StatusNotification message;
 }

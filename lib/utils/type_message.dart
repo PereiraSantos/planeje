@@ -1,11 +1,11 @@
 // ignore: constant_identifier_names
 enum TypeMessage { Adicionar, Atualizar }
 
-class Message {
+class StatusNotification {
   TypeMessage? _type;
   String? _message;
 
-  Message([this._type]) {
+  StatusNotification([this._type]) {
     _type = _type ?? TypeMessage.Adicionar;
     setType(_type!);
   }

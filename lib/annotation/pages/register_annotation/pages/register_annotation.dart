@@ -10,14 +10,14 @@ import '../component/drop_down_revision.dart';
 // ignore: must_be_immutable
 class RegisterAnnotation extends StatelessWidget {
   RegisterAnnotation({super.key, required this.registerAnnotation}) {
-    textController.text = registerAnnotation.annotation.text ?? '';
-    titleController.text = registerAnnotation.annotation.title ?? '';
+    description.text = registerAnnotation.annotation.text ?? '';
+    title.text = registerAnnotation.annotation.title ?? '';
   }
 
   IRegisterAnnotation registerAnnotation;
   final formKey = GlobalKey<FormState>();
-  final TextEditingController textController = TextEditingController();
-  final TextEditingController titleController = TextEditingController();
+  final TextEditingController description = TextEditingController();
+  final TextEditingController title = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class RegisterAnnotation extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropDownButtonCategory(
-                  onClick: (value) => registerAnnotation.annotation.setIdCategory(value),
+                  onChanged: (value) => registerAnnotation.annotation.setIdCategory(value),
                   idCategory: registerAnnotation.annotation.idCategory,
                 ),
                 DropDownButtonRevision(
@@ -52,7 +52,7 @@ class RegisterAnnotation extends StatelessWidget {
                 ),
                 Flexible(
                   child: TextFormField(
-                    controller: titleController,
+                    controller: title,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     maxLength: 200,
@@ -69,7 +69,7 @@ class RegisterAnnotation extends StatelessWidget {
                 ),
                 Flexible(
                   child: TextFormField(
-                    controller: textController,
+                    controller: description,
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     maxLength: 1000,
@@ -102,8 +102,8 @@ class RegisterAnnotation extends StatelessWidget {
             () async {
               if (!formKey.currentState!.validate()) return;
 
-              registerAnnotation.annotation.setTitle(titleController.text);
-              registerAnnotation.annotation.setText(textController.text);
+              registerAnnotation.annotation.setTitle(title.text);
+              registerAnnotation.annotation.setText(description.text);
               registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
 
               await registerAnnotation.writeAnnotation();

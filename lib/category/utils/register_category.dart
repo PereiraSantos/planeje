@@ -6,7 +6,7 @@ import '../entities/category.dart';
 abstract class RegisterCategory {
   Future<int?> writeCategory();
   late Category category;
-  late Message message;
+  late StatusNotification message;
 }
 
 class SaveCategory implements RegisterCategory {
@@ -22,7 +22,7 @@ class SaveCategory implements RegisterCategory {
   Category category;
 
   @override
-  Message message;
+  StatusNotification message;
 }
 
 class UpdateCategory implements RegisterCategory {
@@ -38,5 +38,5 @@ class UpdateCategory implements RegisterCategory {
   Category category;
 
   @override
-  Message message;
+  StatusNotification message;
 }

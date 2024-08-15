@@ -51,7 +51,7 @@ class ListLearn extends StatelessWidget {
                                 registerLearn: UpdateLearn(
                                   LearnDatabase(),
                                   snapshot.data![index],
-                                  Message(TypeMessage.Atualizar),
+                                  StatusNotification(TypeMessage.Atualizar),
                                 ),
                               ),
                             ),

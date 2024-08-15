@@ -72,7 +72,7 @@ class ListQuiz extends StatelessWidget {
                                 registerQuiz: UpdateQuiz(
                                   QuizDatabase(),
                                   (snapshot.data![index]),
-                                  Message(TypeMessage.Atualizar),
+                                  StatusNotification(TypeMessage.Atualizar),
                                 ),
                               ),
                             ),

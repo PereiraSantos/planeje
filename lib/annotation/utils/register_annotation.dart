@@ -5,7 +5,7 @@ import 'package:planeje/utils/type_message.dart';
 abstract class IRegisterAnnotation {
   Future<int?> writeAnnotation();
   late Annotation annotation;
-  late Message message;
+  late StatusNotification message;
 }
 
 class InsertAnnotation implements IRegisterAnnotation {
@@ -22,7 +22,7 @@ class InsertAnnotation implements IRegisterAnnotation {
   Annotation annotation;
 
   @override
-  Message message;
+  StatusNotification message;
 }
 
 class UpdateAnnotation implements IRegisterAnnotation {
@@ -39,5 +39,5 @@ class UpdateAnnotation implements IRegisterAnnotation {
   Annotation annotation;
 
   @override
-  Message message;
+  StatusNotification message;
 }

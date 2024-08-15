@@ -14,11 +14,11 @@ class GetDelayedRevision extends NetRevisionTime implements IFindRevision {
   Future<void> getRevision() async {
     await findNextRevision();
 
-    for (var element in revisionTimes) {
-      revisions.add(element);
+    for (var element in revisions) {
+      nextRevisions.add(element);
     }
 
-    for (var element in revisions) {
+    for (var element in nextRevisions) {
       if (revisionValid.validate(FormatDate.dateParse(element.dateRevision.nextDate!))) total++;
     }
 
@@ -36,10 +36,10 @@ class GetCompletedRevision extends NetRevisionTime implements IFindRevision {
   Future<void> getRevision() async {
     await findNextRevision();
 
-    for (var element in revisionTimes) {
+    for (var element in revisions) {
       if (revisionValid.validate(FormatDate.dateParse(element.dateRevision.nextDate!))) total++;
 
-      revisions.add(element);
+      nextRevisions.add(element);
     }
 
     reviserNotifier.updateQuantityCompleted(total);

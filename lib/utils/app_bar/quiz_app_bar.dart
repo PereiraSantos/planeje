@@ -24,7 +24,7 @@ class QuizAppBar implements IAppBarNavigatorAdd {
     var result = await Navigator.of(context).push(
       TransitionsBuilder.createRoute(
         RegisterQuizPage(
-          registerQuiz: SaveQuiz(QuizDatabase(), Quiz(), Message()),
+          registerQuiz: SaveQuiz(QuizDatabase(), Quiz(), StatusNotification()),
         ),
       ),
     );

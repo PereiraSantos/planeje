@@ -6,7 +6,7 @@ import '../../entities/quiz.dart';
 abstract class RegisterQuiz {
   Future<int?> writeQuiz();
   late Quiz quiz;
-  late Message message;
+  late StatusNotification message;
 }
 
 class SaveQuiz implements RegisterQuiz {
@@ -23,7 +23,7 @@ class SaveQuiz implements RegisterQuiz {
   Quiz quiz;
 
   @override
-  Message message;
+  StatusNotification message;
 }
 
 class UpdateQuiz implements RegisterQuiz {
@@ -40,5 +40,5 @@ class UpdateQuiz implements RegisterQuiz {
   Quiz quiz;
 
   @override
-  Message message;
+  StatusNotification message;
 }

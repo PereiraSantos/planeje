@@ -31,7 +31,7 @@ class RevisionAppBar implements IAppBarNavigatorAdd {
           revision: Register(
             RevisionDatabaseDataSource(),
             Revision(),
-            Message(),
+            StatusNotification(),
             RegisterDateRevision(DateRevisionDatabaseDataSource(), DateRevision()),
           ),
         ),

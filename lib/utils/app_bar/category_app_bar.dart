@@ -24,7 +24,7 @@ class CategoryAppBar implements IAppBarNavigatorAdd {
       registerCategory: SaveCategory(
         CategoryDatabase(),
         Category(),
-        Message(),
+        StatusNotification(),
       ),
     )));
 

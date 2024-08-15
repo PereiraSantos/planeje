@@ -42,7 +42,9 @@ class _HomeState extends State<Home> {
           listenable: reviserNotifier,
           builder: (BuildContext context, Widget? child) {
             return AppBarWidget(
-              actions: [HomeAppBar(quantity: reviserNotifier.quantityDelayed).buildNotification(context)],
+              actions: [
+                HomeAppBar(quantity: reviserNotifier.quantityReviserDelayed).buildNotification(context)
+              ],
               child: [
                 HomeAppBarWidget(onClick: () => null, color: Colors.black54),
                 AppBarButtonWidget(
@@ -61,8 +63,8 @@ class _HomeState extends State<Home> {
             return Column(
               children: [
                 ReviserLate(
-                    quantityCompleted: reviserNotifier.quantityCompleted,
-                    quantityDelayed: reviserNotifier.quantityDelayed),
+                    quantityCompleted: reviserNotifier.quantityReviserCompleted,
+                    quantityDelayed: reviserNotifier.quantityReviserDelayed),
                 NextRevision(
                     future: NetRevisionTime(ValidateIsBefore()).getNextRevision(),
                     text: 'Realizar',

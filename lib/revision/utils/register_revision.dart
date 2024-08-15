@@ -6,7 +6,7 @@ import 'package:planeje/utils/type_message.dart';
 abstract class IRevision {
   Future<int?> writeRevision();
   late Revision revision;
-  late Message message;
+  late StatusNotification message;
   late IDate registerDate;
 }
 
@@ -24,7 +24,7 @@ class Register implements IRevision {
   Revision revision;
 
   @override
-  Message message;
+  StatusNotification message;
 
   @override
   IDate registerDate;
@@ -44,7 +44,7 @@ class Update implements IRevision {
   }
 
   @override
-  Message message;
+  StatusNotification message;
 
   @override
   IDate registerDate;

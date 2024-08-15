@@ -9,6 +9,8 @@ import 'package:planeje/quiz_revision/datasource/dao/question_dao.dart';
 import 'package:planeje/quiz_revision/datasource/dao/quiz_dao.dart';
 import 'package:planeje/revision/datasource/dao/date_revision_dao.dart';
 import 'package:planeje/revision/datasource/dao/revision_dao.dart';
+import 'package:planeje/utils/cache/cache.dart';
+import 'package:planeje/utils/cache/cache_dao.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:sqflite/sqflite.dart' as sqflite;
@@ -30,6 +32,7 @@ part 'app_database.g.dart';
   Question,
   Learn,
   Category,
+  Cache,
 ])
 abstract class AppDatabase extends FloorDatabase {
   RevisionDao get revisionDao;
@@ -39,6 +42,7 @@ abstract class AppDatabase extends FloorDatabase {
   QuestionDao get questionDao;
   LearnDao get learnDao;
   CategoryDao get categoryDao;
+  CacheDao get cacheDao;
 }
 
 final migration1to2 = Migration(1, 2, (database) async {
@@ -47,6 +51,12 @@ final migration1to2 = Migration(1, 2, (database) async {
   await database.execute('ALTER TABLE annotation ADD COLUMN id_category INTEGER');
 });
 
+final migration1to3 = Migration(2, 3, (database) async {
+  await database.execute('CREATE TABLE IF NOT EXISTS `cache` (`id` INTEGER PRIMARY KEY, `hash` TEXT)');
+});
+
 Future<AppDatabase> getInstance() async {
-  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([migration1to2]).build();
+  return await $FloorAppDatabase
+      .databaseBuilder('app_database.db')
+      .addMigrations([migration1to2, migration1to3]).build();
 }

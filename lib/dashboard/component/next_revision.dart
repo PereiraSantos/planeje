@@ -69,7 +69,7 @@ class NextRevision extends StatelessWidget {
                               revision: Update(
                                 RevisionDatabaseDataSource(),
                                 snapshot.data![index].revision,
-                                Message(TypeMessage.Atualizar),
+                                StatusNotification(TypeMessage.Atualizar),
                                 UpdateDateRevision(
                                     DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
                               ),

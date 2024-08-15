@@ -51,7 +51,7 @@ class ListCategory extends StatelessWidget {
                                 registerCategory: UpdateCategory(
                                   CategoryDatabase(),
                                   snapshot.data![index],
-                                  Message(TypeMessage.Atualizar),
+                                  StatusNotification(TypeMessage.Atualizar),
                                 ),
                               ),
                             ),

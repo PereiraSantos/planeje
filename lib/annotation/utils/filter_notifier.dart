@@ -3,19 +3,19 @@ import 'package:planeje/annotation/entities/annotation_revision.dart';
 import 'package:planeje/category/entities/category.dart';
 
 class FilterNotifier with ChangeNotifier {
-  List<Category> _filter = [];
-  List<AnnotationRevision>? _annotation = [];
+  List<Category> _filters = [];
+  List<AnnotationRevision>? _annotationsRevisions = [];
 
-  List<AnnotationRevision>? get annotation => _annotation;
+  List<AnnotationRevision>? get annotationsRevisions => _annotationsRevisions;
 
   void setAnnotation(List<AnnotationRevision> value) {
-    _annotation = value;
+    _annotationsRevisions = value;
   }
 
-  List<Category> get filter => _filter;
+  List<Category> get filters => _filters;
 
   void setFilter(List<Category> value) {
-    _filter = value;
+    _filters = value;
     update();
   }
 

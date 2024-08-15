@@ -75,6 +75,8 @@ class _$AppDatabase extends AppDatabase {
 
   CategoryDao? _categoryDaoInstance;
 
+  CacheDao? _cacheDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -110,6 +112,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `learn` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `cache` (`id` INTEGER NOT NULL, `hash` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -151,6 +155,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   CategoryDao get categoryDao {
     return _categoryDaoInstance ??= _$CategoryDao(database, changeListener);
+  }
+
+  @override
+  CacheDao get cacheDao {
+    return _cacheDaoInstance ??= _$CacheDao(database, changeListener);
   }
 }
 
@@ -741,5 +750,57 @@ class _$CategoryDao extends CategoryDao {
   Future<int> updateCategory(Category category) {
     return _categoryUpdateAdapter.updateAndReturnChangedRows(
         category, OnConflictStrategy.abort);
+  }
+}
+
+class _$CacheDao extends CacheDao {
+  _$CacheDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _cacheInsertionAdapter = InsertionAdapter(
+            database,
+            'cache',
+            (Cache item) =>
+                <String, Object?>{'id': item.id, 'hash': item.hash}),
+        _cacheUpdateAdapter = UpdateAdapter(
+            database,
+            'cache',
+            ['id'],
+            (Cache item) =>
+                <String, Object?>{'id': item.id, 'hash': item.hash});
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Cache> _cacheInsertionAdapter;
+
+  final UpdateAdapter<Cache> _cacheUpdateAdapter;
+
+  @override
+  Future<void> delete() async {
+    await _queryAdapter.queryNoReturn('delete from cache where id = 1');
+  }
+
+  @override
+  Future<List<Cache>?> getCache() async {
+    return _queryAdapter.queryList('select * from cache where id = 1',
+        mapper: (Map<String, Object?> row) =>
+            Cache(row['id'] as int, row['hash'] as String));
+  }
+
+  @override
+  Future<int> insertCache(Cache cache) {
+    return _cacheInsertionAdapter.insertAndReturnId(
+        cache, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateCache(Cache cache) {
+    return _cacheUpdateAdapter.updateAndReturnChangedRows(
+        cache, OnConflictStrategy.abort);
   }
 }

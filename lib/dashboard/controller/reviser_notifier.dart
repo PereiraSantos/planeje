@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import '../../revision/entities/revision.dart';
 
 class ReviserNotifier with ChangeNotifier {
-  int _quantityCompleted = 0;
-  int _quantityDelayed = 0;
+  int _quantityReviserCompleted = 0;
+  int _quantityReviserDelayed = 0;
 
   Revision _revision = Revision();
 
-  int get quantityCompleted => _quantityCompleted;
-  int get quantityDelayed => _quantityDelayed;
+  int get quantityReviserCompleted => _quantityReviserCompleted;
+  int get quantityReviserDelayed => _quantityReviserDelayed;
 
   Revision get revision => _revision;
 
   void updateQuantityCompleted(int value) {
-    _quantityCompleted = value;
+    _quantityReviserCompleted = value;
     notifyListeners();
   }
 
   void updateDelayed(int value) {
-    _quantityDelayed = value;
+    _quantityReviserDelayed = value;
     notifyListeners();
   }
 

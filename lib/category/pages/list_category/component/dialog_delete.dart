@@ -21,9 +21,10 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var result = await DeleteCategory(CategoryDatabase()).deleteCategoryById(category.id!);
+                      var categoryDeleted =
+                          await DeleteCategory(CategoryDatabase()).deleteCategoryById(category.id!);
 
-                      if (result != null && context.mounted) {
+                      if (categoryDeleted != null && context.mounted) {
                         message(context, 'Removido com sucesso');
                         Navigator.pop(context, true);
                       }

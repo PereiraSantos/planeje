@@ -28,7 +28,7 @@ class AnnotationAppBar implements IAppBarNavigatorAdd {
           registerAnnotation: InsertAnnotation(
             AnnotationDatabaseDatasource(),
             Annotation(),
-            Message(),
+            StatusNotification(),
           ),
         ),
       ),

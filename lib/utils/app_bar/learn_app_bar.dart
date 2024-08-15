@@ -22,7 +22,7 @@ class LearnAppBar implements IAppBarNavigatorAdd {
   Future<void> navigatorAdd(BuildContext context) async {
     var result = await Navigator.of(context).push(
       TransitionsBuilder.createRoute(
-        RegisterLearnPage(registerLearn: SaveLearn(LearnDatabase(), Learn(), Message())),
+        RegisterLearnPage(registerLearn: SaveLearn(LearnDatabase(), Learn(), StatusNotification())),
       ),
     );
 
