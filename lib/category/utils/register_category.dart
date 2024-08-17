@@ -3,19 +3,19 @@ import 'package:planeje/utils/type_message.dart';
 
 import '../entities/category.dart';
 
-abstract class RegisterCategory {
+abstract class RegisterCategoryFactory {
   Future<int?> writeCategory();
   late Category category;
   late Message message;
 }
 
-class SaveCategory implements RegisterCategory {
-  DatasourceCategoryRepository datasourceCategoryRepository;
-  SaveCategory(this.datasourceCategoryRepository, this.category, this.message);
+class SaveCategory implements RegisterCategoryFactory {
+  CategoryDatabaseFactory categoryDatabase;
+  SaveCategory(this.categoryDatabase, this.category, this.message);
 
   @override
   Future<int?> writeCategory() async {
-    return await datasourceCategoryRepository.insertCategory(category);
+    return await categoryDatabase.insertCategory(category);
   }
 
   @override
@@ -25,13 +25,13 @@ class SaveCategory implements RegisterCategory {
   Message message;
 }
 
-class UpdateCategory implements RegisterCategory {
-  DatasourceCategoryRepository datasourceCategoryRepository;
-  UpdateCategory(this.datasourceCategoryRepository, this.category, this.message);
+class UpdateCategory implements RegisterCategoryFactory {
+  CategoryDatabaseFactory categoryDatabase;
+  UpdateCategory(this.categoryDatabase, this.category, this.message);
 
   @override
   Future<int?> writeCategory() async {
-    return await datasourceCategoryRepository.updateCategory(category);
+    return await categoryDatabase.updateCategory(category);
   }
 
   @override

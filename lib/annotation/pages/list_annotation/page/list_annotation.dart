@@ -40,7 +40,7 @@ class ListAnnotation extends StatelessWidget {
             },
           ),
           FutureBuilder(
-            future: GetAnnotation(AnnotationDatabaseDatasource())
+            future: GetAnnotation(AnnotationDatabase())
                 .getAnnotationWidthRevision(annotationNotifier.search ?? ''),
             builder: (BuildContext context, AsyncSnapshot<List<AnnotationRevision>?> snapshot) {
               if (snapshot.hasData) {
@@ -104,7 +104,7 @@ class ListAnnotation extends StatelessWidget {
                                     TransitionsBuilder.createRoute(
                                       RegisterAnnotation(
                                         registerAnnotation: UpdateAnnotation(
-                                          AnnotationDatabaseDatasource(),
+                                          AnnotationDatabase(),
                                           annotations[index],
                                           Message(TypeMessage.Atualizar),
                                         ),

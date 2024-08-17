@@ -2,7 +2,7 @@ import 'package:planeje/quiz_revision/entities/question.dart';
 
 import '../../../database/app_database.dart';
 
-abstract class DatasourceQuestionRepository {
+abstract class QuestionDatabaseFactory {
   Future<List<Question>?> getAllQuestion();
   Future<int> insertQuestion(Question question);
   Future<Question?> getQuestionById(int id);
@@ -12,7 +12,7 @@ abstract class DatasourceQuestionRepository {
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
 }
 
-class QuestionDatabase implements DatasourceQuestionRepository {
+class QuestionDatabase implements QuestionDatabaseFactory {
   @override
   Future<void> deleteQuestion(int id) async {
     final database = await getInstance();

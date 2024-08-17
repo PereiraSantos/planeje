@@ -13,7 +13,7 @@ class DialogDelete {
     Revision revision,
   ) async {
     List<Annotation> result =
-        await GetAnnotation(AnnotationDatabaseDatasource()).getAnnotationWidthIdRevision(revision.id!) ?? [];
+        await GetAnnotation(AnnotationDatabase()).getAnnotationWidthIdRevision(revision.id!) ?? [];
 
     if (result.isNotEmpty) {
       if (!context.mounted) return;

@@ -14,7 +14,7 @@ class RegisterAnnotation extends StatelessWidget {
     titleController.text = registerAnnotation.annotation.title ?? '';
   }
 
-  IRegisterAnnotation registerAnnotation;
+  RegisterAnnotationFactory registerAnnotation;
   final formKey = GlobalKey<FormState>();
   final TextEditingController textController = TextEditingController();
   final TextEditingController titleController = TextEditingController();

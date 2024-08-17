@@ -1,12 +1,12 @@
 import 'package:planeje/annotation/datasource/database/database_datasource.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 
-abstract class IDeleteAnnotation {
+abstract class DeleteAnnotationFactory {
   Future<Annotation?> delete(int id);
 }
 
-class DeleteAnnotation implements IDeleteAnnotation {
-  AnnotationDataSourceRepository annotationDatabase;
+class DeleteAnnotation implements DeleteAnnotationFactory {
+  AnnotationDatabaseFactory annotationDatabase;
 
   DeleteAnnotation(this.annotationDatabase);
   @override

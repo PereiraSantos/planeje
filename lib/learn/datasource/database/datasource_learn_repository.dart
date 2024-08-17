@@ -1,7 +1,7 @@
 import 'package:planeje/database/app_database.dart';
 import 'package:planeje/learn/entities/learn.dart';
 
-abstract class DatasourceLearnRepository {
+abstract class LearnDatabaseFactory {
   Future<List<Learn>?> getAllLearn(String text);
   Future<int> insertLearn(Learn learn);
   Future<Learn?> getLearnId(int id);
@@ -9,7 +9,7 @@ abstract class DatasourceLearnRepository {
   Future<Learn?> deleteLearnById(int id);
 }
 
-class LearnDatabase implements DatasourceLearnRepository {
+class LearnDatabase implements LearnDatabaseFactory {
   @override
   Future<List<Learn>?> getAllLearn(String text) async {
     final database = await getInstance();

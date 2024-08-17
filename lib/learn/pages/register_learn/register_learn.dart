@@ -11,7 +11,7 @@ class RegisterLearnPage extends StatelessWidget {
     description.text = registerLearn.learn.description ?? '';
   }
 
-  RegisterLearn registerLearn;
+  RegisterLearnFactory registerLearn;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
 

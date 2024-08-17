@@ -1,23 +1,23 @@
 import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
 import 'package:planeje/learn/entities/learn.dart';
 
-abstract class IFindLearn {
+abstract class FindLearnFactory {
   Future<List<Learn>?> getAllLearn(String text);
   Future<Learn?> getLearnId(int id);
 }
 
-class GetLearn implements IFindLearn {
-  DatasourceLearnRepository datasourceLearnRepository;
+class GetLearn implements FindLearnFactory {
+  LearnDatabaseFactory learnDatabase;
 
-  GetLearn(this.datasourceLearnRepository);
+  GetLearn(this.learnDatabase);
 
   @override
   Future<List<Learn>?> getAllLearn(String text) async {
-    return await datasourceLearnRepository.getAllLearn(text);
+    return await learnDatabase.getAllLearn(text);
   }
 
   @override
   Future<Learn?> getLearnId(int id) async {
-    return await datasourceLearnRepository.getLearnId(id);
+    return await learnDatabase.getLearnId(id);
   }
 }

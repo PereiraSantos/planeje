@@ -2,14 +2,14 @@ import 'package:planeje/annotation/datasource/database/database_datasource.dart'
 import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/utils/type_message.dart';
 
-abstract class IRegisterAnnotation {
+abstract class RegisterAnnotationFactory {
   Future<int?> writeAnnotation();
   late Annotation annotation;
   late Message message;
 }
 
-class InsertAnnotation implements IRegisterAnnotation {
-  AnnotationDataSourceRepository annotationDatabase;
+class InsertAnnotation implements RegisterAnnotationFactory {
+  AnnotationDatabaseFactory annotationDatabase;
 
   InsertAnnotation(this.annotationDatabase, this.annotation, this.message);
 
@@ -25,8 +25,8 @@ class InsertAnnotation implements IRegisterAnnotation {
   Message message;
 }
 
-class UpdateAnnotation implements IRegisterAnnotation {
-  AnnotationDataSourceRepository annotationDatabase;
+class UpdateAnnotation implements RegisterAnnotationFactory {
+  AnnotationDatabaseFactory annotationDatabase;
 
   UpdateAnnotation(this.annotationDatabase, this.annotation, this.message);
 

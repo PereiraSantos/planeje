@@ -1,22 +1,22 @@
 import 'package:planeje/quiz_revision/datasource/database/question_database.dart';
 import 'package:planeje/quiz_revision/utils/register_question/question_list.dart';
 
-abstract class DeleteQuestion {
+abstract class DeleteQuestionFactory {
   Future<void> delete(List<QuestionList> questionList);
 }
 
-class RemoveQuestion implements DeleteQuestion {
-  DatasourceQuestionRepository datasourceQuestion;
+class RemoveQuestion implements DeleteQuestionFactory {
+  QuestionDatabaseFactory questionDatabase;
 
-  RemoveQuestion(this.datasourceQuestion);
+  RemoveQuestion(this.questionDatabase);
 
   @override
   Future<bool> delete(List<QuestionList> questionList) async {
     for (var item in questionList) {
       if (item.delete) {
         item.question?.id != null
-            ? await datasourceQuestion.deleteQuestion(item.question!.id!)
-            : await datasourceQuestion.deleteQuestionByIdQuiz(item.question!.idQuiz!);
+            ? await questionDatabase.deleteQuestion(item.question!.id!)
+            : await questionDatabase.deleteQuestionByIdQuiz(item.question!.idQuiz!);
       }
     }
     return true;

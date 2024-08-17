@@ -3,21 +3,21 @@ import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/utils/type_message.dart';
 
-abstract class IRevision {
+abstract class RevisionFactory {
   Future<int?> writeRevision();
   late Revision revision;
   late Message message;
-  late IDate registerDate;
+  late DateFactory registerDate;
 }
 
-class Register implements IRevision {
-  RevisionDataSourceRepository databaseData;
+class Register implements RevisionFactory {
+  RevisionDatabaseFactory revisionDatabase;
 
-  Register(this.databaseData, this.revision, this.message, this.registerDate);
+  Register(this.revisionDatabase, this.revision, this.message, this.registerDate);
 
   @override
   Future<int?> writeRevision() async {
-    return await databaseData.insertRevision(revision);
+    return await revisionDatabase.insertRevision(revision);
   }
 
   @override
@@ -27,25 +27,25 @@ class Register implements IRevision {
   Message message;
 
   @override
-  IDate registerDate;
+  DateFactory registerDate;
 }
 
-class Update implements IRevision {
-  RevisionDatabaseDataSource databaseData;
+class Update implements RevisionFactory {
+  RevisionDatabaseDataSource revisionDatabase;
 
-  Update(this.databaseData, this.revision, this.message, this.registerDate);
+  Update(this.revisionDatabase, this.revision, this.message, this.registerDate);
 
   @override
   Revision revision;
 
   @override
   Future<int?> writeRevision() async {
-    return await databaseData.updateRevision(revision);
+    return await revisionDatabase.updateRevision(revision);
   }
 
   @override
   Message message;
 
   @override
-  IDate registerDate;
+  DateFactory registerDate;
 }

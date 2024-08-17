@@ -2,33 +2,33 @@ import 'package:planeje/revision/datasource/database/date_revision_database_data
 
 import 'package:planeje/revision/entities/date_revision.dart';
 
-abstract class IDate {
+abstract class DateFactory {
   Future<int?> writeDateRevision();
   late DateRevision date;
 }
 
-class RegisterDateRevision implements IDate {
-  DateRevisionDataSourceRepository databaseData;
+class RegisterDateRevision implements DateFactory {
+  DateRevisionDatabaseFactory dateRevisionDatabase;
 
-  RegisterDateRevision(this.databaseData, this.date);
+  RegisterDateRevision(this.dateRevisionDatabase, this.date);
 
   @override
   Future<int?> writeDateRevision() async {
-    return await databaseData.insertDateRevision(date);
+    return await dateRevisionDatabase.insertDateRevision(date);
   }
 
   @override
   DateRevision date;
 }
 
-class UpdateDateRevision implements IDate {
-  DateRevisionDataSourceRepository databaseData;
+class UpdateDateRevision implements DateFactory {
+  DateRevisionDatabaseFactory dateRevisionDatabase;
 
-  UpdateDateRevision(this.databaseData, this.date);
+  UpdateDateRevision(this.dateRevisionDatabase, this.date);
 
   @override
   Future<int?> writeDateRevision() async {
-    return await databaseData.updateDateRevision(date);
+    return await dateRevisionDatabase.updateDateRevision(date);
   }
 
   @override

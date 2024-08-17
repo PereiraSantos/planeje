@@ -1,16 +1,16 @@
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 
-abstract class IFindRevision {
+abstract class FindRevisionFactory {
   Future<List<RevisionTime>> findRevisionByDescription(text);
 }
 
-class GetRevision implements IFindRevision {
-  RevisionDataSourceRepository revisiondatabase;
+class GetRevision implements FindRevisionFactory {
+  RevisionDatabaseFactory revisionDatabase;
 
-  GetRevision(this.revisiondatabase);
+  GetRevision(this.revisionDatabase);
   @override
   Future<List<RevisionTime>> findRevisionByDescription(text) async {
-    return await revisiondatabase.findRevisionByDescription(text);
+    return await revisionDatabase.findRevisionByDescription(text);
   }
 }

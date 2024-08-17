@@ -7,7 +7,7 @@ import 'package:planeje/utils/format_date.dart';
 class NetRevisionTime {
   NetRevisionTime(this.revisionValid);
 
-  IRevisionValid revisionValid;
+  RevisionValidFactory revisionValid;
   List<RevisionTime> revisions = [];
   List<RevisionTime> revisionTimes = [];
   var total = 0;

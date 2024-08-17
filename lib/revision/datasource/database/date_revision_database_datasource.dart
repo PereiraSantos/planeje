@@ -2,7 +2,7 @@ import 'package:planeje/revision/entities/date_revision.dart';
 
 import '../../../database/app_database.dart';
 
-abstract class DateRevisionDataSourceRepository {
+abstract class DateRevisionDatabaseFactory {
   Future<List<DateRevision>> findAllDateRevisions();
   Future<DateRevision?> findDateRevisionById(int id);
   Future<DateRevision?> deleteDateRevisionById(int id);
@@ -10,7 +10,7 @@ abstract class DateRevisionDataSourceRepository {
   Future<int?> updateDateRevision(DateRevision dateRevision);
 }
 
-class DateRevisionDatabaseDataSource implements DateRevisionDataSourceRepository {
+class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
   @override
   Future<DateRevision?> deleteDateRevisionById(int id) async {
     final database = await getInstance();

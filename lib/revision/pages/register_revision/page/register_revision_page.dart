@@ -15,7 +15,7 @@ class RegisterRevisionPage extends StatelessWidget {
     description.text = revision.revision.description ?? '';
   }
 
-  IRevision revision;
+  RevisionFactory revision;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
   String nextDate = '';

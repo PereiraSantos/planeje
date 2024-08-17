@@ -11,7 +11,7 @@ class RegisterCategoryPage extends StatelessWidget {
     description.text = registerCategory.category.description ?? '';
   }
 
-  RegisterCategory registerCategory;
+  RegisterCategoryFactory registerCategory;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
 

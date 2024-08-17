@@ -1,7 +1,7 @@
 import 'package:planeje/category/entities/category.dart';
 import 'package:planeje/database/app_database.dart';
 
-abstract class DatasourceCategoryRepository {
+abstract class CategoryDatabaseFactory {
   Future<List<Category>?> getAllCategory(String text);
   Future<int> insertCategory(Category category);
   Future<Category?> getCategoryId(int id);
@@ -9,7 +9,7 @@ abstract class DatasourceCategoryRepository {
   Future<Category?> deleteCategoryById(int id);
 }
 
-class CategoryDatabase implements DatasourceCategoryRepository {
+class CategoryDatabase implements CategoryDatabaseFactory {
   @override
   Future<List<Category>?> getAllCategory(String text) async {
     final database = await getInstance();
