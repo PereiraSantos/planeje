@@ -96,7 +96,7 @@ class _HomeState extends State<Home> {
                         id: 1,
                         nextDate: '25/08/2024',
                         hourInit: '02:40',
-                        hourEnd: '02:50',
+                        hourEnd: '02:51',
                         idRevision: 1,
                       ),
                     ),

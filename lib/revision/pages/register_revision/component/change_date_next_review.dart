@@ -22,8 +22,9 @@ class ChangeDateNextReview extends StatefulWidget {
 
 class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
   String dateNextRevision = '';
-  final TextEditingController day = TextEditingController();
+  final TextEditingController day = TextEditingController(text: '0');
   bool show = false;
+  bool showRevisionDate = false;
 
   void generateNextRevision({int? value, bool? edit = false}) {
     var dateTemp = FormatDate.formatDate(FormatDate.newDate());
@@ -58,7 +59,6 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
   @override
   void initState() {
     super.initState();
-    day.text = widget.revisionEntity?.id != null ? '0' : '30';
     generateNextRevision();
   }
 
@@ -66,28 +66,21 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        DateReview(
-          dateNextRevision: dateNextRevision,
-          onClickCalendar: (picked) {
-            setDate(picked);
-            setState(() {});
-          },
-        ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, top: 5, right: 20),
+              padding: const EdgeInsets.only(left: 20.0, top: 25, right: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Text(
-                    "Próxima revisão em",
+                    "Lembrar data próxima revisão em",
                     style: TextStyle(color: Colors.black45, fontSize: 16),
                   ),
                   SizedBox(
-                    width: 90,
+                    width: 65,
                     height: 40,
                     child: TextFormFieldWidget(
                       controller: day,
@@ -96,6 +89,8 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
                         day.text = value.toString().trim().replaceAll(RegExp(r'[.,-]'), '');
 
                         show = false;
+
+                        showRevisionDate = day.text == '0' || day.text == '' ? false : true;
 
                         if ((day.text != '' && (int.parse(day.text) > 100)) || day.text.length > 2) {
                           show = true;
@@ -109,10 +104,7 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
                       valid: false,
                     ),
                   ),
-                  const Text(
-                    "dias.",
-                    style: TextStyle(color: Colors.black45, fontSize: 16),
-                  ),
+                  const Text("dias.", style: TextStyle(color: Colors.black45, fontSize: 16)),
                 ],
               ),
             ),
@@ -127,6 +119,10 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
               ),
             ),
           ],
+        ),
+        Visibility(
+          visible: showRevisionDate,
+          child: DateReview(date: dateNextRevision),
         ),
       ],
     );

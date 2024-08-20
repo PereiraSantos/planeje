@@ -45,6 +45,16 @@ class CardRevision extends StatelessWidget {
     return false;
   }
 
+  getTimeRevision() {
+    if (revisionTime.dateRevision.hourInit == null || revisionTime.dateRevision.hourEnd == null) return '';
+    DateTime timeInit = FormatDate.timeParse(revisionTime.dateRevision.hourInit!);
+    DateTime timeEnd = FormatDate.timeParse(revisionTime.dateRevision.hourEnd!);
+
+    var time = timeEnd.subtract(Duration(hours: timeInit.hour, minutes: timeInit.minute));
+
+    return time.toString().replaceAll('1970-01-01', '').replaceAll('.000', '');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -84,49 +94,48 @@ class CardRevision extends StatelessWidget {
               }
             },
           ),
-          SizedBox(
-            width: double.maxFinite,
-            child: TextCard(
-              padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-              revisionEntity: revisionTime.revision.description ?? "",
-              maxLines: 5,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
+                child: Text(
+                  'Revisão:',
+                  style: TextStyle(color: Colors.black45, fontSize: 16),
+                ),
+              ),
+              Expanded(
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: TextCard(
+                    padding: const EdgeInsets.only(top: 10, right: 5),
+                    revisionEntity: revisionTime.revision.description ?? "",
+                    maxLines: 5,
+                  ),
+                ),
+              ),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 2,
-                child: SizedBox(
-                  width: double.maxFinite,
-                  child: TextCard(
-                    padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                    revisionEntity: FormatDate.formatDateString('${revisionTime.dateRevision.nextDate}'),
-                    maxLines: 5,
-                  ),
+              const Padding(
+                padding: EdgeInsets.only(left: 10, top: 5, right: 33),
+                child: Text(
+                  'Data:',
+                  style: TextStyle(color: Colors.black45, fontSize: 16),
                 ),
               ),
-              labelText("Das:"),
               Expanded(
-                flex: 1,
                 child: SizedBox(
                   width: double.maxFinite,
                   child: TextCard(
-                    padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                    revisionEntity: FormatDate.formatTimeString('${revisionTime.dateRevision.hourInit}'),
-                    maxLines: 5,
-                  ),
-                ),
-              ),
-              labelText("As:"),
-              Expanded(
-                flex: 1,
-                child: SizedBox(
-                  width: double.maxFinite,
-                  child: TextCard(
-                    padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                    revisionEntity: FormatDate.formatTimeString('${revisionTime.dateRevision.hourEnd}'),
+                    padding: const EdgeInsets.only(right: 5, bottom: 5, top: 5),
+                    revisionEntity: revisionTime.dateRevision.nextDate != null
+                        ? FormatDate.formatDateString('${revisionTime.dateRevision.nextDate}')
+                        : '',
                     maxLines: 5,
                   ),
                 ),
@@ -136,9 +145,41 @@ class CardRevision extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(child: Text('Tempo:')),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.play_arrow)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.pause))
+              const Padding(
+                padding: EdgeInsets.only(left: 8, right: 13),
+                child: Text(
+                  'Tempo:',
+                  style: TextStyle(color: Colors.black54, fontSize: 16),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  ' ${getTimeRevision()}',
+                  style: const TextStyle(color: Colors.black54, fontSize: 16),
+                ),
+              ),
+              SizedBox(
+                width: 40,
+                height: 35,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.play_arrow,
+                    size: 20,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 40,
+                height: 35,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.pause,
+                    size: 20,
+                  ),
+                ),
+              )
             ],
           ),
         ],

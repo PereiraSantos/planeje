@@ -7,7 +7,6 @@ import '../../../../utils/message_user.dart';
 import '../../../../widgets/text_button_widget.dart';
 import '../../../../widgets/text_form_field_widget.dart';
 import '../component/change_date_next_review.dart';
-import '../component/change_time_revision.dart';
 
 // ignore: must_be_immutable
 class RegisterRevisionPage extends StatelessWidget {
@@ -53,11 +52,6 @@ class RegisterRevisionPage extends StatelessWidget {
                   keyboardType: TextInputType.multiline,
                   textArea: true,
                 ),
-                ChangeTimeRevision(
-                  onClickTimeInit: (time) => revision.registerDate.date.setHourInit(time),
-                  onClickTimeEnd: (time) => revision.registerDate.date.setHourEnd(time),
-                  revisionEntity: revision.registerDate.date,
-                ),
                 ChangeDateNextReview(
                   revisionEntity: revision.registerDate.date,
                   onClickCalendar: (value) => nextDate = value,
@@ -82,8 +76,6 @@ class RegisterRevisionPage extends StatelessWidget {
                 if (idRevision == null) return;
 
                 revision.registerDate.date.setDate(revision.registerDate.date.dateRevision);
-                revision.registerDate.date.setHourInit(revision.registerDate.date.hourInit);
-                revision.registerDate.date.setHourEnd(revision.registerDate.date.hourEnd);
                 revision.registerDate.date.setIdRevision(revision.revision.id ?? idRevision);
                 revision.registerDate.date.setNextDate(nextDate);
 
