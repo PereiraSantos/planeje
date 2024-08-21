@@ -28,7 +28,7 @@ class ListAnnotation extends StatelessWidget {
       child: Column(
         children: [
           FutureBuilder(
-            future: GetCategory(CategoryDatabase()).getAllCategory(''),
+            future: GetCategory(CategoryDatabase()).getAll(''),
             builder: (BuildContext context, AsyncSnapshot<List<Category>?> snapshot) {
               if (snapshot.hasData) {
                 return snapshot.data!.isNotEmpty

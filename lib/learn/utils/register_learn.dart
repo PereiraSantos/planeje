@@ -1,11 +1,10 @@
 import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
 import 'package:planeje/learn/entities/learn.dart';
+import 'package:planeje/utils/register.dart';
 import 'package:planeje/utils/type_message.dart';
 
-abstract class RegisterLearnFactory {
-  Future<int?> writeLearn();
+abstract class RegisterLearnFactory extends RegisterFactory {
   late Learn learn;
-  late Message message;
 }
 
 class SaveLearn implements RegisterLearnFactory {
@@ -13,7 +12,7 @@ class SaveLearn implements RegisterLearnFactory {
   SaveLearn(this.learnDatabase, this.learn, this.message);
 
   @override
-  Future<int?> writeLearn() async {
+  Future<int?> write() async {
     return await learnDatabase.insertLearn(learn);
   }
 
@@ -29,7 +28,7 @@ class UpdateLearn implements RegisterLearnFactory {
   UpdateLearn(this.learnDatabase, this.learn, this.message);
 
   @override
-  Future<int?> writeLearn() async {
+  Future<int?> write() async {
     return await learnDatabase.updateLearn(learn);
   }
 

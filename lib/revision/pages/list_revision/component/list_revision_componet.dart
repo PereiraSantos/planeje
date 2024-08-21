@@ -128,7 +128,7 @@ class ListRevisionComponet extends StatelessWidget {
                             children: [
                               FutureBuilder(
                                 future: GetLearn(LearnDatabase())
-                                    .getLearnId(snapshot.data![index].revision.idLearn ?? -1),
+                                    .getById(snapshot.data![index].revision.idLearn ?? -1),
                                 builder: (BuildContext context, AsyncSnapshot<Learn?> snapshot) {
                                   if (snapshot.hasData) {
                                     return Row(
@@ -185,8 +185,10 @@ class ListRevisionComponet extends StatelessWidget {
                                       width: double.maxFinite,
                                       child: TextCard(
                                         padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                        revisionEntity: FormatDate.formatTimeString(
-                                            '${snapshot.data![index].dateRevision.hourInit}'),
+                                        revisionEntity: snapshot.data![index].dateRevision.hourInit != null
+                                            ? FormatDate.formatTimeString(
+                                                '${snapshot.data![index].dateRevision.hourInit}')
+                                            : '',
                                         maxLines: 5,
                                       ),
                                     ),
@@ -198,8 +200,10 @@ class ListRevisionComponet extends StatelessWidget {
                                       width: double.maxFinite,
                                       child: TextCard(
                                         padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                        revisionEntity: FormatDate.formatTimeString(
-                                            '${snapshot.data![index].dateRevision.hourEnd}'),
+                                        revisionEntity: snapshot.data![index].dateRevision.hourEnd != null
+                                            ? FormatDate.formatTimeString(
+                                                '${snapshot.data![index].dateRevision.hourEnd}')
+                                            : '',
                                         maxLines: 5,
                                       ),
                                     ),

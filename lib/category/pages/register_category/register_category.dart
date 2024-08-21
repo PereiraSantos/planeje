@@ -59,7 +59,7 @@ class RegisterCategoryPage extends StatelessWidget {
 
                 registerCategory.category.setDescription(description.text);
 
-                var result = await registerCategory.writeCategory();
+                var result = await registerCategory.write();
 
                 if (context.mounted && result != null) {
                   MessageUser.message(context, registerCategory.message.message);

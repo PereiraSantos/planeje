@@ -48,7 +48,7 @@ class ListQuiz extends StatelessWidget {
 
                           await RemoveQuestion(QuestionDatabase()).delete(tableQuestionNotifier.questions);
 
-                          await DeleteQuiz(QuizDatabase()).deleteQuiz(snapshot.data![index].id!);
+                          await DeleteQuiz(QuizDatabase()).deleteById(snapshot.data![index].id!);
                           tableQuestionNotifier.clearList();
 
                           if (!context.mounted) return;

@@ -66,8 +66,8 @@ class DialogDelete {
                   children: [
                     TextButton(
                       onPressed: () async {
-                        var result = await DeleteRevision(RevisionDatabaseDataSource())
-                            .deleteRevisionById(revision.id!);
+                        var result =
+                            await DeleteRevision(RevisionDatabaseDataSource()).deleteById(revision.id!);
 
                         if (result != null && context.mounted) {
                           message(context, 'Removido com sucesso');

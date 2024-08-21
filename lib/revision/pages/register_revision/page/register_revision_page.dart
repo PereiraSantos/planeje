@@ -77,7 +77,7 @@ class RegisterRevisionPage extends StatelessWidget {
 
                 revision.revision.setDescription(description.text);
 
-                var idRevision = await revision.writeRevision();
+                var idRevision = await revision.write();
 
                 if (idRevision == null) return;
 

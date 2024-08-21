@@ -59,7 +59,7 @@ class RegisterLearnPage extends StatelessWidget {
 
                 registerLearn.learn.setDescription(description.text);
 
-                var result = await registerLearn.writeLearn();
+                var result = await registerLearn.write();
 
                 if (context.mounted && result != null) {
                   MessageUser.message(context, registerLearn.message.message);

@@ -1,10 +1,8 @@
 import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
 import 'package:planeje/learn/entities/learn.dart';
+import 'package:planeje/utils/find.dart';
 
-abstract class FindLearnFactory {
-  Future<List<Learn>?> getAllLearn(String text);
-  Future<Learn?> getLearnId(int id);
-}
+abstract class FindLearnFactory extends FindFactory {}
 
 class GetLearn implements FindLearnFactory {
   LearnDatabaseFactory learnDatabase;
@@ -12,12 +10,12 @@ class GetLearn implements FindLearnFactory {
   GetLearn(this.learnDatabase);
 
   @override
-  Future<List<Learn>?> getAllLearn(String text) async {
+  Future<List<Learn>?> getAll(String text) async {
     return await learnDatabase.getAllLearn(text);
   }
 
   @override
-  Future<Learn?> getLearnId(int id) async {
+  Future<Learn?> getById(int id) async {
     return await learnDatabase.getLearnId(id);
   }
 }

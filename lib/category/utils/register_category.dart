@@ -1,12 +1,11 @@
 import 'package:planeje/category/datasource/database/datasource_category_repository.dart';
+import 'package:planeje/utils/register.dart';
 import 'package:planeje/utils/type_message.dart';
 
 import '../entities/category.dart';
 
-abstract class RegisterCategoryFactory {
-  Future<int?> writeCategory();
+abstract class RegisterCategoryFactory extends RegisterFactory {
   late Category category;
-  late Message message;
 }
 
 class SaveCategory implements RegisterCategoryFactory {
@@ -14,7 +13,7 @@ class SaveCategory implements RegisterCategoryFactory {
   SaveCategory(this.categoryDatabase, this.category, this.message);
 
   @override
-  Future<int?> writeCategory() async {
+  Future<int?> write() async {
     return await categoryDatabase.insertCategory(category);
   }
 
@@ -30,7 +29,7 @@ class UpdateCategory implements RegisterCategoryFactory {
   UpdateCategory(this.categoryDatabase, this.category, this.message);
 
   @override
-  Future<int?> writeCategory() async {
+  Future<int?> write() async {
     return await categoryDatabase.updateCategory(category);
   }
 

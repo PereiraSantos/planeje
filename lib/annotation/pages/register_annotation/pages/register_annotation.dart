@@ -106,7 +106,7 @@ class RegisterAnnotation extends StatelessWidget {
               registerAnnotation.annotation.setText(textController.text);
               registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
 
-              await registerAnnotation.writeAnnotation();
+              await registerAnnotation.write();
 
               if (context.mounted) {
                 MessageUser.message(context, registerAnnotation.message.message);

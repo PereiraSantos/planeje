@@ -27,7 +27,7 @@ class DialogDelete {
                   TextButton(
                     onPressed: () async {
                       var result =
-                          await DeleteAnnotation(AnnotationDatabase()).delete(annotationRevision.id!);
+                          await DeleteAnnotation(AnnotationDatabase()).deleteById(annotationRevision.id!);
 
                       if (result != null && context.mounted) {
                         MessageUser.message(context, 'Removido com sucesso');

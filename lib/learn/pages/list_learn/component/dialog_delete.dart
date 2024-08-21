@@ -21,7 +21,7 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var result = await DeleteLearn(LearnDatabase()).deleteLearnById(learn.id!);
+                      var result = await DeleteLearn(LearnDatabase()).deleteById(learn.id!);
 
                       if (result != null && context.mounted) {
                         message(context, 'Removido com sucesso');
