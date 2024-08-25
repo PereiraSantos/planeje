@@ -101,7 +101,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `date_creational` TEXT, `id_learn` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER, `status` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `id_category` INTEGER)');
         await database.execute(
@@ -268,7 +268,8 @@ class _$DateRevisionDao extends DateRevisionDao {
                   'next_date_revision': item.nextDate,
                   'hour_init': item.hourInit,
                   'hour_end': item.hourEnd,
-                  'id_revision': item.idRevision
+                  'id_revision': item.idRevision,
+                  'status': item.status == null ? null : (item.status! ? 1 : 0)
                 }),
         _dateRevisionUpdateAdapter = UpdateAdapter(
             database,
@@ -280,7 +281,8 @@ class _$DateRevisionDao extends DateRevisionDao {
                   'next_date_revision': item.nextDate,
                   'hour_init': item.hourInit,
                   'hour_end': item.hourEnd,
-                  'id_revision': item.idRevision
+                  'id_revision': item.idRevision,
+                  'status': item.status == null ? null : (item.status! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -302,7 +304,9 @@ class _$DateRevisionDao extends DateRevisionDao {
             nextDate: row['next_date_revision'] as String?,
             hourInit: row['hour_init'] as String?,
             hourEnd: row['hour_end'] as String?,
-            idRevision: row['id_revision'] as int?));
+            idRevision: row['id_revision'] as int?,
+            status:
+                row['status'] == null ? null : (row['status'] as int) != 0));
   }
 
   @override
@@ -314,7 +318,8 @@ class _$DateRevisionDao extends DateRevisionDao {
             nextDate: row['next_date_revision'] as String?,
             hourInit: row['hour_init'] as String?,
             hourEnd: row['hour_end'] as String?,
-            idRevision: row['id_revision'] as int?),
+            idRevision: row['id_revision'] as int?,
+            status: row['status'] == null ? null : (row['status'] as int) != 0),
         arguments: [id]);
   }
 
@@ -327,7 +332,8 @@ class _$DateRevisionDao extends DateRevisionDao {
             nextDate: row['next_date_revision'] as String?,
             hourInit: row['hour_init'] as String?,
             hourEnd: row['hour_end'] as String?,
-            idRevision: row['id_revision'] as int?),
+            idRevision: row['id_revision'] as int?,
+            status: row['status'] == null ? null : (row['status'] as int) != 0),
         arguments: [id]);
   }
 

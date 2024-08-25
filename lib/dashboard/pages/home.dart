@@ -94,7 +94,7 @@ class _HomeState extends State<Home> {
                           id: 1, idLearn: 1, description: 'teste teste teste teste teste teste teste teste'),
                       DateRevision(
                         id: 1,
-                        nextDate: '25/08/2024',
+                        nextDate: '25/09/2024',
                         hourInit: '02:40',
                         hourEnd: '02:51',
                         idRevision: 1,

@@ -22,6 +22,9 @@ class DateRevision {
   @ColumnInfo(name: 'id_revision')
   int? idRevision;
 
+  @ColumnInfo(name: 'status')
+  bool? status;
+
   DateRevision({
     this.id,
     this.dateRevision,
@@ -29,6 +32,7 @@ class DateRevision {
     this.hourInit,
     this.hourEnd,
     this.idRevision,
+    this.status,
   });
 
   void setId(int? value) => id = value;
@@ -37,4 +41,5 @@ class DateRevision {
   void setHourInit(String? value) => hourInit = value ?? FormatDate.formatTimeByString(DateTime.now());
   void setHourEnd(String? value) => hourEnd = value ?? FormatDate.formatTimeByString(DateTime.now());
   void setIdRevision(int? value) => idRevision = value;
+  void setStatus(bool? value) => status = value;
 }

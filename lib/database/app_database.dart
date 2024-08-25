@@ -51,12 +51,16 @@ final migration1to2 = Migration(1, 2, (database) async {
   await database.execute('ALTER TABLE annotation ADD COLUMN id_category INTEGER');
 });
 
-final migration1to3 = Migration(2, 3, (database) async {
+final migration2to3 = Migration(2, 3, (database) async {
   await database.execute('CREATE TABLE IF NOT EXISTS `cache` (`id` INTEGER PRIMARY KEY, `hash` TEXT)');
+});
+
+final migration3to4 = Migration(3, 4, (database) async {
+  await database.execute('ALTER TABLE date_revision ADD status INTEGER)');
 });
 
 Future<AppDatabase> getInstance() async {
   return await $FloorAppDatabase
       .databaseBuilder('app_database.db')
-      .addMigrations([migration1to2, migration1to3]).build();
+      .addMigrations([migration1to2, migration2to3, migration3to4]).build();
 }

@@ -52,7 +52,20 @@ class CardRevision extends StatelessWidget {
 
     var time = timeEnd.subtract(Duration(hours: timeInit.hour, minutes: timeInit.minute));
 
-    return time.toString().replaceAll('1970-01-01', '').replaceAll('.000', '');
+    return time.toString().replaceAll('1970-01-01', '').replaceAll('.000', '').trimLeft();
+  }
+
+  Widget labelCard(String label) {
+    return Expanded(
+      flex: 2,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 5, top: 2),
+        child: Text(
+          label,
+          style: const TextStyle(color: Colors.black45, fontSize: 16),
+        ),
+      ),
+    );
   }
 
   @override
@@ -95,21 +108,16 @@ class CardRevision extends StatelessWidget {
             },
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 10, top: 10, right: 10),
-                child: Text(
-                  'Revisão:',
-                  style: TextStyle(color: Colors.black45, fontSize: 16),
-                ),
-              ),
+              labelCard('Revisão:'),
               Expanded(
+                flex: 8,
                 child: SizedBox(
                   width: double.maxFinite,
                   child: TextCard(
-                    padding: const EdgeInsets.only(top: 10, right: 5),
+                    padding: const EdgeInsets.only(right: 0, top: 2),
                     revisionEntity: revisionTime.revision.description ?? "",
                     maxLines: 5,
                   ),
@@ -121,18 +129,13 @@ class CardRevision extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 10, top: 5, right: 33),
-                child: Text(
-                  'Data:',
-                  style: TextStyle(color: Colors.black45, fontSize: 16),
-                ),
-              ),
+              labelCard('Data:'),
               Expanded(
+                flex: 8,
                 child: SizedBox(
                   width: double.maxFinite,
                   child: TextCard(
-                    padding: const EdgeInsets.only(right: 5, bottom: 5, top: 5),
+                    padding: const EdgeInsets.only(right: 0, top: 2),
                     revisionEntity: revisionTime.dateRevision.nextDate != null
                         ? FormatDate.formatDateString('${revisionTime.dateRevision.nextDate}')
                         : '',
@@ -144,44 +147,101 @@ class CardRevision extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 8, right: 13),
-                child: Text(
-                  'Tempo:',
-                  style: TextStyle(color: Colors.black54, fontSize: 16),
+              labelCard('Tempo:'),
+              Expanded(
+                flex: 8,
+                child: TextCard(
+                  padding: const EdgeInsets.only(right: 0, top: 2),
+                  revisionEntity: '${getTimeRevision()}',
+                  maxLines: 1,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Visibility(
+                  visible: true,
+                  replacement: SizedBox(
+                    width: 70,
+                    height: 35,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 2, top: 3, bottom: 2),
+                      child: TextButton(
+                          style: ButtonStyle(
+                              foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2),
+                                  side: const BorderSide(color: Colors.grey),
+                                ),
+                              ),
+                              textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 16))),
+                          onPressed: () {},
+                          child: const Text('Finalizar', style: TextStyle(fontSize: 14))),
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: 70,
+                    height: 35,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 2, top: 3, bottom: 2),
+                      child: TextButton(
+                          style: ButtonStyle(
+                              foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
+                              shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(2),
+                                  side: const BorderSide(color: Colors.grey),
+                                ),
+                              ),
+                              textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 16))),
+                          onPressed: () {},
+                          child: const Text('Iniciar ', style: TextStyle(fontSize: 14))),
+                    ),
+                  ),
                 ),
               ),
               Expanded(
-                child: Text(
-                  ' ${getTimeRevision()}',
-                  style: const TextStyle(color: Colors.black54, fontSize: 16),
+                flex: 4,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Visibility(
+                      replacement: SizedBox(
+                        width: 40,
+                        height: 35,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.pause,
+                            size: 20,
+                            color: Colors.black45,
+                          ),
+                        ),
+                      ),
+                      child: SizedBox(
+                        width: 40,
+                        height: 35,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.play_arrow,
+                            size: 20,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-              SizedBox(
-                width: 40,
-                height: 35,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.play_arrow,
-                    size: 20,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 40,
-                height: 35,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.pause,
-                    size: 20,
-                  ),
-                ),
-              )
             ],
-          ),
+          )
         ],
       ),
     );
