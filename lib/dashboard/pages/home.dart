@@ -28,6 +28,16 @@ class _HomeState extends State<Home> {
   void reloadPage() => setState(() {});
 
   final ReviserNotifier reviserNotifier = ReviserNotifier();
+  RevisionTime revisionTime = RevisionTime(
+    Revision(id: 1, idLearn: 1, description: 'teste teste teste teste teste teste teste teste'),
+    DateRevision(
+      id: 1,
+      nextDate: '25/09/2024',
+      hourInit: '02:40',
+      hourEnd: '02:51',
+      idRevision: 1,
+    ),
+  );
 
   @override
   void initState() {
@@ -89,17 +99,11 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                   child: CardRevision(
-                    revisionTime: RevisionTime(
-                      Revision(
-                          id: 1, idLearn: 1, description: 'teste teste teste teste teste teste teste teste'),
-                      DateRevision(
-                        id: 1,
-                        nextDate: '25/09/2024',
-                        hourInit: '02:40',
-                        hourEnd: '02:51',
-                        idRevision: 1,
-                      ),
-                    ),
+                    revisionTime: revisionTime,
+                    isRevision: true,
+                    reloadPage: () {
+                      setState(() {});
+                    },
                   ),
                 ),
               ],
