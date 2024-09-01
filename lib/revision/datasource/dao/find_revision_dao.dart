@@ -7,13 +7,15 @@ import '../../../../database/app_database.dart';
 class FindRevisionDao {
   Future<List<RevisionTime>> findRevision(AppDatabase database, String text) async {
     List<RevisionTime> listRevisionTime = [];
+
     List<Map> list = text != ''
-        ? await database.database.rawQuery(
-            'SELECT * FROM revision  inner join date_revision on revision.id = date_revision.id_revision where description LIKE \'%$text%\'')
-        : await database.database.rawQuery(
-            'SELECT * FROM revision inner join date_revision on revision.id = date_revision.id_revision');
+        ? await database.database.rawQuery('SELECT * FROM revision where description LIKE \'%$text%\'')
+        : await database.database.rawQuery('SELECT * FROM revision');
 
     for (var element in list) {
+      List<Map> listDateRevision = await database.database.rawQuery(
+          'SELECT * FROM date_revision where id_revision = ${element['id']} order by id_date desc  limit 1');
+
       listRevisionTime.add(
         RevisionTime(
           Revision(
@@ -23,12 +25,18 @@ class FindRevisionDao {
             idLearn: element['id_learn'],
           ),
           DateRevision(
-              dateRevision: element['date_revision'],
-              hourEnd: element['hour_end'],
-              hourInit: element['hour_init'],
-              idRevision: element['id_revision'],
-              nextDate: element['next_date_revision'],
-              id: element['id_date']),
+              dateRevision: listDateRevision[0]['date_revision'],
+              hourEnd: listDateRevision[0]['hour_end'],
+              hourInit: listDateRevision[0]['hour_init'],
+              idRevision: listDateRevision[0]['id_revision'],
+              nextDate: listDateRevision[0]['next_date_revision'],
+              id: listDateRevision[0]['id_date'],
+              day: listDateRevision[0]['day'],
+              status: listDateRevision[0]['status'] != null
+                  ? listDateRevision[0]['status'] == 1
+                      ? true
+                      : false
+                  : false),
         ),
       );
     }

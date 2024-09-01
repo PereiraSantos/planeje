@@ -11,10 +11,12 @@ class ChangeDateNextReview extends StatefulWidget {
     super.key,
     required this.onClickCalendar,
     this.revisionEntity,
+    required this.onDay,
   });
 
   final DateRevision? revisionEntity;
   final Function(String) onClickCalendar;
+  final Function(int) onDay;
 
   @override
   State<ChangeDateNextReview> createState() => _ChangeDateNextReviewState();
@@ -59,7 +61,11 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
   @override
   void initState() {
     super.initState();
-    generateNextRevision();
+    if (widget.revisionEntity?.day != null) {
+      day.text = (widget.revisionEntity!.day).toString();
+      dateNextRevision = (widget.revisionEntity!.nextDate).toString();
+      showRevisionDate = true;
+    }
   }
 
   @override
@@ -98,6 +104,8 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
                         }
 
                         if (!show) generateNextRevision(value: day.text != '' ? null : 0, edit: true);
+
+                        widget.onDay(int.parse(day.text));
 
                         setState(() {});
                       },

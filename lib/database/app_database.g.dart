@@ -83,7 +83,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 4,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -101,7 +101,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `date_creational` TEXT, `id_learn` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER, `status` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER, `status` INTEGER, `day` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `id_category` INTEGER)');
         await database.execute(
@@ -269,7 +269,8 @@ class _$DateRevisionDao extends DateRevisionDao {
                   'hour_init': item.hourInit,
                   'hour_end': item.hourEnd,
                   'id_revision': item.idRevision,
-                  'status': item.status == null ? null : (item.status! ? 1 : 0)
+                  'status': item.status == null ? null : (item.status! ? 1 : 0),
+                  'day': item.day
                 }),
         _dateRevisionUpdateAdapter = UpdateAdapter(
             database,
@@ -282,7 +283,8 @@ class _$DateRevisionDao extends DateRevisionDao {
                   'hour_init': item.hourInit,
                   'hour_end': item.hourEnd,
                   'id_revision': item.idRevision,
-                  'status': item.status == null ? null : (item.status! ? 1 : 0)
+                  'status': item.status == null ? null : (item.status! ? 1 : 0),
+                  'day': item.day
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -305,22 +307,8 @@ class _$DateRevisionDao extends DateRevisionDao {
             hourInit: row['hour_init'] as String?,
             hourEnd: row['hour_end'] as String?,
             idRevision: row['id_revision'] as int?,
-            status:
-                row['status'] == null ? null : (row['status'] as int) != 0));
-  }
-
-  @override
-  Future<DateRevision?> findDateRevisionById(int id) async {
-    return _queryAdapter.query('SELECT * FROM date_revision WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => DateRevision(
-            id: row['id_date'] as int?,
-            dateRevision: row['date_revision'] as String?,
-            nextDate: row['next_date_revision'] as String?,
-            hourInit: row['hour_init'] as String?,
-            hourEnd: row['hour_end'] as String?,
-            idRevision: row['id_revision'] as int?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0),
-        arguments: [id]);
+            status: row['status'] == null ? null : (row['status'] as int) != 0,
+            day: row['day'] as int?));
   }
 
   @override
@@ -333,7 +321,56 @@ class _$DateRevisionDao extends DateRevisionDao {
             hourInit: row['hour_init'] as String?,
             hourEnd: row['hour_end'] as String?,
             idRevision: row['id_revision'] as int?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0),
+            status: row['status'] == null ? null : (row['status'] as int) != 0,
+            day: row['day'] as int?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> updateHourInitRevision(
+    String hourInit,
+    int id,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'update date_revision set hour_init = ?1 where id_date = ?2',
+        arguments: [hourInit, id]);
+  }
+
+  @override
+  Future<void> updateHourEndRevision(
+    String hourEnd,
+    String dateRevision,
+    String nextDateRevision,
+    int id,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'update date_revision set date_revision = ?2, next_date_revision = ?3, hour_end = ?1 where id_date = ?4',
+        arguments: [hourEnd, dateRevision, nextDateRevision, id]);
+  }
+
+  @override
+  Future<void> updateStatus(
+    bool status,
+    int id,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'update date_revision set status = ?1 where id_date = ?2',
+        arguments: [status ? 1 : 0, id]);
+  }
+
+  @override
+  Future<DateRevision?> findDateRevisionById(int id) async {
+    return _queryAdapter.query(
+        'select * from date_revision  where id_date  = ?1',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            nextDate: row['next_date_revision'] as String?,
+            hourInit: row['hour_init'] as String?,
+            hourEnd: row['hour_end'] as String?,
+            idRevision: row['id_revision'] as int?,
+            status: row['status'] == null ? null : (row['status'] as int) != 0,
+            day: row['day'] as int?),
         arguments: [id]);
   }
 

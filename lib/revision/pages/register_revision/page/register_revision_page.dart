@@ -55,6 +55,7 @@ class RegisterRevisionPage extends StatelessWidget {
                 ChangeDateNextReview(
                   revisionEntity: revision.registerDate.date,
                   onClickCalendar: (value) => nextDate = value,
+                  onDay: (value) => revision.registerDate.date.setDay(value),
                 ),
               ],
             ),
@@ -78,6 +79,7 @@ class RegisterRevisionPage extends StatelessWidget {
                 revision.registerDate.date.setDate(revision.registerDate.date.dateRevision);
                 revision.registerDate.date.setIdRevision(revision.revision.id ?? idRevision);
                 revision.registerDate.date.setNextDate(nextDate);
+                revision.registerDate.date.setDay(revision.registerDate.date.day);
 
                 var result = await revision.registerDate.writeDateRevision();
 

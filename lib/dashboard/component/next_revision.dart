@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/dashboard/controller/under_review_notifier.dart';
 import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 import 'package:planeje/revision/pages/register_revision/page/register_revision_page.dart';
+import 'package:planeje/revision/utils/find_date_revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/revision/utils/update_hour.dart';
 import 'package:planeje/utils/type_message.dart';
+import 'package:planeje/widgets/button_widget.dart';
 
 import '../../revision/pages/list_revision/component/text_list.dart';
 import '../../utils/transitions_builder.dart';
@@ -17,11 +22,13 @@ class NextRevision extends StatelessWidget {
     required this.future,
     required this.text,
     required this.finishUpdaterReviser,
+    required this.underReviewNotifier,
   });
 
   final Future<List<RevisionTime>?> future;
   final String text;
   final Function() finishUpdaterReviser;
+  final UnderReviewNotifier underReviewNotifier;
 
   Widget labelText(String label) {
     return Padding(
@@ -36,6 +43,31 @@ class NextRevision extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getTime() => FormatDate.formatTimeByString(FormatDate.newDate());
+
+  Future<void> updateStatus(int id) async {
+    DateRevision? dateRevision =
+        await FindDateRevision(DateRevisionDatabaseDataSource()).findDateRevisionById(id);
+
+    if (dateRevision != null && (dateRevision.status ?? false)) {
+      var result = await RegisterDateRevision(
+          DateRevisionDatabaseDataSource(),
+          DateRevision(
+            status: false,
+            dateRevision: dateRevision.dateRevision,
+            nextDate: dateRevision.nextDate,
+            idRevision: dateRevision.idRevision,
+            day: dateRevision.day,
+          )).writeDateRevision();
+
+      underReviewNotifier.setIdDateRevision(result!).update();
+    } else {
+      await UpdateHour(DateRevisionDatabaseDataSource())
+          .updateStatus(false, id)
+          .whenComplete(() => underReviewNotifier.setIdDateRevision(id).update());
+    }
   }
 
   @override
@@ -85,28 +117,58 @@ class NextRevision extends StatelessWidget {
                           elevation: 2,
                           shape: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(3.0), borderSide: BorderSide.none),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                width: double.maxFinite,
-                                child: TextCard(
-                                  padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
-                                  revisionEntity: snapshot.data![index].revision.description ?? "",
-                                  maxLines: 5,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 17,
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: double.maxFinite,
+                                      child: TextCard(
+                                        padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
+                                        revisionEntity: snapshot.data![index].revision.description ?? "",
+                                        maxLines: 5,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: double.maxFinite,
+                                      child: TextCard(
+                                        padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
+                                        revisionEntity: FormatDate.formatDateString(
+                                            "${snapshot.data![index].dateRevision.nextDate}"),
+                                        maxLines: 5,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(
-                                width: double.maxFinite,
-                                child: TextCard(
-                                  padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                  revisionEntity: FormatDate.formatDateString(
-                                      "${snapshot.data![index].dateRevision.nextDate}"),
-                                  maxLines: 5,
+                              Expanded(
+                                child: Visibility(
+                                  visible: underReviewNotifier.getIdDateRevision() == -1,
+                                  child: SizedBox(
+                                    width: 70,
+                                    height: 35,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 5, top: 6, bottom: 6, right: 6),
+                                      child: ButtonWidget(
+                                        onTap: () async =>
+                                            await updateStatus(snapshot.data![index].dateRevision.id!)
+                                                .whenComplete(() {
+                                          finishUpdaterReviser();
+                                        }),
+                                        label: 'Revisar',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

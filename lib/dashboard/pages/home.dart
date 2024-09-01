@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/dashboard/component/under_review.dart';
+import 'package:planeje/dashboard/controller/under_review_notifier.dart';
 import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/utils/next_revision_time.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
 import 'package:planeje/dashboard/utils/valid_date.dart';
-import 'package:planeje/revision/entities/date_revision.dart';
-import 'package:planeje/revision/entities/revision.dart';
-import 'package:planeje/revision/entities/revision_time.dart';
 import 'package:planeje/utils/app_bar/home_app_bar.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_widget.dart';
 import 'package:planeje/widgets/app_bar_widget/home_app_bar_widget.dart';
-import 'package:planeje/widgets/card_revision.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_widget.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';
@@ -28,16 +26,7 @@ class _HomeState extends State<Home> {
   void reloadPage() => setState(() {});
 
   final ReviserNotifier reviserNotifier = ReviserNotifier();
-  RevisionTime revisionTime = RevisionTime(
-    Revision(id: 1, idLearn: 1, description: 'teste teste teste teste teste teste teste teste'),
-    DateRevision(
-      id: 1,
-      nextDate: '25/09/2024',
-      hourInit: '02:40',
-      hourEnd: '02:51',
-      idRevision: 1,
-    ),
-  );
+  final UnderReviewNotifier underReviewNotifier = UnderReviewNotifier();
 
   @override
   void initState() {
@@ -77,34 +66,29 @@ class _HomeState extends State<Home> {
             return Column(
               children: [
                 ReviserLate(
-                    quantityCompleted: reviserNotifier.quantityReviserCompleted,
-                    quantityDelayed: reviserNotifier.quantityReviserDelayed),
+                  quantityCompleted: reviserNotifier.quantityReviserCompleted,
+                  quantityDelayed: reviserNotifier.quantityReviserDelayed,
+                ),
+                ListenableBuilder(
+                  listenable: underReviewNotifier,
+                  builder: (BuildContext context, Widget? child) {
+                    return UnderReview(
+                      underReviewNotifier: underReviewNotifier,
+                      finishReviser: () => reloadPage(),
+                    );
+                  },
+                ),
                 NextRevision(
-                    future: NetRevisionTime(ValidateIsBefore()).getNextRevision(),
-                    text: 'Realizar',
-                    finishUpdaterReviser: () => reloadPage()),
+                  future: NetRevisionTime(ValidateIsBefore()).getNextRevision(),
+                  text: 'Realizar',
+                  finishUpdaterReviser: () => reloadPage(),
+                  underReviewNotifier: underReviewNotifier,
+                ),
                 NextRevision(
                   future: NetRevisionTime(ValidateIsAfter()).getNextRevision(),
                   text: 'Próximas',
                   finishUpdaterReviser: () => reloadPage(),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 15, top: 10),
-                  alignment: Alignment.bottomLeft,
-                  child: const Text(
-                    'Em Revisão',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-                  child: CardRevision(
-                    revisionTime: revisionTime,
-                    isRevision: true,
-                    reloadPage: () {
-                      setState(() {});
-                    },
-                  ),
+                  underReviewNotifier: underReviewNotifier,
                 ),
               ],
             );
