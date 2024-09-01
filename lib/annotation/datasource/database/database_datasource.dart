@@ -4,7 +4,7 @@ import 'package:planeje/annotation/entities/annotation.dart';
 import '../../../database/app_database.dart';
 import '../../entities/annotation_revision.dart';
 
-abstract class AnnotationDataSourceRepository {
+abstract class AnnotationDatabaseFactory {
   Future<int?> insertAnnotation(Annotation annotationEntity);
   Future<int?> updateAnnotation(Annotation annotationEntity);
   Future<Annotation?> delete(int id);
@@ -12,7 +12,7 @@ abstract class AnnotationDataSourceRepository {
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
 }
 
-class AnnotationDatabaseDatasource implements AnnotationDataSourceRepository {
+class AnnotationDatabase implements AnnotationDatabaseFactory {
   @override
   Future<Annotation?> delete(int id) async {
     final database = await getInstance();

@@ -7,7 +7,7 @@ abstract class UpdateHourFactory {
 }
 
 class UpdateHour implements UpdateHourFactory {
-  DateRevisionDataSourceRepository dataSourceRepository;
+  DateRevisionDatabaseDataSource dataSourceRepository;
 
   UpdateHour(this.dataSourceRepository);
   @override

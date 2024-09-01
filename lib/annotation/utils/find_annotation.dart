@@ -2,13 +2,13 @@ import 'package:planeje/annotation/datasource/database/database_datasource.dart'
 import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/entities/annotation_revision.dart';
 
-abstract class IFindAnnotation {
+abstract class FindAnnotationFactory {
   Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text);
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
 }
 
-class GetAnnotation implements IFindAnnotation {
-  AnnotationDataSourceRepository annotationDatabase;
+class GetAnnotation implements FindAnnotationFactory {
+  AnnotationDatabaseFactory annotationDatabase;
 
   GetAnnotation(this.annotationDatabase);
 

@@ -1,17 +1,16 @@
 import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
 import 'package:planeje/learn/entities/learn.dart';
+import 'package:planeje/utils/delete.dart';
 
-abstract class IDeleteLearn {
-  Future<Learn?> deleteLearnById(int id);
-}
+abstract class DeleteLearnFactory extends DeleteFactory {}
 
-class DeleteLearn implements IDeleteLearn {
-  DatasourceLearnRepository datasourceLearnRepository;
+class DeleteLearn implements DeleteLearnFactory {
+  LearnDatabaseFactory learnDatabase;
 
-  DeleteLearn(this.datasourceLearnRepository);
+  DeleteLearn(this.learnDatabase);
 
   @override
-  Future<Learn?> deleteLearnById(int id) async {
-    return await datasourceLearnRepository.deleteLearnById(id);
+  Future<Learn?> deleteById(int id) async {
+    return await learnDatabase.deleteLearnById(id);
   }
 }

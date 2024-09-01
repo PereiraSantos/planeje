@@ -20,7 +20,7 @@ class ListCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: FutureBuilder(
-        future: GetCategory(CategoryDatabase()).getAllCategory(categoryNotifier.search ?? ''),
+        future: GetCategory(CategoryDatabase()).getAll(categoryNotifier.search ?? ''),
         builder: (BuildContext context, AsyncSnapshot<List<Category>?> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {

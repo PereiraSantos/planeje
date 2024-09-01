@@ -20,7 +20,7 @@ class ListLearn extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: FutureBuilder(
-        future: GetLearn(LearnDatabase()).getAllLearn(learnNotifier.search ?? ''),
+        future: GetLearn(LearnDatabase()).getAll(learnNotifier.search ?? ''),
         builder: (BuildContext context, AsyncSnapshot<List<Learn>?> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {

@@ -7,7 +7,7 @@ import 'package:planeje/quiz_revision/utils/register_question/remove_question.da
 import 'package:planeje/utils/message_user.dart';
 
 class TableQuestionNotifier with ChangeNotifier {
-  RegisterQuestion registerQuestion = SaveQuestion(QuestionDatabase());
+  RegisterQuestionFactory registerQuestion = SaveQuestion(QuestionDatabase());
   List<QuestionList> questions = [];
 
   Future<void> deleteQuestionByIdQuiz(int idQUiz) async {
@@ -39,7 +39,7 @@ class TableQuestionNotifier with ChangeNotifier {
     }).toList();
 
     await registerQuestion.writeQuestion(questions);
-    DeleteQuestion deleteQuestion = RemoveQuestion(QuestionDatabase());
+    DeleteQuestionFactory deleteQuestion = RemoveQuestion(QuestionDatabase());
     await deleteQuestion.delete(questions);
   }
 

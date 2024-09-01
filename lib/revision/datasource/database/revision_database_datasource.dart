@@ -4,7 +4,7 @@ import 'package:planeje/revision/datasource/dao/find_revision_dao.dart';
 import '../../entities/revision.dart';
 import '../../entities/revision_time.dart';
 
-abstract class RevisionDataSourceRepository {
+abstract class RevisionDatabaseFactory {
   Future<List<Revision>> findAllRevisions();
   Future<Revision?> findRevisionById(int id);
   Future<Revision?> deleteRevisionById(int id);
@@ -13,7 +13,7 @@ abstract class RevisionDataSourceRepository {
   Future<int?> insertRevision(Revision revision);
 }
 
-class RevisionDatabaseDataSource implements RevisionDataSourceRepository {
+class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
   @override
   Future<Revision?> deleteRevisionById(int id) async {
     final database = await getInstance();

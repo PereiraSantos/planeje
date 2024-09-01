@@ -1,20 +1,19 @@
 import 'package:planeje/annotation/datasource/database/database_datasource.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
+import 'package:planeje/utils/register.dart';
 import 'package:planeje/utils/type_message.dart';
 
-abstract class IRegisterAnnotation {
-  Future<int?> writeAnnotation();
+abstract class RegisterAnnotationFactory extends RegisterFactory {
   late Annotation annotation;
-  late StatusNotification message;
 }
 
-class InsertAnnotation implements IRegisterAnnotation {
-  AnnotationDataSourceRepository annotationDatabase;
+class InsertAnnotation implements RegisterAnnotationFactory {
+  AnnotationDatabaseFactory annotationDatabase;
 
   InsertAnnotation(this.annotationDatabase, this.annotation, this.message);
 
   @override
-  Future<int?> writeAnnotation() async {
+  Future<int?> write() async {
     return await annotationDatabase.insertAnnotation(annotation);
   }
 
@@ -25,13 +24,13 @@ class InsertAnnotation implements IRegisterAnnotation {
   StatusNotification message;
 }
 
-class UpdateAnnotation implements IRegisterAnnotation {
-  AnnotationDataSourceRepository annotationDatabase;
+class UpdateAnnotation implements RegisterAnnotationFactory {
+  AnnotationDatabaseFactory annotationDatabase;
 
   UpdateAnnotation(this.annotationDatabase, this.annotation, this.message);
 
   @override
-  Future<int?> writeAnnotation() async {
+  Future<int?> write() async {
     return await annotationDatabase.updateAnnotation(annotation);
   }
 

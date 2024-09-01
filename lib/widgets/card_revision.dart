@@ -92,7 +92,7 @@ class CardRevision extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             FutureBuilder(
-              future: GetLearn(LearnDatabase()).getLearnId(revisionTime.revision.idLearn ?? -1),
+              future: GetLearn(LearnDatabase()).getById(revisionTime.revision.idLearn ?? -1),
               builder: (BuildContext context, AsyncSnapshot<Learn?> snapshot) {
                 if (snapshot.hasData) {
                   return Row(

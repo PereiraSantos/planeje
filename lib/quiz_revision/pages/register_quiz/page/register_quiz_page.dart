@@ -17,7 +17,7 @@ class RegisterQuizPage extends StatelessWidget {
     _tableQuestionNotifier.initListQuestionEdit(registerQuiz.quiz.id);
   }
 
-  final RegisterQuiz registerQuiz;
+  final RegisterQuizFactory registerQuiz;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
   final TextEditingController topic = TextEditingController();

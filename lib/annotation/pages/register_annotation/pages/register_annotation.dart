@@ -14,7 +14,7 @@ class RegisterAnnotation extends StatelessWidget {
     title.text = registerAnnotation.annotation.title ?? '';
   }
 
-  IRegisterAnnotation registerAnnotation;
+  RegisterAnnotationFactory registerAnnotation;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
   final TextEditingController title = TextEditingController();
@@ -106,7 +106,7 @@ class RegisterAnnotation extends StatelessWidget {
               registerAnnotation.annotation.setText(description.text);
               registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
 
-              await registerAnnotation.writeAnnotation();
+              await registerAnnotation.write();
 
               if (context.mounted) {
                 MessageUser.message(context, registerAnnotation.message.message);

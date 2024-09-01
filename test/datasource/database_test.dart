@@ -5,7 +5,7 @@ import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 
-class DatabaseMock implements RevisionDataSourceRepository {
+class DatabaseMock implements RevisionDatabaseFactory {
   DatabaseMock();
 
   @override

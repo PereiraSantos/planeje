@@ -1,15 +1,14 @@
 import 'package:planeje/quiz_revision/datasource/database/quiz_database.dart';
+import 'package:planeje/utils/delete.dart';
 
-abstract class RemoveQuiz {
-  Future<void> deleteQuiz(int id);
-}
+abstract class RemoveQuizFactory extends DeleteFactory {}
 
-class DeleteQuiz implements RemoveQuiz {
-  DatasourceQuizRepository datasourceQuiz;
+class DeleteQuiz implements RemoveQuizFactory {
+  QuizDatabaseFactory quizDatabase;
 
-  DeleteQuiz(this.datasourceQuiz);
+  DeleteQuiz(this.quizDatabase);
   @override
-  Future<void> deleteQuiz(int id) async {
-    await datasourceQuiz.deleteQuiz(id);
+  Future<void> deleteById(int id) async {
+    await quizDatabase.deleteQuiz(id);
   }
 }

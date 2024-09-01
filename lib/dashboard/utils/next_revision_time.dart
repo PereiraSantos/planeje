@@ -7,8 +7,7 @@ import 'package:planeje/utils/format_date.dart';
 class NetRevisionTime {
   NetRevisionTime(this.revisionValid);
 
-  IRevisionValid revisionValid;
-  List<RevisionTime> nextRevisions = [];
+  RevisionValidFactory revisionValid;
   List<RevisionTime> revisions = [];
   var total = 0;
 
@@ -17,6 +16,7 @@ class NetRevisionTime {
 
   Future<List<RevisionTime>?> getNextRevision() async {
     await findNextRevision();
+    List<RevisionTime> nextRevisions = [];
 
     for (var element in revisions) {
       if (revisionValid.validate(FormatDate.dateParse(element.dateRevision.nextDate!))) {

@@ -11,7 +11,7 @@ class RegisterLearnPage extends StatelessWidget {
     description.text = registerLearn.learn.description ?? '';
   }
 
-  RegisterLearn registerLearn;
+  RegisterLearnFactory registerLearn;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
 
@@ -59,7 +59,7 @@ class RegisterLearnPage extends StatelessWidget {
 
                 registerLearn.learn.setDescription(description.text);
 
-                var result = await registerLearn.writeLearn();
+                var result = await registerLearn.write();
 
                 if (context.mounted && result != null) {
                   MessageUser.message(context, registerLearn.message.message);

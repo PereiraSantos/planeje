@@ -3,20 +3,20 @@ import 'package:planeje/utils/type_message.dart';
 
 import '../../entities/quiz.dart';
 
-abstract class RegisterQuiz {
+abstract class RegisterQuizFactory {
   Future<int?> writeQuiz();
   late Quiz quiz;
   late StatusNotification message;
 }
 
-class SaveQuiz implements RegisterQuiz {
-  DatasourceQuizRepository datasourceQuiz;
+class SaveQuiz implements RegisterQuizFactory {
+  QuizDatabaseFactory quizDatabase;
 
-  SaveQuiz(this.datasourceQuiz, this.quiz, this.message);
+  SaveQuiz(this.quizDatabase, this.quiz, this.message);
 
   @override
   Future<int?> writeQuiz() async {
-    return await datasourceQuiz.insertQuiz(quiz);
+    return await quizDatabase.insertQuiz(quiz);
   }
 
   @override
@@ -26,8 +26,8 @@ class SaveQuiz implements RegisterQuiz {
   StatusNotification message;
 }
 
-class UpdateQuiz implements RegisterQuiz {
-  DatasourceQuizRepository datasourceQuiz;
+class UpdateQuiz implements RegisterQuizFactory {
+  QuizDatabaseFactory datasourceQuiz;
 
   UpdateQuiz(this.datasourceQuiz, this.quiz, this.message);
 

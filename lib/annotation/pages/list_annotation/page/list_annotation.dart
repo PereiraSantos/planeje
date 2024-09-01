@@ -28,7 +28,7 @@ class ListAnnotation extends StatelessWidget {
       child: Column(
         children: [
           FutureBuilder(
-            future: GetCategory(CategoryDatabase()).getAllCategory(''),
+            future: GetCategory(CategoryDatabase()).getAll(''),
             builder: (BuildContext context, AsyncSnapshot<List<Category>?> snapshot) {
               if (snapshot.hasData) {
                 return snapshot.data!.isNotEmpty
@@ -40,7 +40,7 @@ class ListAnnotation extends StatelessWidget {
             },
           ),
           FutureBuilder(
-            future: GetAnnotation(AnnotationDatabaseDatasource())
+            future: GetAnnotation(AnnotationDatabase())
                 .getAnnotationWidthRevision(annotationNotifier.search ?? ''),
             builder: (BuildContext context, AsyncSnapshot<List<AnnotationRevision>?> snapshot) {
               if (snapshot.hasData) {
@@ -109,7 +109,7 @@ class ListAnnotation extends StatelessWidget {
                                     TransitionsBuilder.createRoute(
                                       RegisterAnnotation(
                                         registerAnnotation: UpdateAnnotation(
-                                          AnnotationDatabaseDatasource(),
+                                          AnnotationDatabase(),
                                           annotationsRevisions[index],
                                           StatusNotification(TypeMessage.Atualizar),
                                         ),

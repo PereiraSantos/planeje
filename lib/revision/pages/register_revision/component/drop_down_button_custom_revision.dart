@@ -22,7 +22,7 @@ class DropDownButtonCustomRevision extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: FutureBuilder(
-        future: GetLearn(LearnDatabase()).getAllLearn(''),
+        future: GetLearn(LearnDatabase()).getAll(''),
         builder: (BuildContext context, AsyncSnapshot<List<Learn>?> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {

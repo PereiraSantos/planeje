@@ -20,7 +20,7 @@ class DropDownButtonCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GetCategory(CategoryDatabase()).getAllCategory(''),
+      future: GetCategory(CategoryDatabase()).getAll(''),
       builder: (BuildContext context, AsyncSnapshot<List<Category>?> snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isNotEmpty) {

@@ -1,23 +1,21 @@
 import 'package:planeje/category/datasource/database/datasource_category_repository.dart';
 import 'package:planeje/category/entities/category.dart';
+import 'package:planeje/utils/find.dart';
 
-abstract class IFindCategory {
-  Future<List<Category>?> getAllCategory(String text);
-  Future<Category?> getCategoryId(int id);
-}
+abstract class FindCategoryFactory extends FindFactory {}
 
-class GetCategory implements IFindCategory {
-  DatasourceCategoryRepository datasourceCategoryRepository;
+class GetCategory implements FindCategoryFactory {
+  CategoryDatabaseFactory categoryDatabase;
 
-  GetCategory(this.datasourceCategoryRepository);
+  GetCategory(this.categoryDatabase);
 
   @override
-  Future<List<Category>?> getAllCategory(String text) async {
-    return await datasourceCategoryRepository.getAllCategory(text);
+  Future<List<Category>?> getAll(String text) async {
+    return await categoryDatabase.getAllCategory(text);
   }
 
   @override
-  Future<Category?> getCategoryId(int id) async {
-    return await datasourceCategoryRepository.getCategoryId(id);
+  Future<Category?> getById(int id) async {
+    return await categoryDatabase.getCategoryId(id);
   }
 }

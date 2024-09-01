@@ -8,7 +8,7 @@ abstract class FindDateRevisionFactory {
 }
 
 class FindDateRevision implements FindDateRevisionFactory {
-  DateRevisionDataSourceRepository dataSourceRepository;
+  DateRevisionDatabaseDataSource dataSourceRepository;
 
   FindDateRevision(this.dataSourceRepository);
   @override

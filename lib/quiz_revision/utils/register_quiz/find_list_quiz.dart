@@ -1,17 +1,17 @@
 import 'package:planeje/quiz_revision/datasource/database/quiz_database.dart';
 import 'package:planeje/quiz_revision/entities/quiz.dart';
 
-abstract class FindListQuiz {
+abstract class FindListQuizFactory {
   Future<List<Quiz>?> getAllQuiz(String text);
 }
 
-class GetQuiz implements FindListQuiz {
-  DatasourceQuizRepository datasourceQuiz;
+class GetQuiz implements FindListQuizFactory {
+  QuizDatabaseFactory quizDatabase;
 
-  GetQuiz(this.datasourceQuiz);
+  GetQuiz(this.quizDatabase);
 
   @override
   Future<List<Quiz>?> getAllQuiz(String text) async {
-    return await datasourceQuiz.getAllQuiz(text);
+    return await quizDatabase.getAllQuiz(text);
   }
 }

@@ -26,7 +26,7 @@ class AnnotationAppBar implements IAppBarNavigatorAdd {
       TransitionsBuilder.createRoute(
         RegisterAnnotation(
           registerAnnotation: InsertAnnotation(
-            AnnotationDatabaseDatasource(),
+            AnnotationDatabase(),
             Annotation(),
             StatusNotification(),
           ),

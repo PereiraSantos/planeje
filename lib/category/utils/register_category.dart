@@ -1,21 +1,20 @@
 import 'package:planeje/category/datasource/database/datasource_category_repository.dart';
+import 'package:planeje/utils/register.dart';
 import 'package:planeje/utils/type_message.dart';
 
 import '../entities/category.dart';
 
-abstract class RegisterCategory {
-  Future<int?> writeCategory();
+abstract class RegisterCategoryFactory extends RegisterFactory {
   late Category category;
-  late StatusNotification message;
 }
 
-class SaveCategory implements RegisterCategory {
-  DatasourceCategoryRepository datasourceCategoryRepository;
-  SaveCategory(this.datasourceCategoryRepository, this.category, this.message);
+class SaveCategory implements RegisterCategoryFactory {
+  CategoryDatabaseFactory categoryDatabase;
+  SaveCategory(this.categoryDatabase, this.category, this.message);
 
   @override
-  Future<int?> writeCategory() async {
-    return await datasourceCategoryRepository.insertCategory(category);
+  Future<int?> write() async {
+    return await categoryDatabase.insertCategory(category);
   }
 
   @override
@@ -25,13 +24,13 @@ class SaveCategory implements RegisterCategory {
   StatusNotification message;
 }
 
-class UpdateCategory implements RegisterCategory {
-  DatasourceCategoryRepository datasourceCategoryRepository;
-  UpdateCategory(this.datasourceCategoryRepository, this.category, this.message);
+class UpdateCategory implements RegisterCategoryFactory {
+  CategoryDatabaseFactory categoryDatabase;
+  UpdateCategory(this.categoryDatabase, this.category, this.message);
 
   @override
-  Future<int?> writeCategory() async {
-    return await datasourceCategoryRepository.updateCategory(category);
+  Future<int?> write() async {
+    return await categoryDatabase.updateCategory(category);
   }
 
   @override

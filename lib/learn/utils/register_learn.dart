@@ -1,20 +1,19 @@
 import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
 import 'package:planeje/learn/entities/learn.dart';
+import 'package:planeje/utils/register.dart';
 import 'package:planeje/utils/type_message.dart';
 
-abstract class RegisterLearn {
-  Future<int?> writeLearn();
+abstract class RegisterLearnFactory extends RegisterFactory {
   late Learn learn;
-  late StatusNotification message;
 }
 
-class SaveLearn implements RegisterLearn {
-  DatasourceLearnRepository datasourceLearnRepository;
-  SaveLearn(this.datasourceLearnRepository, this.learn, this.message);
+class SaveLearn implements RegisterLearnFactory {
+  LearnDatabaseFactory learnDatabase;
+  SaveLearn(this.learnDatabase, this.learn, this.message);
 
   @override
-  Future<int?> writeLearn() async {
-    return await datasourceLearnRepository.insertLearn(learn);
+  Future<int?> write() async {
+    return await learnDatabase.insertLearn(learn);
   }
 
   @override
@@ -24,13 +23,13 @@ class SaveLearn implements RegisterLearn {
   StatusNotification message;
 }
 
-class UpdateLearn implements RegisterLearn {
-  DatasourceLearnRepository datasourceLearnRepository;
-  UpdateLearn(this.datasourceLearnRepository, this.learn, this.message);
+class UpdateLearn implements RegisterLearnFactory {
+  LearnDatabaseFactory learnDatabase;
+  UpdateLearn(this.learnDatabase, this.learn, this.message);
 
   @override
-  Future<int?> writeLearn() async {
-    return await datasourceLearnRepository.updateLearn(learn);
+  Future<int?> write() async {
+    return await learnDatabase.updateLearn(learn);
   }
 
   @override
