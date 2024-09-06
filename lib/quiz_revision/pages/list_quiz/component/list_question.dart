@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/widgets/button_custon.dart';
 import '../../../../widgets/checkbox_custom.dart';
 import '../../../entities/question.dart';
@@ -69,7 +70,10 @@ class _ListQuestionState extends State<ListQuestion> {
             children: [
               GestureDetector(
                 onTap: () {
-                  if (listQuestionController.index == -1) return;
+                  if (listQuestionController.index == -1) {
+                    MessageUser.message(context, 'Necessário escolher um registro!!!');
+                    return;
+                  }
                   listQuestionController.showAnswer = true;
                   setState(() {});
                 },

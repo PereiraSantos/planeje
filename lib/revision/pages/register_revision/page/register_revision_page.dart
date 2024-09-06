@@ -81,6 +81,11 @@ class RegisterRevisionPage extends StatelessWidget {
                 revision.registerDate.date.setNextDate(nextDate);
                 revision.registerDate.date.setDay(revision.registerDate.date.day);
 
+                if (nextDate == '') {
+                  revision.registerDate.date.setNextDate(null);
+                  revision.registerDate.date.setDay(0);
+                }
+
                 var result = await revision.registerDate.writeDateRevision();
 
                 if (result != null && context.mounted) {

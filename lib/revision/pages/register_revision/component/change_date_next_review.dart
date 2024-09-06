@@ -65,6 +65,7 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
       day.text = (widget.revisionEntity!.day).toString();
       dateNextRevision = (widget.revisionEntity!.nextDate).toString();
       showRevisionDate = true;
+      widget.onClickCalendar(dateNextRevision);
     }
   }
 
