@@ -8,11 +8,13 @@ class AppBarButtonWidget extends StatelessWidget {
     required this.onClick,
     required this.title,
     this.color,
+    this.value,
   });
 
   final Function() onClick;
   final String title;
   Color? color;
+  double? value;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class AppBarButtonWidget extends StatelessWidget {
       onTap: () => onClick(),
       child: ButtonCuston(
         color: color ?? Colors.black12,
-        width: MediaQuery.of(context).size.width * 0.3,
+        width: MediaQuery.of(context).size.width * (value ?? 0.2).toDouble(),
         margin: const EdgeInsets.only(left: 05),
         child: Text(
           title,

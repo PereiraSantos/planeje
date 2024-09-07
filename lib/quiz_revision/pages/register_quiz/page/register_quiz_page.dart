@@ -49,7 +49,7 @@ class RegisterQuizPage extends StatelessWidget {
                 TextFormFieldWidget(
                   controller: topic,
                   onChange: registerQuiz.quiz.setTopic,
-                  hintText: 'Assunto',
+                  hintText: 'Tema',
                   keyboardType: TextInputType.text,
                   textArea: false,
                   valid: false,

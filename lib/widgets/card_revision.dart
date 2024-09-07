@@ -20,18 +20,6 @@ class CardRevision extends StatelessWidget {
   final bool isRevision;
   final Widget? child;
 
-  Widget labelText(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, top: 5),
-      child: SizedBox(
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 17, color: Colors.black54),
-        ),
-      ),
-    );
-  }
-
   Color? checkColorDate(String? date) {
     if (date == "" || isRevision) return null;
 
@@ -99,13 +87,13 @@ class CardRevision extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      labelText("Conhecimento:"),
+                      labelCard('Assunto:'),
                       Expanded(
-                        flex: 2,
+                        flex: 8,
                         child: SizedBox(
                           width: double.maxFinite,
                           child: TextCard(
-                            padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
+                            padding: const EdgeInsets.only(right: 0, top: 2),
                             revisionEntity: snapshot.data?.description ?? "",
                             maxLines: 5,
                           ),
@@ -122,7 +110,7 @@ class CardRevision extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                labelCard('Revisão:'),
+                labelCard('Tema:'),
                 Expanded(
                   flex: 8,
                   child: SizedBox(

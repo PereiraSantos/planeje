@@ -11,6 +11,7 @@ import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_widget.dart';
 import 'package:planeje/widgets/app_bar_widget/home_app_bar_widget.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_widget.dart';
+import 'package:planeje/widgets/tab_bar_widget/tab_bar_widget_quiz.dart';
 import '../component/next_revision.dart';
 import '../component/reviser_late.dart';
 
@@ -53,7 +54,12 @@ class _HomeState extends State<Home> {
                 AppBarButtonWidget(
                     onClick: () async => await Navigator.of(context)
                         .push(TransitionsBuilder.createRoute(const TabBarWidget())),
-                    title: 'Cronograma'),
+                    title: 'Revisão'),
+                AppBarButtonWidget(
+                    value: 0.2,
+                    onClick: () async => await Navigator.of(context)
+                        .push(TransitionsBuilder.createRoute(const TabBarWidgetQuiz())),
+                    title: 'Quiz'),
               ],
             );
           },

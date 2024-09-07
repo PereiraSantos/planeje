@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/pages/register_annotation/component/drop_down_category.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
 import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
@@ -42,10 +41,6 @@ class RegisterAnnotation extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                DropDownButtonCategory(
-                  onChanged: (value) => registerAnnotation.annotation.setIdCategory(value),
-                  idCategory: registerAnnotation.annotation.idCategory,
-                ),
                 DropDownButtonRevision(
                   onClick: (value) => registerAnnotation.annotation.setIdRevision(value),
                   idRevision: registerAnnotation.annotation.idRevision,

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/datasource/database/database_datasource.dart';
-import 'package:planeje/annotation/pages/list_annotation/component/filter.dart';
 import 'package:planeje/annotation/pages/register_annotation/pages/register_annotation.dart';
 import 'package:planeje/annotation/utils/delete_annotation.dart';
 import 'package:planeje/annotation/utils/filter_notifier.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
-import 'package:planeje/category/datasource/database/datasource_category_repository.dart';
-import 'package:planeje/category/entities/category.dart';
-import 'package:planeje/category/utils/find_category.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
 import '../../../../utils/transitions_builder.dart';
@@ -29,18 +25,6 @@ class ListAnnotation extends StatelessWidget {
       child: Column(
         children: [
           FutureBuilder(
-            future: GetCategory(CategoryDatabase()).getAll(''),
-            builder: (BuildContext context, AsyncSnapshot<List<Category>?> snapshot) {
-              if (snapshot.hasData) {
-                return snapshot.data!.isNotEmpty
-                    ? Filter(categories: snapshot.data!, filterNotifier: filterNotifier)
-                    : const SizedBox();
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-          FutureBuilder(
             future: GetAnnotation(AnnotationDatabase())
                 .getAnnotationWidthRevision(annotationNotifier.search ?? ''),
             builder: (BuildContext context, AsyncSnapshot<List<AnnotationRevision>?> snapshot) {
@@ -51,42 +35,8 @@ class ListAnnotation extends StatelessWidget {
                   return ListenableBuilder(
                     listenable: filterNotifier,
                     builder: (BuildContext context, Widget? child) {
-                      List<AnnotationRevision> annotationsRevisions = [];
-
-                      var copyAnnotationsRevisions =
-                          List<AnnotationRevision>.from(filterNotifier.annotationsRevisions!);
-                      int quantityFilterSelect = 0;
-
-                      for (Category item in filterNotifier.filters) {
-                        if (item.select) {
-                          quantityFilterSelect++;
-                          annotationsRevisions.addAll(copyAnnotationsRevisions
-                              .where((e) => e.descriptionCategory == item.description)
-                              .toList());
-                        }
-                      }
-
-                      if (quantityFilterSelect == 0 && annotationsRevisions.isEmpty) {
-                        annotationsRevisions = copyAnnotationsRevisions;
-                      }
-
-                      if (quantityFilterSelect > 0 && annotationsRevisions.isEmpty) annotationsRevisions = [];
-
-                      if (annotationsRevisions.isEmpty) {
-                        return const Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              "Não há anotação!!!",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w300),
-                            ),
-                          ),
-                        );
-                      }
-
                       return ListView.builder(
-                        itemCount: annotationsRevisions.length,
+                        itemCount: snapshot.data!.length,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
@@ -96,10 +46,10 @@ class ListAnnotation extends StatelessWidget {
                               if (direction == DismissDirection.startToEnd) {
                                 return await DialogDelete().build(
                                   context,
-                                  annotationsRevisions[index].text!,
+                                  snapshot.data![index].text!,
                                   <AnnotationRevision>() async {
                                     return await DeleteAnnotation(AnnotationDatabase())
-                                        .deleteById(annotationsRevisions[index].id!);
+                                        .deleteById(snapshot.data![index].id!);
                                   },
                                 );
                               }
@@ -118,7 +68,7 @@ class ListAnnotation extends StatelessWidget {
                                       RegisterAnnotation(
                                         registerAnnotation: UpdateAnnotation(
                                           AnnotationDatabase(),
-                                          annotationsRevisions[index],
+                                          snapshot.data![index],
                                           StatusNotification(TypeMessage.Atualizar),
                                         ),
                                       ),
@@ -134,38 +84,25 @@ class ListAnnotation extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Visibility(
-                                        visible: annotationsRevisions[index].idRevision != null,
+                                        visible: snapshot.data![index].idRevision != null,
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
-                                            const TextList("Revisão:", flex: 2),
-                                            TextList("${annotationsRevisions[index].description}",
+                                            const TextList("Tema:", flex: 1),
+                                            TextList("${snapshot.data![index].description}",
                                                 flex: 6, fontSize: 17),
                                           ],
                                         ),
                                       ),
                                       Visibility(
-                                        visible: annotationsRevisions[index].idCategory != null &&
-                                            annotationsRevisions[index].descriptionCategory != null,
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            const TextList("Categoria:", flex: 2),
-                                            TextList("${annotationsRevisions[index].descriptionCategory}",
-                                                flex: 6, fontSize: 17),
-                                          ],
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: annotationsRevisions[index].title != "",
+                                        visible: snapshot.data![index].title != "",
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             TextList(
-                                              "${annotationsRevisions[index].title}",
+                                              "${snapshot.data![index].title}",
                                               color: Colors.black54,
                                               fontWeight: FontWeight.w500,
                                               fontSize: 17,
@@ -178,7 +115,7 @@ class ListAnnotation extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          TextList(annotationsRevisions[index].text ?? ""),
+                                          TextList(snapshot.data![index].text ?? ""),
                                         ],
                                       ),
                                       const Padding(padding: EdgeInsets.all(3))

@@ -34,7 +34,7 @@ class _ListQuestionState extends State<ListQuestion> {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.only(left: 08, right: 10),
+              padding: const EdgeInsets.only(left: 02, right: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,

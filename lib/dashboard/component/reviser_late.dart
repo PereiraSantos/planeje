@@ -48,7 +48,7 @@ class ReviserLate extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(left: 5, bottom: 10),
                   child: Text(
-                    "Próximas: $quantityCompleted",
+                    "Próximas:  $quantityCompleted",
                     style: const TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ),

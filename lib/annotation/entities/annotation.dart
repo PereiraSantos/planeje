@@ -18,16 +18,12 @@ class Annotation {
   @ColumnInfo(name: 'id_revision')
   int? idRevision;
 
-  @ColumnInfo(name: 'id_category')
-  int? idCategory;
-
   Annotation({
     this.id,
     this.title,
     this.text,
     this.dateText,
     this.idRevision,
-    this.idCategory,
   });
 
   void setId(int? value) => id = value;
@@ -35,5 +31,4 @@ class Annotation {
   void setText(String value) => text = value;
   void setDateText(String? date) => dateText = date ?? FormatDate.formatDate(FormatDate.newDate());
   void setIdRevision(int? value) => idRevision = value;
-  void setIdCategory(int? value) => idCategory = value;
 }

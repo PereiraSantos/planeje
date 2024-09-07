@@ -88,7 +88,7 @@ class ListQuiz extends StatelessWidget {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: Text("Assunto: ${snapshot.data![index].topic ?? ''}",
+                                child: Text("Tema: ${snapshot.data![index].topic ?? ''}",
                                     style: const TextStyle(fontSize: 14, color: Colors.black54)),
                               ),
                               Padding(

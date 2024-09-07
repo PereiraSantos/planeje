@@ -103,7 +103,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER, `status` INTEGER, `day` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `id_category` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT)');
         await database.execute(
@@ -400,8 +400,7 @@ class _$AnnotationDao extends AnnotationDao {
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
-                  'id_revision': item.idRevision,
-                  'id_category': item.idCategory
+                  'id_revision': item.idRevision
                 }),
         _annotationUpdateAdapter = UpdateAdapter(
             database,
@@ -412,8 +411,7 @@ class _$AnnotationDao extends AnnotationDao {
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
-                  'id_revision': item.idRevision,
-                  'id_category': item.idCategory
+                  'id_revision': item.idRevision
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -434,8 +432,7 @@ class _$AnnotationDao extends AnnotationDao {
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?,
-            idCategory: row['id_category'] as int?),
+            idRevision: row['id_revision'] as int?),
         arguments: [id]);
   }
 
@@ -448,8 +445,7 @@ class _$AnnotationDao extends AnnotationDao {
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?,
-            idCategory: row['id_category'] as int?),
+            idRevision: row['id_revision'] as int?),
         arguments: [idRevision]);
   }
 

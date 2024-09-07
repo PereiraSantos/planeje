@@ -48,7 +48,7 @@ class RegisterRevisionPage extends StatelessWidget {
                 TextFormFieldWidget(
                   controller: description,
                   maxLine: 5,
-                  hintText: 'Revisão',
+                  hintText: 'Tema',
                   keyboardType: TextInputType.multiline,
                   textArea: true,
                 ),
