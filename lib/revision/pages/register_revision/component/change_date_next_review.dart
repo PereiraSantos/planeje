@@ -106,7 +106,7 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
 
                         if (!show) generateNextRevision(value: day.text != '' ? null : 0, edit: true);
 
-                        widget.onDay(int.parse(day.text));
+                        if (day.text != '') widget.onDay(int.parse(day.text));
 
                         setState(() {});
                       },
