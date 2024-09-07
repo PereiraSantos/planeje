@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
 import 'package:planeje/learn/entities/learn.dart';
 import 'package:planeje/learn/pages/register_learn/register_learn.dart';
+import 'package:planeje/learn/utils/delete_learn.dart';
 import 'package:planeje/learn/utils/find_learn.dart';
 import 'package:planeje/learn/utils/register_learn.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
 import '../../../../utils/transitions_builder.dart';
-import '../component/dialog_delete.dart';
+import '../../../../widgets/dialog_delete.dart';
 import '../component/text_list.dart';
 
 // ignore: must_be_immutable
@@ -33,7 +34,10 @@ class ListLearn extends StatelessWidget {
                     key: UniqueKey(),
                     confirmDismiss: (DismissDirection direction) async {
                       if (direction == DismissDirection.startToEnd) {
-                        return await DialogDelete.build(context, snapshot.data![index]);
+                        return await DialogDelete().build(context, snapshot.data![index].description!,
+                            <Learn>() async {
+                          return await DeleteLearn(LearnDatabase()).deleteById(snapshot.data![index].id!);
+                        });
                       }
                       return null;
                     },

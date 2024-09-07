@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/category/datasource/database/datasource_category_repository.dart';
-import 'package:planeje/category/entities/category.dart';
-import 'package:planeje/category/utils/delete_category.dart';
+import 'package:planeje/utils/message_user.dart';
 
 class DialogDelete {
-  static build(BuildContext context, Category category) async {
+  build<T>(BuildContext context, String text, Future<T> Function() onPressed) async {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Text(
-            "Deseja excluir? \n${category.description!}",
+            "Deseja excluir? \n$text",
             style: const TextStyle(color: Colors.black45, fontSize: 18),
           ),
           actions: <Widget>[
@@ -21,10 +19,10 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var result = await DeleteCategory(CategoryDatabase()).deleteById(category.id!);
+                      var result = await onPressed();
 
                       if (result != null && context.mounted) {
-                        message(context, 'Removido com sucesso');
+                        MessageUser.message(context, 'Removido com sucesso');
                         Navigator.pop(context, true);
                       }
                     },
@@ -40,7 +38,7 @@ class DialogDelete {
                     child: const Text("SIM"),
                   ),
                   TextButton(
-                    onPressed: () => Navigator.pop(context, false),
+                    onPressed: () => Navigator.of(context).pop(false),
                     style: ButtonStyle(
                       foregroundColor: WidgetStateProperty.all(const Color.fromARGB(80, 0, 0, 0)),
                       padding: WidgetStateProperty.all(
@@ -59,13 +57,5 @@ class DialogDelete {
         );
       },
     );
-  }
-
-  static void message(BuildContext context, String message) {
-    var snackBar = SnackBar(
-      content: Text(message),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

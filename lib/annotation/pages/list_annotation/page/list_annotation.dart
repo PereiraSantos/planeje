@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/datasource/database/database_datasource.dart';
-import 'package:planeje/annotation/pages/list_annotation/component/dialog_delete.dart';
 import 'package:planeje/annotation/pages/list_annotation/component/filter.dart';
 import 'package:planeje/annotation/pages/register_annotation/pages/register_annotation.dart';
+import 'package:planeje/annotation/utils/delete_annotation.dart';
 import 'package:planeje/annotation/utils/filter_notifier.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
@@ -13,6 +13,7 @@ import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
 import '../../../../utils/transitions_builder.dart';
 
+import '../../../../widgets/dialog_delete.dart';
 import '../../../entities/annotation_revision.dart';
 import '../component/text_list.dart';
 
@@ -93,7 +94,14 @@ class ListAnnotation extends StatelessWidget {
                             key: UniqueKey(),
                             confirmDismiss: (DismissDirection direction) async {
                               if (direction == DismissDirection.startToEnd) {
-                                return await DialogDelete.build(context, annotationsRevisions[index]);
+                                return await DialogDelete().build(
+                                  context,
+                                  annotationsRevisions[index].text!,
+                                  <AnnotationRevision>() async {
+                                    return await DeleteAnnotation(AnnotationDatabase())
+                                        .deleteById(annotationsRevisions[index].id!);
+                                  },
+                                );
                               }
                               return null;
                             },

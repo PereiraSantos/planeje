@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/category/datasource/database/datasource_category_repository.dart';
 import 'package:planeje/category/entities/category.dart';
-import 'package:planeje/category/pages/list_category/component/dialog_delete.dart';
 import 'package:planeje/category/pages/register_category/register_category.dart';
+import 'package:planeje/category/utils/delete_category.dart';
 import 'package:planeje/category/utils/find_category.dart';
 import 'package:planeje/category/utils/register_category.dart';
 import 'package:planeje/revision/pages/list_revision/component/text_list.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
+
+import '../../../widgets/dialog_delete.dart';
 
 // ignore: must_be_immutable
 class ListCategory extends StatelessWidget {
@@ -33,7 +35,14 @@ class ListCategory extends StatelessWidget {
                     key: UniqueKey(),
                     confirmDismiss: (DismissDirection direction) async {
                       if (direction == DismissDirection.startToEnd) {
-                        return await DialogDelete.build(context, snapshot.data![index]);
+                        return await DialogDelete().build(
+                          context,
+                          snapshot.data![index].description!,
+                          <Category>() async {
+                            return await DeleteCategory(CategoryDatabase())
+                                .deleteById(snapshot.data![index].id!);
+                          },
+                        );
                       }
                       return null;
                     },
