@@ -40,6 +40,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffffffff),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55.0),
         child: ListenableBuilder(

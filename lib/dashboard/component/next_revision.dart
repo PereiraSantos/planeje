@@ -30,21 +30,6 @@ class NextRevision extends StatelessWidget {
   final Function() finishUpdaterReviser;
   final UnderReviewNotifier underReviewNotifier;
 
-  Widget labelText(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, top: 5),
-      child: SizedBox(
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 17,
-            color: Colors.black54,
-          ),
-        ),
-      ),
-    );
-  }
-
   String getTime() => FormatDate.formatTimeByString(FormatDate.newDate());
 
   Future<void> updateStatus(int id) async {
@@ -79,13 +64,18 @@ class NextRevision extends StatelessWidget {
           if (snapshot.data!.isNotEmpty) {
             return Column(
               children: [
-                const Padding(padding: EdgeInsets.all(10)),
+                const Divider(color: Colors.grey, endIndent: 15, indent: 15),
                 Container(
-                  padding: const EdgeInsets.only(left: 15, top: 10),
+                  padding: const EdgeInsets.only(left: 15, bottom: 5),
                   alignment: Alignment.bottomLeft,
                   child: Text(
                     text,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black54,
+                    ),
                   ),
                 ),
                 ListView.builder(
@@ -112,11 +102,10 @@ class NextRevision extends StatelessWidget {
                       },
                       child: Container(
                         width: double.maxFinite,
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Card(
-                          elevation: 2,
-                          shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(3.0), borderSide: BorderSide.none),
+                        margin: const EdgeInsets.only(left: 25, right: 15),
+                        child: Container(
+                          padding: const EdgeInsets.only(bottom: 5, right: 5),
+                          margin: const EdgeInsets.only(bottom: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,43 +118,46 @@ class NextRevision extends StatelessWidget {
                                     SizedBox(
                                       width: double.maxFinite,
                                       child: TextCard(
-                                        padding: const EdgeInsets.only(left: 8, top: 05, right: 5),
+                                        padding: const EdgeInsets.only(top: 2),
                                         revisionEntity: snapshot.data![index].revision.description ?? "",
                                         maxLines: 5,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: double.maxFinite,
-                                      child: TextCard(
-                                        padding: const EdgeInsets.only(left: 8, right: 5, bottom: 5, top: 5),
-                                        revisionEntity: FormatDate.formatDateString(
-                                            "${snapshot.data![index].dateRevision.nextDate}"),
-                                        maxLines: 5,
+                                    Visibility(
+                                      visible: underReviewNotifier.getIdDateRevision() == -1,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(top: 2),
+                                          child: SizedBox(
+                                            width: 52,
+                                            height: 18,
+                                            child: ButtonWidget(
+                                              onTap: () async =>
+                                                  await updateStatus(snapshot.data![index].dateRevision.id!)
+                                                      .whenComplete(() {
+                                                finishUpdaterReviser();
+                                              }),
+                                              label: 'Revisar',
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                               Expanded(
-                                child: Visibility(
-                                  visible: underReviewNotifier.getIdDateRevision() == -1,
-                                  child: SizedBox(
-                                    width: 70,
-                                    height: 35,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 5, top: 6, bottom: 6, right: 6),
-                                      child: ButtonWidget(
-                                        onTap: () async =>
-                                            await updateStatus(snapshot.data![index].dateRevision.id!)
-                                                .whenComplete(() {
-                                          finishUpdaterReviser();
-                                        }),
-                                        label: 'Revisar',
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                child: SizedBox(
+                                  width: double.maxFinite,
+                                  child: TextCard(
+                                    padding: const EdgeInsets.only(bottom: 5, top: 5),
+                                    revisionEntity: FormatDate.formatDateString(
+                                        "${snapshot.data![index].dateRevision.nextDate}"),
+                                    maxLines: 5,
+                                    textAlign: TextAlign.right,
                                   ),
                                 ),
                               ),

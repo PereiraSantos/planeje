@@ -3,6 +3,11 @@ import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 
 import '../../../../database/app_database.dart';
+/*
+
+with revision_temp as (SELECT * FROM revision as r inner join date_revision as d on r.id == d.id_revision)
+select * from revision_temp group by id_revision
+*/
 
 class FindRevisionDao {
   Future<List<RevisionTime>> findRevision(AppDatabase database, String text) async {

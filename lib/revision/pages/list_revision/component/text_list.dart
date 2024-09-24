@@ -9,6 +9,7 @@ class TextCard extends StatelessWidget {
     this.maxLines = 1,
     this.fontWeight = FontWeight.normal,
     this.padding,
+    this.textAlign = TextAlign.left,
   });
 
   final String revisionEntity;
@@ -17,6 +18,7 @@ class TextCard extends StatelessWidget {
   final int? maxLines;
   final FontWeight? fontWeight;
   final EdgeInsetsGeometry? padding;
+  final TextAlign? textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class TextCard extends StatelessWidget {
       child: Text(
         revisionEntity,
         maxLines: maxLines,
+        textAlign: textAlign,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
           fontSize: fontSize,

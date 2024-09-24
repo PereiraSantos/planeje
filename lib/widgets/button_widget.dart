@@ -21,10 +21,10 @@ class ButtonWidget extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(color: color, width: 1),
-              left: BorderSide(color: color, width: 1),
-              right: BorderSide(color: color, width: 1),
-              bottom: BorderSide(color: color, width: 1),
+              top: BorderSide(color: color, width: 0.5),
+              left: BorderSide(color: color, width: 0.5),
+              right: BorderSide(color: color, width: 0.5),
+              bottom: BorderSide(color: color, width: 0.5),
             ),
             color: Colors.white,
             borderRadius: BorderRadius.circular(4)),

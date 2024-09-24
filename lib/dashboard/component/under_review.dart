@@ -32,12 +32,17 @@ class UnderReview extends StatelessWidget {
           if (snapshot.data!.isNotEmpty) {
             return Column(
               children: [
+                const Divider(color: Colors.grey, endIndent: 15, indent: 15),
                 Container(
-                  padding: const EdgeInsets.only(left: 15, top: 10),
+                  padding: const EdgeInsets.only(left: 15),
                   alignment: Alignment.bottomLeft,
                   child: const Text(
                     'Em Revisão',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
+                    style: TextStyle(
+                        fontSize: 17,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black54),
                   ),
                 ),
                 ListView.builder(

@@ -20,25 +20,26 @@ class ReviserLate extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.only(left: 5, top: 10),
+            padding: const EdgeInsets.only(left: 5),
             child: const Text(
               "Revisões",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black54),
+              style: TextStyle(
+                fontSize: 17,
+                color: Colors.black54,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          Card(
-            elevation: 2,
-            color: Colors.white,
-            shape: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(3.0),
-              borderSide: BorderSide.none,
-            ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.3,
+            margin: const EdgeInsets.only(left: 10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.only(left: 5, bottom: 3, top: 10),
+                  padding: const EdgeInsets.only(left: 5, bottom: 1, top: 3),
                   width: double.maxFinite,
                   child: Text(
                     "Atrasadas: $quantityDelayed",
@@ -46,9 +47,9 @@ class ReviserLate extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 5, bottom: 10),
+                  padding: const EdgeInsets.only(left: 5, bottom: 3),
                   child: Text(
-                    "Próximas:  $quantityCompleted",
+                    "Revisadas: $quantityCompleted",
                     style: const TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ),
