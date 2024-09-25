@@ -56,8 +56,8 @@ final migration2to3 = Migration(2, 3, (database) async {
 });
 
 final migration3to4 = Migration(3, 4, (database) async {
-  await database.execute('ALTER TABLE date_revision ADD status INTEGER)');
-  await database.execute('ALTER TABLE date_revision ADD day INTEGER)');
+  await database.execute('ALTER TABLE date_revision ADD status INTEGER');
+  await database.execute('ALTER TABLE date_revision ADD day INTEGER');
 });
 
 Future<AppDatabase> getInstance() async {
