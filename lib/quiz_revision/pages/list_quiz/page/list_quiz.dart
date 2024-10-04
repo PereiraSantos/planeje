@@ -40,23 +40,28 @@ class ListQuiz extends StatelessWidget {
                     key: UniqueKey(),
                     confirmDismiss: (DismissDirection direction) async {
                       if (direction == DismissDirection.startToEnd) {
-                        var result = await DialogDelete.build(context, snapshot.data![index]);
+                        try {
+                          var result = await DialogDelete.build(context, snapshot.data![index]);
 
-                        if (result && context.mounted) {
-                          final TableQuestionNotifier tableQuestionNotifier = TableQuestionNotifier();
-                          await tableQuestionNotifier.deleteQuestionByIdQuiz(snapshot.data![index].id!);
+                          if (result && context.mounted) {
+                            final TableQuestionNotifier tableQuestionNotifier = TableQuestionNotifier();
+                            await tableQuestionNotifier.deleteQuestionByIdQuiz(snapshot.data![index].id!);
 
-                          await RemoveQuestion(QuestionDatabase()).delete(tableQuestionNotifier.questions);
+                            await RemoveQuestion(QuestionDatabase()).delete(tableQuestionNotifier.questions);
 
-                          await DeleteQuiz(QuizDatabase()).deleteById(snapshot.data![index].id!);
-                          tableQuestionNotifier.clearList();
+                            await DeleteQuiz(QuizDatabase()).deleteById(snapshot.data![index].id!);
+                            tableQuestionNotifier.clearList();
 
-                          if (!context.mounted) return;
-                          MessageUser.message(context, 'Removido com sucesso');
-                          quizNotifier.update();
+                            if (!context.mounted) return;
+                            MessageUser.message(context, 'Removido com sucesso');
+                            quizNotifier.update();
+                          }
+                          return null;
+                        } catch (e) {
+                          // ignore: use_build_context_synchronously
+                          MessageUser.message(context, 'Erro ao abrir dialogo');
                         }
                       }
-                      return null;
                     },
                     background: const Align(
                       alignment: Alignment(-0.9, 0),
@@ -66,18 +71,23 @@ class ListQuiz extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                       child: GestureDetector(
                         onTap: () async {
-                          var result = await Navigator.of(context).push(
-                            TransitionsBuilder.createRoute(
-                              RegisterQuizPage(
-                                registerQuiz: UpdateQuiz(
-                                  QuizDatabase(),
-                                  (snapshot.data![index]),
-                                  StatusNotification(TypeMessage.Atualizar),
+                          try {
+                            var result = await Navigator.of(context).push(
+                              TransitionsBuilder.createRoute(
+                                RegisterQuizPage(
+                                  registerQuiz: UpdateQuiz(
+                                    QuizDatabase(),
+                                    (snapshot.data![index]),
+                                    StatusNotification(TypeMessage.Atualizar),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                          if (result) quizNotifier.update();
+                            );
+                            if (result) quizNotifier.update();
+                          } catch (e) {
+                            // ignore: use_build_context_synchronously
+                            MessageUser.message(context, 'Erro na rota quiz revisão');
+                          }
                         },
                         child: Card(
                           elevation: 2,

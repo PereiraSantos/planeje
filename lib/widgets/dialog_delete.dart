@@ -19,11 +19,16 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var result = await onPressed();
+                      try {
+                        var result = await onPressed();
 
-                      if (result != null && context.mounted) {
-                        MessageUser.message(context, 'Removido com sucesso');
-                        Navigator.pop(context, true);
+                        if (result != null && context.mounted) {
+                          MessageUser.message(context, 'Removido com sucesso');
+                          Navigator.pop(context, true);
+                        }
+                      } catch (e) {
+                        // ignore: use_build_context_synchronously
+                        MessageUser.message(context, 'Erro ao deletar');
                       }
                     },
                     style: ButtonStyle(

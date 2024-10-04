@@ -5,6 +5,7 @@ import 'package:planeje/learn/pages/register_learn/register_learn.dart';
 import 'package:planeje/learn/utils/delete_learn.dart';
 import 'package:planeje/learn/utils/find_learn.dart';
 import 'package:planeje/learn/utils/register_learn.dart';
+import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
 import '../../../../utils/transitions_builder.dart';
@@ -36,7 +37,12 @@ class ListLearn extends StatelessWidget {
                       if (direction == DismissDirection.startToEnd) {
                         return await DialogDelete().build(context, snapshot.data![index].description!,
                             <Learn>() async {
-                          return await DeleteLearn(LearnDatabase()).deleteById(snapshot.data![index].id!);
+                          try {
+                            return await DeleteLearn(LearnDatabase()).deleteById(snapshot.data![index].id!);
+                          } catch (e) {
+                            // ignore: use_build_context_synchronously
+                            MessageUser.message(context, 'Erro ao abrir dialogo');
+                          }
                         });
                       }
                       return null;
@@ -49,18 +55,23 @@ class ListLearn extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                       child: GestureDetector(
                         onTap: () async {
-                          var result = await Navigator.of(context).push(
-                            TransitionsBuilder.createRoute(
-                              RegisterLearnPage(
-                                registerLearn: UpdateLearn(
-                                  LearnDatabase(),
-                                  snapshot.data![index],
-                                  StatusNotification(TypeMessage.Atualizar),
+                          try {
+                            var result = await Navigator.of(context).push(
+                              TransitionsBuilder.createRoute(
+                                RegisterLearnPage(
+                                  registerLearn: UpdateLearn(
+                                    LearnDatabase(),
+                                    snapshot.data![index],
+                                    StatusNotification(TypeMessage.Atualizar),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                          if (result) learnNotifier.update();
+                            );
+                            if (result) learnNotifier.update();
+                          } catch (e) {
+                            // ignore: use_build_context_synchronously
+                            MessageUser.message(context, 'Erro na rota assunto');
+                          }
                         },
                         child: Card(
                           elevation: 2,

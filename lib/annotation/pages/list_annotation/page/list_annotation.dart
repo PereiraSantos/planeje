@@ -5,6 +5,7 @@ import 'package:planeje/annotation/utils/delete_annotation.dart';
 import 'package:planeje/annotation/utils/filter_notifier.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
+import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
 import '../../../../utils/transitions_builder.dart';
@@ -44,14 +45,19 @@ class ListAnnotation extends StatelessWidget {
                             key: UniqueKey(),
                             confirmDismiss: (DismissDirection direction) async {
                               if (direction == DismissDirection.startToEnd) {
-                                return await DialogDelete().build(
-                                  context,
-                                  snapshot.data![index].text!,
-                                  <AnnotationRevision>() async {
-                                    return await DeleteAnnotation(AnnotationDatabase())
-                                        .deleteById(snapshot.data![index].id!);
-                                  },
-                                );
+                                try {
+                                  return await DialogDelete().build(
+                                    context,
+                                    snapshot.data![index].text!,
+                                    <AnnotationRevision>() async {
+                                      return await DeleteAnnotation(AnnotationDatabase())
+                                          .deleteById(snapshot.data![index].id!);
+                                    },
+                                  );
+                                } catch (e) {
+                                  // ignore: use_build_context_synchronously
+                                  MessageUser.message(context, 'Erro ao abrir dialogo');
+                                }
                               }
                               return null;
                             },
@@ -63,18 +69,23 @@ class ListAnnotation extends StatelessWidget {
                               padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                               child: GestureDetector(
                                 onTap: () async {
-                                  var result = await Navigator.of(context).push(
-                                    TransitionsBuilder.createRoute(
-                                      RegisterAnnotation(
-                                        registerAnnotation: UpdateAnnotation(
-                                          AnnotationDatabase(),
-                                          snapshot.data![index],
-                                          StatusNotification(TypeMessage.Atualizar),
+                                  try {
+                                    var result = await Navigator.of(context).push(
+                                      TransitionsBuilder.createRoute(
+                                        RegisterAnnotation(
+                                          registerAnnotation: UpdateAnnotation(
+                                            AnnotationDatabase(),
+                                            snapshot.data![index],
+                                            StatusNotification(TypeMessage.Atualizar),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                  if (result) annotationNotifier.update();
+                                    );
+                                    if (result) annotationNotifier.update();
+                                  } catch (e) {
+                                    // ignore: use_build_context_synchronously
+                                    MessageUser.message(context, 'Erro na rota anotação');
+                                  }
                                 },
                                 child: Card(
                                   elevation: 2,

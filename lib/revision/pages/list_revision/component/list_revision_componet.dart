@@ -8,6 +8,7 @@ import 'package:planeje/revision/utils/find_revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
 import 'package:planeje/utils/format_date.dart';
+import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/card_revision.dart';
@@ -52,7 +53,12 @@ class ListRevisionComponet extends StatelessWidget {
                     key: UniqueKey(),
                     confirmDismiss: (DismissDirection direction) async {
                       if (direction == DismissDirection.startToEnd) {
-                        return await DialogDelete.build(context, snapshot.data![index].revision);
+                        try {
+                          return await DialogDelete.build(context, snapshot.data![index].revision);
+                        } catch (e) {
+                          // ignore: use_build_context_synchronously
+                          MessageUser.message(context, 'Erro ao abrir dialogo');
+                        }
                       }
                       return null;
                     },
@@ -64,20 +70,25 @@ class ListRevisionComponet extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                       child: GestureDetector(
                         onTap: () async {
-                          var result = await Navigator.of(context).push(
-                            TransitionsBuilder.createRoute(
-                              RegisterRevisionPage(
-                                revision: Update(
-                                  RevisionDatabaseDataSource(),
-                                  snapshot.data![index].revision,
-                                  StatusNotification(TypeMessage.Atualizar),
-                                  UpdateDateRevision(
-                                      DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
+                          try {
+                            var result = await Navigator.of(context).push(
+                              TransitionsBuilder.createRoute(
+                                RegisterRevisionPage(
+                                  revision: Update(
+                                    RevisionDatabaseDataSource(),
+                                    snapshot.data![index].revision,
+                                    StatusNotification(TypeMessage.Atualizar),
+                                    UpdateDateRevision(
+                                        DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                          if (result) revisionNotifier.update();
+                            );
+                            if (result) revisionNotifier.update();
+                          } catch (e) {
+                            // ignore: use_build_context_synchronously
+                            MessageUser.message(context, 'Erro na rota revisão');
+                          }
                         },
                         child: CardRevision(revisionTime: snapshot.data![index]),
                       ),

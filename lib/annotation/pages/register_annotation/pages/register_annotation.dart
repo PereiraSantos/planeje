@@ -95,17 +95,22 @@ class RegisterAnnotation extends StatelessWidget {
           TextButtonWidget.cancel(() => Navigator.pop(context, false)),
           TextButtonWidget.save(
             () async {
-              if (!formKey.currentState!.validate()) return;
+              try {
+                if (!formKey.currentState!.validate()) return;
 
-              registerAnnotation.annotation.setTitle(title.text);
-              registerAnnotation.annotation.setText(description.text);
-              registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
+                registerAnnotation.annotation.setTitle(title.text);
+                registerAnnotation.annotation.setText(description.text);
+                registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
 
-              await registerAnnotation.write();
+                await registerAnnotation.write();
 
-              if (context.mounted) {
-                MessageUser.message(context, registerAnnotation.message.message);
-                Navigator.pop(context, true);
+                if (context.mounted) {
+                  MessageUser.message(context, registerAnnotation.message.message);
+                  Navigator.pop(context, true);
+                }
+              } catch (e) {
+                // ignore: use_build_context_synchronously
+                MessageUser.message(context, 'Erro ao registrar anotação');
               }
             },
           ),

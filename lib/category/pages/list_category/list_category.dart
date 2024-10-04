@@ -6,6 +6,7 @@ import 'package:planeje/category/utils/delete_category.dart';
 import 'package:planeje/category/utils/find_category.dart';
 import 'package:planeje/category/utils/register_category.dart';
 import 'package:planeje/revision/pages/list_revision/component/text_list.dart';
+import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
@@ -35,14 +36,19 @@ class ListCategory extends StatelessWidget {
                     key: UniqueKey(),
                     confirmDismiss: (DismissDirection direction) async {
                       if (direction == DismissDirection.startToEnd) {
-                        return await DialogDelete().build(
-                          context,
-                          snapshot.data![index].description!,
-                          <Category>() async {
-                            return await DeleteCategory(CategoryDatabase())
-                                .deleteById(snapshot.data![index].id!);
-                          },
-                        );
+                        try {
+                          return await DialogDelete().build(
+                            context,
+                            snapshot.data![index].description!,
+                            <Category>() async {
+                              return await DeleteCategory(CategoryDatabase())
+                                  .deleteById(snapshot.data![index].id!);
+                            },
+                          );
+                        } catch (e) {
+                          // ignore: use_build_context_synchronously
+                          MessageUser.message(context, 'Erro ao abrir dialogo');
+                        }
                       }
                       return null;
                     },
@@ -54,18 +60,23 @@ class ListCategory extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 5.0, right: 5.0),
                       child: GestureDetector(
                         onTap: () async {
-                          var result = await Navigator.of(context).push(
-                            TransitionsBuilder.createRoute(
-                              RegisterCategoryPage(
-                                registerCategory: UpdateCategory(
-                                  CategoryDatabase(),
-                                  snapshot.data![index],
-                                  StatusNotification(TypeMessage.Atualizar),
+                          try {
+                            var result = await Navigator.of(context).push(
+                              TransitionsBuilder.createRoute(
+                                RegisterCategoryPage(
+                                  registerCategory: UpdateCategory(
+                                    CategoryDatabase(),
+                                    snapshot.data![index],
+                                    StatusNotification(TypeMessage.Atualizar),
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                          if (result) categoryNotifier.update();
+                            );
+                            if (result) categoryNotifier.update();
+                          } catch (e) {
+                            // ignore: use_build_context_synchronously
+                            MessageUser.message(context, 'Erro na rota categoria');
+                          }
                         },
                         child: Card(
                           elevation: 2,
