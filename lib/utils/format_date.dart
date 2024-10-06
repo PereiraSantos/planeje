@@ -11,6 +11,10 @@ class FormatDate {
 
   static String formatDate(DateTime date) => DateFormat('dd/MM/yyyy').format(date);
 
+  static String formatDateBase(DateTime date) => DateFormat('yyyy/MM/dd').format(date);
+
+  static String getDateNumber() => FormatDate.formatDateBase(FormatDate.newDate()).replaceAll('/', '');
+
   static String formatDateWek(String date) =>
       date != '' ? DateFormat("EEEE - MMMM").format(dateParse(date)).replaceAll("-feira", "") : '';
 

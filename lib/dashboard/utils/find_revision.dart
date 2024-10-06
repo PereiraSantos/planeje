@@ -1,6 +1,6 @@
-import 'package:planeje/dashboard/utils/next_revision_time.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
-import 'package:planeje/revision/entities/revision_time.dart';
+import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/utils/find_revision.dart';
 import 'package:planeje/utils/format_date.dart';
 
 abstract class FindRevisionFactory {
@@ -8,45 +8,28 @@ abstract class FindRevisionFactory {
   late ReviserNotifier reviserNotifier;
 }
 
-class GetDelayedRevision extends NetRevisionTime implements FindRevisionFactory {
-  GetDelayedRevision(super.revisionValid, this.reviserNotifier);
+class GetDelayedRevision implements FindRevisionFactory {
+  GetDelayedRevision(this.reviserNotifier);
 
   @override
   Future<void> getRevision() async {
-    await findNextRevision();
-
-    List<RevisionTime> nextRevisions = [];
-
-    for (var element in revisions) {
-      nextRevisions.add(element);
-    }
-
-    for (var element in nextRevisions) {
-      if (revisionValid.validate(FormatDate.dateParse(element.dateRevision.nextDate!))) total++;
-    }
-
-    reviserNotifier.updateDelayed(total);
+    int total =
+        await GetRevision(RevisionDatabaseDataSource()).getQuantiyRevision(FormatDate.getDateNumber(), false);
+    if (total > 0) reviserNotifier.updateDelayed(total);
   }
 
   @override
   ReviserNotifier reviserNotifier;
 }
 
-class GetCompletedRevision extends NetRevisionTime implements FindRevisionFactory {
-  GetCompletedRevision(super.revisionValid, this.reviserNotifier);
+class GetCompletedRevision implements FindRevisionFactory {
+  GetCompletedRevision(this.reviserNotifier);
 
   @override
   Future<void> getRevision() async {
-    await findNextRevision();
-    List<RevisionTime> nextRevisions = [];
-
-    for (var element in revisions) {
-      if (revisionValid.validate(FormatDate.dateParse(element.dateRevision.nextDate!))) total++;
-
-      nextRevisions.add(element);
-    }
-
-    reviserNotifier.updateQuantityCompleted(total);
+    int total =
+        await GetRevision(RevisionDatabaseDataSource()).getQuantiyRevision(FormatDate.getDateNumber(), true);
+    if (total > 0) reviserNotifier.updateQuantityCompleted(total);
   }
 
   @override

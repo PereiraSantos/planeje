@@ -8,9 +8,10 @@ abstract class RevisionDatabaseFactory {
   Future<List<Revision>> findAllRevisions();
   Future<Revision?> findRevisionById(int id);
   Future<Revision?> deleteRevisionById(int id);
-  Future<List<RevisionTime>> findRevisionByDescription(String text);
+  Future<List<RevisionTime>> findRevisionByDescription(String text, {bool? isBefore, String? date});
   Future<int?> updateRevision(Revision revision);
   Future<int?> insertRevision(Revision revision);
+  Future<int> getQuantiyRevision(String date, bool isBefore);
 }
 
 class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
@@ -27,9 +28,9 @@ class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
   }
 
   @override
-  Future<List<RevisionTime>> findRevisionByDescription(String text) async {
+  Future<List<RevisionTime>> findRevisionByDescription(String text, {bool? isBefore, String? date}) async {
     final database = await getInstance();
-    return await FindRevisionDao().findRevision(database, text);
+    return await FindRevisionDao().findRevision(database, text, isBefore: isBefore, date: date);
   }
 
   @override
@@ -48,5 +49,11 @@ class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
   Future<int?> updateRevision(Revision revision) async {
     final database = await getInstance();
     return await database.revisionDao.updateRevision(revision);
+  }
+
+  @override
+  Future<int> getQuantiyRevision(String date, bool isBefore) async {
+    final database = await getInstance();
+    return await FindRevisionDao().getQuantiyRevision(database, date, isBefore);
   }
 }

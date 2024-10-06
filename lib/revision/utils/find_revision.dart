@@ -2,7 +2,8 @@ import 'package:planeje/revision/datasource/database/revision_database_datasourc
 import 'package:planeje/revision/entities/revision_time.dart';
 
 abstract class FindRevisionFactory {
-  Future<List<RevisionTime>> findRevisionByDescription(text);
+  Future<List<RevisionTime>> findRevisionByDescription(text, {bool? isBefore, String? date});
+  Future<int> getQuantiyRevision(String date, bool isBefore);
 }
 
 class GetRevision implements FindRevisionFactory {
@@ -10,7 +11,12 @@ class GetRevision implements FindRevisionFactory {
 
   GetRevision(this.revisionDatabase);
   @override
-  Future<List<RevisionTime>> findRevisionByDescription(text) async {
-    return await revisionDatabase.findRevisionByDescription(text);
+  Future<List<RevisionTime>> findRevisionByDescription(text, {bool? isBefore, String? date}) async {
+    return await revisionDatabase.findRevisionByDescription(text, isBefore: isBefore, date: date);
+  }
+
+  @override
+  Future<int> getQuantiyRevision(String date, bool isBefore) async {
+    return await revisionDatabase.getQuantiyRevision(date, isBefore);
   }
 }

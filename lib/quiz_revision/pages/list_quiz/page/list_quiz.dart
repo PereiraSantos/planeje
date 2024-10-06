@@ -56,12 +56,12 @@ class ListQuiz extends StatelessWidget {
                             MessageUser.message(context, 'Removido com sucesso');
                             quizNotifier.update();
                           }
-                          return null;
                         } catch (e) {
                           // ignore: use_build_context_synchronously
                           MessageUser.message(context, 'Erro ao abrir dialogo');
                         }
                       }
+                      return null;
                     },
                     background: const Align(
                       alignment: Alignment(-0.9, 0),

@@ -4,7 +4,6 @@ import 'package:planeje/dashboard/controller/under_review_notifier.dart';
 import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/utils/next_revision_time.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
-import 'package:planeje/dashboard/utils/valid_date.dart';
 import 'package:planeje/utils/app_bar/home_app_bar.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
@@ -32,9 +31,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-
-    GetDelayedRevision(ValidateIsBefore(), reviserNotifier).getRevision();
-    GetCompletedRevision(ValidateIsAfter(), reviserNotifier).getRevision();
+    GetDelayedRevision(reviserNotifier).getRevision();
+    GetCompletedRevision(reviserNotifier).getRevision();
   }
 
   @override
@@ -86,13 +84,13 @@ class _HomeState extends State<Home> {
                   },
                 ),
                 NextRevision(
-                  future: NetRevisionTime(ValidateIsBefore()).getNextRevision(),
+                  future: NetRevisionTime(false).getNextRevision(),
                   text: 'Realizar',
                   finishUpdaterReviser: () => reloadPage(),
                   underReviewNotifier: underReviewNotifier,
                 ),
                 NextRevision(
-                  future: NetRevisionTime(ValidateIsAfter()).getNextRevision(),
+                  future: NetRevisionTime(true).getNextRevision(),
                   text: 'Próximas',
                   finishUpdaterReviser: () => reloadPage(),
                   underReviewNotifier: underReviewNotifier,
