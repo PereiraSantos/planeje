@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/utils/find_revision.dart';
-import '../../../../revision/entities/revision_time.dart';
 
 // ignore: must_be_immutable
 class DropDownButtonRevision extends StatelessWidget {
@@ -20,8 +20,8 @@ class DropDownButtonRevision extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription(''),
-      builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
+      future: GetRevision(RevisionDatabaseDataSource()).findAllRevisions(),
+      builder: (BuildContext context, AsyncSnapshot<List<Revision>> snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isNotEmpty) {
             return Padding(
@@ -37,8 +37,8 @@ class DropDownButtonRevision extends StatelessWidget {
                 onChanged: (int? value) => onClick(value),
                 items: snapshot.data!.map<DropdownMenuItem<int>>((value) {
                   return DropdownMenuItem<int>(
-                    value: value.revision.id,
-                    child: Text('${value.revision.description}'),
+                    value: value.id,
+                    child: Text('${value.description}'),
                   );
                 }).toList(),
               ),

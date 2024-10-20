@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/dashboard/component/under_review.dart';
 import 'package:planeje/dashboard/controller/under_review_notifier.dart';
+import 'package:planeje/dashboard/utils/check_setting.dart';
 import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/utils/next_revision_time.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
+import 'package:planeje/settings/pages/setting_page.dart';
 import 'package:planeje/utils/app_bar/home_app_bar.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
@@ -31,6 +33,9 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    CheckSetting().checkRealize();
+    CheckSetting().checkNext();
+
     GetDelayedRevision(reviserNotifier).getRevision();
     GetCompletedRevision(reviserNotifier).getRevision();
   }
@@ -46,7 +51,14 @@ class _HomeState extends State<Home> {
           builder: (BuildContext context, Widget? child) {
             return AppBarWidget(
               actions: [
-                HomeAppBar(quantity: reviserNotifier.quantityReviserDelayed).buildNotification(context)
+                HomeAppBar(quantity: reviserNotifier.quantityReviserDelayed).buildNotification(),
+                HomeAppBar().buildSetting(
+                  onClick: () async {
+                    var result =
+                        await Navigator.of(context).push(TransitionsBuilder.createRoute(SettingPage()));
+                    if (result != null && result) reloadPage();
+                  },
+                ),
               ],
               child: [
                 HomeAppBarWidget(onClick: () => null, color: Colors.black54),
@@ -84,13 +96,13 @@ class _HomeState extends State<Home> {
                   },
                 ),
                 NextRevision(
-                  future: NetRevisionTime(false).getNextRevision(),
+                  future: NetRevisionTime(false).getNextRevision('realize'),
                   text: 'Realizar',
                   finishUpdaterReviser: () => reloadPage(),
                   underReviewNotifier: underReviewNotifier,
                 ),
                 NextRevision(
-                  future: NetRevisionTime(true).getNextRevision(),
+                  future: NetRevisionTime(true).getNextRevision('next'),
                   text: 'Próximas',
                   finishUpdaterReviser: () => reloadPage(),
                   underReviewNotifier: underReviewNotifier,

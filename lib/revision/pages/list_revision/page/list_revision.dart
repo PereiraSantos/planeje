@@ -43,8 +43,8 @@ class _ListRevisionState extends State<ListRevision> with SingleTickerProviderSt
           child: TabBarView(
             controller: _tabController,
             children: <Widget>[
-              ListRevisionComponet(revisionNotifier: widget.revisionNotifier, next: true),
-              ListRevisionComponet(revisionNotifier: widget.revisionNotifier),
+              ListRevisionComponet(revisionNotifier: widget.revisionNotifier, isBefore: false),
+              ListRevisionComponet(revisionNotifier: widget.revisionNotifier, isBefore: true),
             ],
           ),
         ),

@@ -77,13 +77,15 @@ class _$AppDatabase extends AppDatabase {
 
   CacheDao? _cacheDaoInstance;
 
+  SettingDao? _settingDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 4,
+      version: 5,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -114,6 +116,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `cache` (`id` INTEGER NOT NULL, `hash` TEXT NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -160,6 +164,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   CacheDao get cacheDao {
     return _cacheDaoInstance ??= _$CacheDao(database, changeListener);
+  }
+
+  @override
+  SettingDao get settingDao {
+    return _settingDaoInstance ??= _$SettingDao(database, changeListener);
   }
 }
 
@@ -841,5 +850,61 @@ class _$CacheDao extends CacheDao {
   Future<int> updateCache(Cache cache) {
     return _cacheUpdateAdapter.updateAndReturnChangedRows(
         cache, OnConflictStrategy.abort);
+  }
+}
+
+class _$SettingDao extends SettingDao {
+  _$SettingDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _settingsInsertionAdapter = InsertionAdapter(
+            database,
+            'setting',
+            (Settings item) => <String, Object?>{
+                  'id': item.id,
+                  'keystone': item.key,
+                  'value': item.value
+                }),
+        _settingsUpdateAdapter = UpdateAdapter(
+            database,
+            'setting',
+            ['id'],
+            (Settings item) => <String, Object?>{
+                  'id': item.id,
+                  'keystone': item.key,
+                  'value': item.value
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Settings> _settingsInsertionAdapter;
+
+  final UpdateAdapter<Settings> _settingsUpdateAdapter;
+
+  @override
+  Future<Settings?> findSettingByKey(String key) async {
+    return _queryAdapter.query('select * from setting where keystone = ?1',
+        mapper: (Map<String, Object?> row) => Settings(
+            id: row['id'] as int?,
+            key: row['keystone'] as String?,
+            value: row['value'] as String?),
+        arguments: [key]);
+  }
+
+  @override
+  Future<int> insertSetting(Settings settings) {
+    return _settingsInsertionAdapter.insertAndReturnId(
+        settings, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateSetting(Settings settings) {
+    return _settingsUpdateAdapter.updateAndReturnChangedRows(
+        settings, OnConflictStrategy.abort);
   }
 }

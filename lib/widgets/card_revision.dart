@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:planeje/learn/datasource/database/datasource_learn_repository.dart';
 import 'package:planeje/learn/entities/learn.dart';
 import 'package:planeje/learn/utils/find_learn.dart';
-
 import 'package:planeje/revision/entities/revision_time.dart';
 import 'package:planeje/revision/pages/list_revision/component/text_list.dart';
-
 import 'package:planeje/utils/format_date.dart';
 
 class CardRevision extends StatelessWidget {
@@ -20,19 +18,6 @@ class CardRevision extends StatelessWidget {
   final bool isRevision;
   final Widget? child;
 
-  Color? checkColorDate(String? date) {
-    if (date == "" || isRevision) return null;
-
-    var result = compareDate(date!, (nextDate, dateNow) => nextDate.isBefore(dateNow));
-    if (result) return const Color.fromARGB(255, 250, 194, 190);
-
-    result = compareDate(
-        date, (nextDate, dateNow) => nextDate.day == dateNow.day && nextDate.month == dateNow.month);
-    if (result) return const Color.fromARGB(255, 110, 184, 245);
-
-    return null;
-  }
-
   bool compareDate(String date, bool Function(DateTime, DateTime) compare) {
     DateTime nextDate = FormatDate.dateParse(date);
     DateTime result = DateTime.now();
@@ -40,16 +25,6 @@ class CardRevision extends StatelessWidget {
 
     if (compare(nextDate, dateNow)) return true;
     return false;
-  }
-
-  getTimeRevision() {
-    if (revisionTime.dateRevision.hourInit == null || revisionTime.dateRevision.hourEnd == null) return '';
-    DateTime timeInit = FormatDate.timeParse(revisionTime.dateRevision.hourInit!);
-    DateTime timeEnd = FormatDate.timeParse(revisionTime.dateRevision.hourEnd!);
-
-    var time = timeEnd.subtract(Duration(hours: timeInit.hour, minutes: timeInit.minute));
-
-    return time.toString().replaceAll('1970-01-01', '').replaceAll('.000', '').trimLeft();
   }
 
   Widget labelCard(String label) {
@@ -69,7 +44,6 @@ class CardRevision extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      color: checkColorDate(revisionTime.dateRevision.nextDate),
       shape: OutlineInputBorder(
         borderRadius: BorderRadius.circular(3),
         borderSide: BorderSide.none,

@@ -7,7 +7,6 @@ import 'package:planeje/revision/pages/register_revision/page/register_revision_
 import 'package:planeje/revision/utils/find_revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
-import 'package:planeje/utils/format_date.dart';
 import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/utils/type_message.dart';
@@ -16,34 +15,20 @@ import 'package:planeje/widgets/tab_bar_widget/tab_bar_notifier.dart';
 
 // ignore: must_be_immutable
 class ListRevisionComponet extends StatelessWidget {
-  ListRevisionComponet({super.key, required this.revisionNotifier, this.next = false});
+  ListRevisionComponet({super.key, required this.revisionNotifier, required this.isBefore});
 
   Notifier revisionNotifier;
-  final bool next;
-
-  int getDateNext(String date, int id) {
-    DateTime nextDate = FormatDate.dateParse(date).subtract(const Duration(days: 5));
-    if (!next) {
-      if (nextDate.isAfter(DateTime.now())) return -1;
-    } else {
-      if (nextDate.isBefore(DateTime.now())) return -1;
-    }
-
-    return id;
-  }
+  bool isBefore;
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: FutureBuilder(
         future: GetRevision(RevisionDatabaseDataSource())
-            .findRevisionByDescription(revisionNotifier.search ?? ''),
+            .findRevisionByDescription(revisionNotifier.search ?? '', isBefore),
         builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
-              snapshot.data!.removeWhere(
-                  (item) => item.revision.id == getDateNext(item.dateRevision.nextDate!, item.revision.id!));
-
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 shrinkWrap: true,
