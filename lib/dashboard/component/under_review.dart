@@ -38,11 +38,7 @@ class UnderReview extends StatelessWidget {
                   alignment: Alignment.bottomLeft,
                   child: const Text(
                     'Em Revisão',
-                    style: TextStyle(
-                        fontSize: 17,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black54),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, color: Colors.black54),
                   ),
                 ),
                 ListView.builder(

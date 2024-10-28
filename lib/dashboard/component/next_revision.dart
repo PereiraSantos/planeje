@@ -72,7 +72,6 @@ class NextRevision extends StatelessWidget {
                     text,
                     style: const TextStyle(
                       fontSize: 17,
-                      fontStyle: FontStyle.italic,
                       fontWeight: FontWeight.w500,
                       color: Colors.black54,
                     ),
