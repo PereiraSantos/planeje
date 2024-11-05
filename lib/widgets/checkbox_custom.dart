@@ -14,6 +14,10 @@ class CheckBoxCustom extends StatelessWidget {
         checkColor: Colors.white,
         activeColor: Colors.grey,
         value: isChecked,
+        shape: const CircleBorder(),
+        side: WidgetStateBorderSide.resolveWith(
+          (states) => const BorderSide(width: 1.0, color: Colors.grey),
+        ),
         onChanged: (bool? value) => onClick(value),
       ),
     );

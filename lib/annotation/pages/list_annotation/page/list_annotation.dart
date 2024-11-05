@@ -36,9 +36,12 @@ class ListAnnotation extends StatelessWidget {
                   return ListenableBuilder(
                     listenable: filterNotifier,
                     builder: (BuildContext context, Widget? child) {
-                      return ListView.builder(
+                      return ListView.separated(
                         itemCount: snapshot.data!.length,
                         shrinkWrap: true,
+                        separatorBuilder: (context, index) {
+                          return const Divider(endIndent: 10, indent: 10);
+                        },
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return Dismissible(
@@ -66,7 +69,7 @@ class ListAnnotation extends StatelessWidget {
                               child: Icon(Icons.delete, color: Colors.red, size: 30),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+                              padding: const EdgeInsets.only(left: 10, right: 5.0),
                               child: GestureDetector(
                                 onTap: () async {
                                   try {
@@ -87,51 +90,46 @@ class ListAnnotation extends StatelessWidget {
                                     MessageUser.message(context, 'Erro na rota anotação');
                                   }
                                 },
-                                child: Card(
-                                  elevation: 2,
-                                  shape: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(3), borderSide: BorderSide.none),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Visibility(
-                                        visible: snapshot.data![index].idRevision != null,
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            const TextList("Tema:", flex: 1),
-                                            TextList("${snapshot.data![index].description}",
-                                                flex: 6, fontSize: 17),
-                                          ],
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: snapshot.data![index].title != "",
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            TextList(
-                                              "${snapshot.data![index].title}",
-                                              color: Colors.black54,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 17,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Visibility(
+                                      visible: snapshot.data![index].idRevision != null,
+                                      child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          TextList(snapshot.data![index].text ?? ""),
+                                          const TextList("Tema:", flex: 1),
+                                          TextList("${snapshot.data![index].description}",
+                                              flex: 6, fontSize: 17),
                                         ],
                                       ),
-                                      const Padding(padding: EdgeInsets.all(3))
-                                    ],
-                                  ),
+                                    ),
+                                    Visibility(
+                                      visible: snapshot.data![index].title != "",
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          TextList(
+                                            "${snapshot.data![index].title}",
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 17,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        TextList(snapshot.data![index].text ?? ""),
+                                      ],
+                                    ),
+                                    const Padding(padding: EdgeInsets.all(3))
+                                  ],
                                 ),
                               ),
                             ),

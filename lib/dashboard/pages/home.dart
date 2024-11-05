@@ -6,11 +6,12 @@ import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/utils/next_revision_time.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
 import 'package:planeje/settings/pages/setting_page.dart';
-import 'package:planeje/utils/app_bar/home_app_bar.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_widget.dart';
 import 'package:planeje/widgets/app_bar_widget/home_app_bar_widget.dart';
+import 'package:planeje/widgets/app_bar_widget/notification_app_bar_widget.dart';
+import 'package:planeje/widgets/app_bar_widget/setting_app_bar_widget.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_widget.dart';
 import 'package:planeje/widgets/tab_bar_widget/tab_bar_widget_quiz.dart';
 import '../component/next_revision.dart';
@@ -51,8 +52,8 @@ class _HomeState extends State<Home> {
           builder: (BuildContext context, Widget? child) {
             return AppBarWidget(
               actions: [
-                HomeAppBar(quantity: reviserNotifier.quantityReviserDelayed).buildNotification(),
-                HomeAppBar().buildSetting(
+                NotificationAppBarWidget(quantity: reviserNotifier.quantityReviserDelayed),
+                SettingAppBarWidget(
                   onClick: () async {
                     var result =
                         await Navigator.of(context).push(TransitionsBuilder.createRoute(SettingPage()));

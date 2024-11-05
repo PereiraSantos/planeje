@@ -26,10 +26,13 @@ class ListLearn extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<List<Learn>?> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
-              return ListView.builder(
+              return ListView.separated(
                 itemCount: snapshot.data!.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
+                separatorBuilder: (context, index) {
+                  return const Divider(endIndent: 10, indent: 10);
+                },
                 itemBuilder: (context, index) {
                   return Dismissible(
                     key: UniqueKey(),
@@ -73,19 +76,12 @@ class ListLearn extends StatelessWidget {
                             MessageUser.message(context, 'Erro na rota assunto');
                           }
                         },
-                        child: Card(
-                          elevation: 2,
-                          shape: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(3),
-                            borderSide: BorderSide.none,
-                          ),
-                          child: SizedBox(
-                            width: double.maxFinite,
-                            child: TextCard(
-                              padding: const EdgeInsets.only(left: 8, top: 05, right: 5, bottom: 5),
-                              revisionEntity: snapshot.data![index].description ?? "",
-                              maxLines: 5,
-                            ),
+                        child: SizedBox(
+                          width: double.maxFinite,
+                          child: TextCard(
+                            padding: const EdgeInsets.only(left: 15, top: 05, right: 5, bottom: 5),
+                            label: snapshot.data![index].description ?? "",
+                            maxLines: 5,
                           ),
                         ),
                       ),

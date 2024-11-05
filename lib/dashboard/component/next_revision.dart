@@ -10,7 +10,6 @@ import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
 import 'package:planeje/revision/utils/update_hour.dart';
 import 'package:planeje/utils/type_message.dart';
-import 'package:planeje/widgets/button_widget.dart';
 
 import '../../revision/pages/list_revision/component/text_list.dart';
 import '../../utils/transitions_builder.dart';
@@ -101,10 +100,9 @@ class NextRevision extends StatelessWidget {
                       },
                       child: Container(
                         width: double.maxFinite,
-                        margin: const EdgeInsets.only(left: 25, right: 15),
+                        margin: const EdgeInsets.only(left: 25, right: 5),
                         child: Container(
                           padding: const EdgeInsets.only(bottom: 5, right: 5),
-                          margin: const EdgeInsets.only(bottom: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,27 +122,6 @@ class NextRevision extends StatelessWidget {
                                         fontSize: 16,
                                       ),
                                     ),
-                                    Visibility(
-                                      visible: underReviewNotifier.getIdDateRevision() == -1,
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(top: 2),
-                                          child: SizedBox(
-                                            width: 52,
-                                            height: 18,
-                                            child: ButtonWidget(
-                                              onTap: () async =>
-                                                  await updateStatus(snapshot.data![index].dateRevision.id!)
-                                                      .whenComplete(() {
-                                                finishUpdaterReviser();
-                                              }),
-                                              label: 'Revisar',
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -152,11 +129,34 @@ class NextRevision extends StatelessWidget {
                                 child: SizedBox(
                                   width: double.maxFinite,
                                   child: TextCard(
-                                    padding: const EdgeInsets.only(bottom: 5, top: 5),
+                                    padding: const EdgeInsets.only(bottom: 0, top: 3),
                                     revisionEntity: FormatDate.formatDateString(
                                         "${snapshot.data![index].dateRevision.nextDate}"),
                                     maxLines: 5,
                                     textAlign: TextAlign.right,
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: underReviewNotifier.getIdDateRevision() == -1,
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: SizedBox(
+                                    width: 35,
+                                    height: 25,
+                                    child: IconButton(
+                                      onPressed: () async =>
+                                          await updateStatus(snapshot.data![index].dateRevision.id!)
+                                              .whenComplete(() {
+                                        finishUpdaterReviser();
+                                      }),
+                                      icon: const Icon(
+                                        Icons.replay_circle_filled_rounded,
+                                        color: Colors.black54,
+                                        size: 20,
+                                      ),
+                                      padding: EdgeInsets.zero,
+                                    ),
                                   ),
                                 ),
                               ),

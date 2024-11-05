@@ -336,6 +336,22 @@ class _$DateRevisionDao extends DateRevisionDao {
   }
 
   @override
+  Future<DateRevision?> deleteDateRevisionByIdRevision(int idRevision) async {
+    return _queryAdapter.query(
+        'delete FROM date_revision WHERE id_revision = ?1',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            nextDate: row['next_date_revision'] as String?,
+            hourInit: row['hour_init'] as String?,
+            hourEnd: row['hour_end'] as String?,
+            idRevision: row['id_revision'] as int?,
+            status: row['status'] == null ? null : (row['status'] as int) != 0,
+            day: row['day'] as int?),
+        arguments: [idRevision]);
+  }
+
+  @override
   Future<void> updateHourInitRevision(
     String hourInit,
     int id,

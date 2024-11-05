@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TextCard extends StatelessWidget {
   const TextCard({
     super.key,
-    required this.revisionEntity,
+    required this.label,
     this.fontSize = 16,
     this.color = Colors.black54,
     this.maxLines = 1,
@@ -11,7 +11,7 @@ class TextCard extends StatelessWidget {
     this.padding,
   });
 
-  final String revisionEntity;
+  final String label;
   final double? fontSize;
   final Color color;
   final int? maxLines;
@@ -23,7 +23,7 @@ class TextCard extends StatelessWidget {
     return Padding(
       padding: padding ?? const EdgeInsets.all(5),
       child: Text(
-        revisionEntity,
+        label,
         maxLines: maxLines,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(

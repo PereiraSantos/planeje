@@ -29,9 +29,12 @@ class ListRevisionComponet extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
-              return ListView.builder(
+              return ListView.separated(
                 itemCount: snapshot.data!.length,
                 shrinkWrap: true,
+                separatorBuilder: (context, index) {
+                  return const Divider(endIndent: 10, indent: 10);
+                },
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Dismissible(

@@ -8,6 +8,7 @@ abstract class DateRevisionDatabaseFactory {
   Future<List<DateRevision>> findAllDateRevisions();
   Future<DateRevision?> findDateRevisionById(int id);
   Future<DateRevision?> deleteDateRevisionById(int id);
+  Future<void> deleteDateRevisionByIdRevision(int idRevision);
   Future<int?> insertDateRevision(DateRevision dateRevision);
   Future<int?> updateDateRevision(DateRevision dateRevision);
   Future<void> updateHourInit(String hourInit, int id);
@@ -69,5 +70,11 @@ class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
   Future<void> updateStatus(bool status, int id) async {
     final database = await getInstance();
     await database.dateRevisionDao.updateStatus(status, id);
+  }
+
+  @override
+  Future<void> deleteDateRevisionByIdRevision(int idRevision) async {
+    final database = await getInstance();
+    await database.dateRevisionDao.deleteDateRevisionByIdRevision(idRevision);
   }
 }
