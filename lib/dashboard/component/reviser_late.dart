@@ -26,7 +26,6 @@ class ReviserLate extends StatelessWidget {
               style: TextStyle(
                 fontSize: 17,
                 color: Colors.black54,
-                fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.w500,
               ),
             ),

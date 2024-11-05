@@ -4,7 +4,7 @@ mixin ComponentTable {
   Widget row(String value) {
     return Container(
       padding: const EdgeInsets.only(left: 02, right: 02),
-      child: Text(value, style: const TextStyle(fontSize: 12)),
+      child: Text(value, style: const TextStyle(fontSize: 13, color: Colors.black54)),
     );
   }
 

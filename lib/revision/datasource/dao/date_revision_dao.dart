@@ -9,6 +9,9 @@ abstract class DateRevisionDao {
   @Query('delete FROM date_revision WHERE id = :id')
   Future<DateRevision?> deleteDateRevisionById(int id);
 
+  @Query('delete FROM date_revision WHERE id_revision = :idRevision')
+  Future<DateRevision?> deleteDateRevisionByIdRevision(int idRevision);
+
   @update
   Future<int?> updateDateRevision(DateRevision dateRevision);
 

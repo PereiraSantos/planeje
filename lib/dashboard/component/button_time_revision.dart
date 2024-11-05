@@ -6,7 +6,6 @@ import 'package:planeje/revision/entities/revision_time.dart';
 import 'package:planeje/revision/pages/list_revision/component/text_list.dart';
 import 'package:planeje/revision/utils/update_hour.dart';
 import 'package:planeje/utils/format_date.dart';
-import 'package:planeje/widgets/button_widget.dart';
 
 class ButtonTimeRevision extends StatelessWidget {
   const ButtonTimeRevision({
@@ -24,7 +23,7 @@ class ButtonTimeRevision extends StatelessWidget {
 
   Widget labelCard(String label) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5, top: 0),
+      padding: const EdgeInsets.only(left: 15, top: 0),
       child: Text(
         label,
         style: const TextStyle(color: Colors.black45, fontSize: 16),
@@ -82,24 +81,26 @@ class ButtonTimeRevision extends StatelessWidget {
               alignment: Alignment.bottomRight,
               child: SizedBox(
                 width: 85,
-                height: 28,
+                height: 25,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 5, bottom: 6),
-                  child: ButtonWidget(
-                      onTap: () async {
-                        await UpdateHour(DateRevisionDatabaseDataSource()).updateHourEnd(
-                            getTime(),
-                            revisionTime.dateRevision.nextDate!,
-                            nextRevision(revisionTime.dateRevision.nextDate!, revisionTime.dateRevision.day!),
-                            revisionTime.dateRevision.id!);
-                        await UpdateHour(DateRevisionDatabaseDataSource())
-                            .updateStatus(true, revisionTime.dateRevision.id!)
-                            .whenComplete(() {
-                          underReviewNotifier.resetIdDateRevision();
-                          finishReviser();
-                        });
-                      },
-                      label: 'Finalizar'),
+                  padding: const EdgeInsets.only(right: 5),
+                  child: IconButton(
+                    onPressed: () async {
+                      await UpdateHour(DateRevisionDatabaseDataSource()).updateHourEnd(
+                          getTime(),
+                          revisionTime.dateRevision.nextDate!,
+                          nextRevision(revisionTime.dateRevision.nextDate!, revisionTime.dateRevision.day!),
+                          revisionTime.dateRevision.id!);
+                      await UpdateHour(DateRevisionDatabaseDataSource())
+                          .updateStatus(true, revisionTime.dateRevision.id!)
+                          .whenComplete(() {
+                        underReviewNotifier.resetIdDateRevision();
+                        finishReviser();
+                      });
+                    },
+                    icon: const Icon(Icons.stop_circle_outlined),
+                    padding: EdgeInsets.zero,
+                  ),
                 ),
               ),
             ),
@@ -107,16 +108,18 @@ class ButtonTimeRevision extends StatelessWidget {
               alignment: Alignment.bottomRight,
               child: SizedBox(
                 width: 85,
-                height: 28,
+                height: 25,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 5, bottom: 6),
-                  child: ButtonWidget(
-                      onTap: () async {
-                        await UpdateHour(DateRevisionDatabaseDataSource())
-                            .updateHourInit(getTime(), revisionTime.dateRevision.id!)
-                            .whenComplete(() => underReviewNotifier.update());
-                      },
-                      label: 'Iniciar'),
+                  padding: const EdgeInsets.only(right: 5),
+                  child: IconButton(
+                    onPressed: () async {
+                      await UpdateHour(DateRevisionDatabaseDataSource())
+                          .updateHourInit(getTime(), revisionTime.dateRevision.id!)
+                          .whenComplete(() => underReviewNotifier.update());
+                    },
+                    icon: const Icon(Icons.play_circle_outline),
+                    padding: EdgeInsets.zero,
+                  ),
                 ),
               ),
             ),

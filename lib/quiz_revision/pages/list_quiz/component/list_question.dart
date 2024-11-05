@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/utils/message_user.dart';
-import 'package:planeje/widgets/button_custon.dart';
 import '../../../../widgets/checkbox_custom.dart';
 import '../../../entities/question.dart';
 import '../controller/list_question_controller.dart';
@@ -41,6 +40,24 @@ class _ListQuestionState extends State<ListQuestion> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 08),
+                      child: Text(
+                        '${(index + 1).toString()}:',
+                        style: const TextStyle(fontSize: 16, color: Colors.black45),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 12,
+                    child: Text(
+                      '${widget.listQuestion[index].description}',
+                      style: const TextStyle(fontSize: 16, color: Colors.black45),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
                     child: CheckBoxCustom(
                       isChecked: listQuestionController.getCheck(widget.listQuestion, index),
                       onClick: (value) {
@@ -49,24 +66,16 @@ class _ListQuestionState extends State<ListQuestion> {
                       },
                     ),
                   ),
-                  Expanded(
-                    flex: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: Text(
-                        '${widget.listQuestion[index].description}',
-                        style: const TextStyle(fontSize: 16, color: Colors.black54),
-                      ),
-                    ),
-                  )
                 ],
               ),
             );
           },
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 05, top: 10, bottom: 10),
+          padding: const EdgeInsets.only(left: 05, top: 10, bottom: 10, right: 10),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
                 onTap: () {
@@ -77,34 +86,36 @@ class _ListQuestionState extends State<ListQuestion> {
                   listQuestionController.showAnswer = true;
                   setState(() {});
                 },
-                child: ButtonCuston(
-                  color: const Color.fromARGB(171, 209, 208, 208),
-                  width: MediaQuery.of(context).size.width * 0.2,
+                child: Container(
+                  color: Colors.white,
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  height: 25,
+                  alignment: Alignment.centerLeft,
                   margin: const EdgeInsets.only(left: 05),
                   child: const Text(
-                    "Verificar",
+                    "Verificar resposta",
                     style: TextStyle(
-                        fontSize: 13, color: Color.fromARGB(137, 10, 5, 5), fontWeight: FontWeight.bold),
+                        fontSize: 14, color: Color.fromARGB(137, 10, 5, 5), fontWeight: FontWeight.w400),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Visibility(
-                  visible: listQuestionController.isAnswer(widget.listQuestion, true),
-                  child: const Icon(
+              Visibility(
+                visible: listQuestionController.isAnswer(widget.listQuestion, true),
+                replacement: Visibility(
+                  visible: listQuestionController.isAnswer(widget.listQuestion, false),
+                  child: const Align(
+                    alignment: Alignment.centerRight,
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                child: const Align(
+                  alignment: Alignment.centerRight,
+                  child: Icon(
                     Icons.check,
                     color: Colors.green,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Visibility(
-                  visible: listQuestionController.isAnswer(widget.listQuestion, false),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.red,
                   ),
                 ),
               ),

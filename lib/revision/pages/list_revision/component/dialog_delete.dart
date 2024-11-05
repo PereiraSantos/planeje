@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:planeje/annotation/datasource/database/database_datasource.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/utils/delete_date_revision.dart';
 import 'package:planeje/revision/utils/delete_revision.dart';
 
 import '../../../entities/revision.dart';
@@ -68,6 +70,11 @@ class DialogDelete {
                       onPressed: () async {
                         var result =
                             await DeleteRevision(RevisionDatabaseDataSource()).deleteById(revision.id!);
+
+                        if (result != null) {
+                          await DeleteDateRevision(DateRevisionDatabaseDataSource())
+                              .deleteDateRevisionByIdRevision(revision.id!);
+                        }
 
                         if (result != null && context.mounted) {
                           message(context, 'Removido com sucesso');

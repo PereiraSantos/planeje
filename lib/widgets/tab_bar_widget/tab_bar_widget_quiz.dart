@@ -29,6 +29,7 @@ class _TabBarWidgetState extends State<TabBarWidgetQuiz> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xffffffff),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xffffffff),

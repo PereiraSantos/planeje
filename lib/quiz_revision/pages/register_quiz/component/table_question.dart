@@ -23,7 +23,7 @@ class TableQuestion extends StatelessWidget with ComponentTable {
         description: 'Descrição',
         answer: 'Resposta',
         icon: const SizedBox(),
-        color: const Color.fromARGB(66, 158, 158, 158),
+        color: const Color.fromARGB(255, 248, 248, 248),
       )
     ];
 

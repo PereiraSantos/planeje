@@ -51,6 +51,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
       initialIndex: 1,
       length: 2,
       child: Scaffold(
+        backgroundColor: const Color(0xffffffff),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: const Color(0xffffffff),

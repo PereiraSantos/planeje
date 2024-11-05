@@ -31,9 +31,12 @@ class ListQuiz extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<List<Quiz>?> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data!.isNotEmpty) {
-              return ListView.builder(
+              return ListView.separated(
                 itemCount: snapshot.data!.length,
                 shrinkWrap: true,
+                separatorBuilder: (context, index) {
+                  return const Divider(endIndent: 10, indent: 10);
+                },
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Dismissible(
@@ -89,42 +92,37 @@ class ListQuiz extends StatelessWidget {
                             MessageUser.message(context, 'Erro na rota quiz revisão');
                           }
                         },
-                        child: Card(
-                          elevation: 2,
-                          shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(3), borderSide: BorderSide.none),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: Text("Tema: ${snapshot.data![index].topic ?? ''}",
-                                    style: const TextStyle(fontSize: 14, color: Colors.black54)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 05),
-                                child: Text("${snapshot.data![index].description}?",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 14, color: Colors.black54)),
-                              ),
-                              FutureBuilder(
-                                future: GetQuestion(QuestionDatabase())
-                                    .getQuestionByIdQuiz(snapshot.data![index].id!),
-                                builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
-                                  if (snapshot.hasData) {
-                                    if (snapshot.data!.isNotEmpty) {
-                                      return ListQuestion(listQuestion: snapshot.data ?? []);
-                                    }
-
-                                    return const SizedBox();
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                              child: Text("Tema: ${snapshot.data![index].topic ?? ''}",
+                                  style: const TextStyle(fontSize: 16, color: Colors.black54)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 05),
+                              child: Text("Pegunta: ${snapshot.data![index].description} ?",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 16, color: Colors.black54)),
+                            ),
+                            FutureBuilder(
+                              future: GetQuestion(QuestionDatabase())
+                                  .getQuestionByIdQuiz(snapshot.data![index].id!),
+                              builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
+                                if (snapshot.hasData) {
+                                  if (snapshot.data!.isNotEmpty) {
+                                    return ListQuestion(listQuestion: snapshot.data ?? []);
                                   }
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+
+                                  return const SizedBox();
+                                }
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ),
