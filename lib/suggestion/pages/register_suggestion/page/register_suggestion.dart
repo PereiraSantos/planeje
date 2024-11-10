@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/category/utils/register_category.dart';
-import 'package:planeje/utils/message_user.dart';
+import 'package:planeje/revision/pages/register_revision/component/drop_down_button_custom_revision.dart';
+import 'package:planeje/suggestion/utils/register_suggestion.dart';
+
 import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
-import 'package:planeje/widgets/text_button_widget.dart';
-import 'package:planeje/widgets/text_form_field_widget.dart';
+import '../../../../utils/message_user.dart';
+import '../../../../widgets/text_button_widget.dart';
+import '../../../../widgets/text_form_field_widget.dart';
 
 // ignore: must_be_immutable
-class RegisterCategoryPage extends StatelessWidget {
-  RegisterCategoryPage({super.key, required this.registerCategory}) {
-    description.text = registerCategory.category.description ?? '';
+class RegisterSuggestion extends StatelessWidget {
+  RegisterSuggestion({super.key, required this.registerSuggestion}) {
+    description.text = registerSuggestion.suggestion.description ?? '';
   }
 
-  RegisterCategoryFactory registerCategory;
+  SuggestionFactory registerSuggestion;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
 
@@ -24,7 +26,7 @@ class RegisterCategoryPage extends StatelessWidget {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         title: Text(
-          registerCategory.message.getTypeQuiz!.name,
+          registerSuggestion.message.getTypeQuiz!.name,
           style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
@@ -37,13 +39,17 @@ class RegisterCategoryPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                DropDownButtonCustomRevision(
+                  onClick: (value) => registerSuggestion.suggestion.setIdLearn(value),
+                  idLearn: registerSuggestion.suggestion.idLearn,
+                ),
                 TextFormFieldWidget(
                   controller: description,
-                  onChange: registerCategory.category.setDescription,
+                  maxLine: 5,
                   hintText: 'Descrição',
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.multiline,
+                  textArea: true,
                 ),
-                const Padding(padding: EdgeInsets.all(40)),
               ],
             ),
           ),
@@ -57,16 +63,17 @@ class RegisterCategoryPage extends StatelessWidget {
               try {
                 if (!formKey.currentState!.validate()) return;
 
-                registerCategory.category.setDescription(description.text);
+                registerSuggestion.suggestion.setDescription(description.text);
 
-                var result = await registerCategory.write();
+                var result = await registerSuggestion.write();
 
-                if (context.mounted && result != null) {
-                  MessageUser.message(context, registerCategory.message.message);
+                if (result != null && context.mounted) {
+                  MessageUser.message(context, registerSuggestion.message.message);
                   Navigator.pop(context, true);
                 }
               } catch (e) {
-                if (context.mounted) MessageUser.message(context, 'Erro ao registrar!!!');
+                if (!context.mounted) return;
+                MessageUser.message(context, 'Erro ao registrar!!!');
               }
             },
           ),

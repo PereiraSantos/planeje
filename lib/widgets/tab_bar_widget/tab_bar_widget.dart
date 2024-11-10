@@ -3,9 +3,11 @@ import 'package:planeje/annotation/pages/list_annotation/page/list_annotation.da
 import 'package:planeje/dashboard/pages/home.dart';
 import 'package:planeje/learn/pages/list_learn/page/list_learn.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
+import 'package:planeje/suggestion/pages/list_suggestion/page/list_suggestion.dart';
 import 'package:planeje/utils/app_bar/annotation_app_bar.dart';
 import 'package:planeje/utils/app_bar/learn_app_bar.dart';
 import 'package:planeje/utils/app_bar/revision_app_bar.dart';
+import 'package:planeje/utils/app_bar/suggestion_app_bar.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
 import 'package:planeje/widgets/app_bar_widget/home_app_bar_widget.dart';
@@ -25,11 +27,16 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
 
   dynamic notifier;
 
-  static const List<Tab> tabs = <Tab>[
-    Tab(child: Text('Assunto', style: TextStyle(color: Colors.grey, fontSize: 16))),
-    Tab(child: Text('Tema', style: TextStyle(color: Colors.grey, fontSize: 16))),
-    Tab(child: Text('Anotação', style: TextStyle(color: Colors.grey, fontSize: 16)))
+  static List<Tab> tabs = <Tab>[
+    Tab(child: createTitle('Assunto')),
+    Tab(child: createTitle('Tema')),
+    Tab(child: createTitle('Anotação')),
+    Tab(child: createTitle('Sugestão'))
   ];
+
+  static Widget createTitle(String title) {
+    return SizedBox(child: Text(title, style: const TextStyle(color: Colors.grey, fontSize: 16)));
+  }
 
   late TabController _tabController;
 
@@ -49,7 +56,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: 1,
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: const Color(0xffffffff),
         appBar: AppBar(
@@ -145,6 +152,12 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
                       .buildAdd(context);
                 }
 
+                if (_tabController.index == 3) {
+                  notifier = tabBarNotifier.suggestionNotifier;
+                  return SuggestionAppBar(onClick: () => tabBarNotifier.suggestionNotifier.update())
+                      .buildAdd(context);
+                }
+
                 return const SizedBox();
               },
             ),
@@ -156,6 +169,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
             padding: const EdgeInsets.only(left: 10, right: 10),
             controller: _tabController,
             tabs: tabs,
+            labelPadding: EdgeInsets.zero,
           ),
         ),
         body: TabBarView(
@@ -172,6 +186,10 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
                 listenable: tabBarNotifier.annotationNotifier,
                 builder: (BuildContext context, Widget? child) =>
                     ListAnnotation(tabBarNotifier.annotationNotifier)),
+            ListenableBuilder(
+                listenable: tabBarNotifier.suggestionNotifier,
+                builder: (BuildContext context, Widget? child) =>
+                    ListSuggestion(tabBarNotifier.suggestionNotifier)),
           ],
         ),
       ),

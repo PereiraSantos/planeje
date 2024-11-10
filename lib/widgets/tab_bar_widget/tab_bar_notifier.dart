@@ -6,6 +6,8 @@ class TabBarNotifier with ChangeNotifier {
   Notifier categoryNotifier = Notifier();
   Notifier annotationNotifier = Notifier();
   Notifier quizNotifier = Notifier();
+  Notifier suggestionNotifier = Notifier();
+
   SearchNotifier searchNotifier = SearchNotifier();
 
   void update() => notifyListeners();

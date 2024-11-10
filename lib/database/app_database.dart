@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:planeje/annotation/datasource/dao/annotation_dao.dart';
-import 'package:planeje/category/datasource/dao/category_dao.dart';
-import 'package:planeje/category/entities/category.dart';
 import 'package:planeje/learn/datasource/dao/learn_dao.dart';
 import 'package:planeje/learn/entities/learn.dart';
 import 'package:planeje/quiz_revision/datasource/dao/question_dao.dart';
@@ -10,6 +8,8 @@ import 'package:planeje/quiz_revision/datasource/dao/quiz_dao.dart';
 import 'package:planeje/revision/datasource/dao/date_revision_dao.dart';
 import 'package:planeje/revision/datasource/dao/revision_dao.dart';
 import 'package:planeje/settings/datasource/dao/setting_dao.dart';
+import 'package:planeje/suggestion/datasource/dao/suggestion_dao.dart';
+import 'package:planeje/suggestion/entities/suggestion.dart';
 import 'package:planeje/utils/cache/cache.dart';
 import 'package:planeje/utils/cache/cache_dao.dart';
 
@@ -25,29 +25,6 @@ import '../revision/entities/revision.dart';
 import '../settings/entities/settings.dart';
 
 part 'app_database.g.dart';
-
-@Database(version: 5, entities: [
-  Revision,
-  DateRevision,
-  Annotation,
-  Quiz,
-  Question,
-  Learn,
-  Category,
-  Cache,
-  Settings,
-])
-abstract class AppDatabase extends FloorDatabase {
-  RevisionDao get revisionDao;
-  DateRevisionDao get dateRevisionDao;
-  AnnotationDao get annotationDao;
-  QuizDao get quizDao;
-  QuestionDao get questionDao;
-  LearnDao get learnDao;
-  CategoryDao get categoryDao;
-  CacheDao get cacheDao;
-  SettingDao get settingDao;
-}
 
 final migration1to2 = Migration(1, 2, (database) async {
   await database.execute(
@@ -68,6 +45,34 @@ final migration4to5 = Migration(4, 5, (database) async {
   await database.execute(
       'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY, `keystone` TEXT, `value` TEXT)');
 });
+
+final migration5to6 = Migration(5, 6, (database) async {
+  await database.execute(
+      'CREATE TABLE IF NOT EXISTS `suggestion` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `id_learn` INTEGER,  `sortition` INTEGER)');
+});
+
+@Database(version: 6, entities: [
+  Revision,
+  DateRevision,
+  Annotation,
+  Quiz,
+  Question,
+  Learn,
+  Cache,
+  Settings,
+  Suggestion,
+])
+abstract class AppDatabase extends FloorDatabase {
+  RevisionDao get revisionDao;
+  DateRevisionDao get dateRevisionDao;
+  AnnotationDao get annotationDao;
+  QuizDao get quizDao;
+  QuestionDao get questionDao;
+  LearnDao get learnDao;
+  CacheDao get cacheDao;
+  SettingDao get settingDao;
+  SuggestionDao get suggestionDao;
+}
 
 Future<AppDatabase> getInstance() async {
   return await $FloorAppDatabase

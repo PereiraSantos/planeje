@@ -63,7 +63,7 @@ class _TabBarWidgetState extends State<TabBarWidgetQuiz> with SingleTickerProvid
                   AppBarButtonWidget(
                     onClick: () async => await Navigator.of(context)
                         .push(TransitionsBuilder.createRoute(const TabBarWidget())),
-                    title: 'Assunto',
+                    title: 'Revisão',
                   ),
                   AppBarButtonWidget(
                     value: 0.2,

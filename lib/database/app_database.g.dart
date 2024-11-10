@@ -73,11 +73,11 @@ class _$AppDatabase extends AppDatabase {
 
   LearnDao? _learnDaoInstance;
 
-  CategoryDao? _categoryDaoInstance;
-
   CacheDao? _cacheDaoInstance;
 
   SettingDao? _settingDaoInstance;
+
+  SuggestionDao? _suggestionDaoInstance;
 
   Future<sqflite.Database> open(
     String path,
@@ -85,7 +85,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 5,
+      version: 6,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -113,11 +113,11 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `learn` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
-        await database.execute(
             'CREATE TABLE IF NOT EXISTS `cache` (`id` INTEGER NOT NULL, `hash` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `suggestion` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `id_learn` INTEGER, `sortition` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -157,11 +157,6 @@ class _$AppDatabase extends AppDatabase {
   }
 
   @override
-  CategoryDao get categoryDao {
-    return _categoryDaoInstance ??= _$CategoryDao(database, changeListener);
-  }
-
-  @override
   CacheDao get cacheDao {
     return _cacheDaoInstance ??= _$CacheDao(database, changeListener);
   }
@@ -169,6 +164,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   SettingDao get settingDao {
     return _settingDaoInstance ??= _$SettingDao(database, changeListener);
+  }
+
+  @override
+  SuggestionDao get suggestionDao {
+    return _suggestionDaoInstance ??= _$SuggestionDao(database, changeListener);
   }
 }
 
@@ -741,82 +741,6 @@ class _$LearnDao extends LearnDao {
   }
 }
 
-class _$CategoryDao extends CategoryDao {
-  _$CategoryDao(
-    this.database,
-    this.changeListener,
-  )   : _queryAdapter = QueryAdapter(database),
-        _categoryInsertionAdapter = InsertionAdapter(
-            database,
-            'category',
-            (Category item) => <String, Object?>{
-                  'id': item.id,
-                  'description': item.description
-                }),
-        _categoryUpdateAdapter = UpdateAdapter(
-            database,
-            'category',
-            ['id'],
-            (Category item) => <String, Object?>{
-                  'id': item.id,
-                  'description': item.description
-                });
-
-  final sqflite.DatabaseExecutor database;
-
-  final StreamController<String> changeListener;
-
-  final QueryAdapter _queryAdapter;
-
-  final InsertionAdapter<Category> _categoryInsertionAdapter;
-
-  final UpdateAdapter<Category> _categoryUpdateAdapter;
-
-  @override
-  Future<List<Category>?> getAllCategory() async {
-    return _queryAdapter.queryList('SELECT * FROM category',
-        mapper: (Map<String, Object?> row) => Category(
-            id: row['id'] as int?, description: row['description'] as String?));
-  }
-
-  @override
-  Future<List<Category>?> getCategory(String text) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM category where description LIKE ?1',
-        mapper: (Map<String, Object?> row) => Category(
-            id: row['id'] as int?, description: row['description'] as String?),
-        arguments: [text]);
-  }
-
-  @override
-  Future<Category?> getCategoryId(int id) async {
-    return _queryAdapter.query('SELECT * FROM category WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Category(
-            id: row['id'] as int?, description: row['description'] as String?),
-        arguments: [id]);
-  }
-
-  @override
-  Future<Category?> deleteCategoryById(int id) async {
-    return _queryAdapter.query('delete FROM category WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Category(
-            id: row['id'] as int?, description: row['description'] as String?),
-        arguments: [id]);
-  }
-
-  @override
-  Future<int> insertCategory(Category category) {
-    return _categoryInsertionAdapter.insertAndReturnId(
-        category, OnConflictStrategy.abort);
-  }
-
-  @override
-  Future<int> updateCategory(Category category) {
-    return _categoryUpdateAdapter.updateAndReturnChangedRows(
-        category, OnConflictStrategy.abort);
-  }
-}
-
 class _$CacheDao extends CacheDao {
   _$CacheDao(
     this.database,
@@ -922,5 +846,111 @@ class _$SettingDao extends SettingDao {
   Future<int> updateSetting(Settings settings) {
     return _settingsUpdateAdapter.updateAndReturnChangedRows(
         settings, OnConflictStrategy.abort);
+  }
+}
+
+class _$SuggestionDao extends SuggestionDao {
+  _$SuggestionDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _suggestionInsertionAdapter = InsertionAdapter(
+            database,
+            'suggestion',
+            (Suggestion item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description,
+                  'id_learn': item.idLearn,
+                  'sortition':
+                      item.sortition == null ? null : (item.sortition! ? 1 : 0)
+                }),
+        _suggestionUpdateAdapter = UpdateAdapter(
+            database,
+            'suggestion',
+            ['id'],
+            (Suggestion item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description,
+                  'id_learn': item.idLearn,
+                  'sortition':
+                      item.sortition == null ? null : (item.sortition! ? 1 : 0)
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Suggestion> _suggestionInsertionAdapter;
+
+  final UpdateAdapter<Suggestion> _suggestionUpdateAdapter;
+
+  @override
+  Future<List<Suggestion>?> findSuggestionAll() async {
+    return _queryAdapter.queryList('select * from suggestion',
+        mapper: (Map<String, Object?> row) => Suggestion(
+            id: row['id'] as int?,
+            description: row['description'] as String?,
+            idLearn: row['id_learn'] as int?,
+            sortition: row['sortition'] == null
+                ? null
+                : (row['sortition'] as int) != 0));
+  }
+
+  @override
+  Future<List<Suggestion>?> findSuggestionText(String text) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM suggestion where description LIKE ?1',
+        mapper: (Map<String, Object?> row) => Suggestion(
+            id: row['id'] as int?,
+            description: row['description'] as String?,
+            idLearn: row['id_learn'] as int?,
+            sortition: row['sortition'] == null
+                ? null
+                : (row['sortition'] as int) != 0),
+        arguments: [text]);
+  }
+
+  @override
+  Future<Suggestion?> deleteSuggestionById(int id) async {
+    return _queryAdapter.query('delete FROM suggestion WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Suggestion(
+            id: row['id'] as int?,
+            description: row['description'] as String?,
+            idLearn: row['id_learn'] as int?,
+            sortition: row['sortition'] == null
+                ? null
+                : (row['sortition'] as int) != 0),
+        arguments: [id]);
+  }
+
+  @override
+  Future<Suggestion?> updateSortition(
+    int id,
+    bool sortition,
+  ) async {
+    return _queryAdapter.query(
+        'update suggestion set sortition = ?2 where id = ?1',
+        mapper: (Map<String, Object?> row) => Suggestion(
+            id: row['id'] as int?,
+            description: row['description'] as String?,
+            idLearn: row['id_learn'] as int?,
+            sortition: row['sortition'] == null
+                ? null
+                : (row['sortition'] as int) != 0),
+        arguments: [id, sortition ? 1 : 0]);
+  }
+
+  @override
+  Future<int> insertSuggestion(Suggestion suggestion) {
+    return _suggestionInsertionAdapter.insertAndReturnId(
+        suggestion, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateSuggestion(Suggestion suggestion) {
+    return _suggestionUpdateAdapter.updateAndReturnChangedRows(
+        suggestion, OnConflictStrategy.abort);
   }
 }
