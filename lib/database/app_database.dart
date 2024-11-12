@@ -77,5 +77,5 @@ abstract class AppDatabase extends FloorDatabase {
 Future<AppDatabase> getInstance() async {
   return await $FloorAppDatabase
       .databaseBuilder('app_database.db')
-      .addMigrations([migration1to2, migration2to3, migration3to4, migration4to5]).build();
+      .addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6]).build();
 }
