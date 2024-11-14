@@ -10,8 +10,5 @@ Controlava as revisões em planilha e ferramentas online, decidi desenvolver a m
 ## Google Play
 https://play.google.com/store/apps/details?id=com.br.planeje&pcampaignid=web_share
 <p align="left">
-  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_3.jpg" width="230" />
-  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_2.jpg" width="230" />
-  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_4.jpg" width="230" />
-  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje_1.jpg" width="230" />
+  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje.png" width="600" height="400"/>
 </p>
