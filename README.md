@@ -1,7 +1,7 @@
 # Planeje
 
-Aplicativo desenvolvido para controle dos meus estudos em programação.
-Controlava as revisões em planilha e ferramentas online, decidi desenvolver a minha própria. 
+Aplicativo desenvolvido para controle de revisão.
+ 
 ## Finalidade do aplicativo
 - `Assunto` - Cria item para estudo.
 - `Tema` - Cria revisão vinculada a Assunto ou não.
