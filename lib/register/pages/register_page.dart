@@ -1,0 +1,97 @@
+import 'package:flutter/material.dart';
+import 'package:planeje/login/entities/user.dart';
+import 'package:planeje/login/pages/login_page.dart';
+import 'package:planeje/utils/message_user.dart';
+
+class RegisterPage extends StatelessWidget {
+  RegisterPage({super.key});
+
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _login = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.only(left: 40, right: 40),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  controller: _login,
+                  decoration: const InputDecoration(
+                    hintText: 'Login',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Campo obrigatório';
+                    return null;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: TextFormField(
+                    controller: _password,
+                    decoration: InputDecoration(
+                      hintText: 'Senha',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Campo obrigatório';
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginPage())),
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),
+                              foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                            ),
+                            child: Text('Voltar', style: TextStyle(fontSize: 18)),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (!_formKey.currentState!.validate()) return;
+                              User(_login.text, _password.text);
+
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+
+                              MessageUser.message(context, 'Cadastro realizado!!!');
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),
+                              foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                            ),
+                            child: Text('Registrar', style: TextStyle(fontSize: 18)),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
