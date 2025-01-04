@@ -1,7 +1,7 @@
 # Planeje
 
-Aplicativo desenvolvido para controle dos meus estudos em programação.
-Controlava as revisões em planilha e ferramentas online, decidi desenvolver a minha própria. 
+Aplicativo desenvolvido para controle de revisão.
+ 
 ## Finalidade do aplicativo
 - `Assunto` - Cria item para estudo.
 - `Tema` - Cria revisão vinculada a Assunto ou não.
@@ -10,6 +10,3 @@ Controlava as revisões em planilha e ferramentas online, decidi desenvolver a m
 - `Quiz` - Cria quiz, jogo de quiz, para medir seu conhecimento sobre os seus estudos.
 ## Google Play
 https://play.google.com/store/apps/details?id=com.br.planeje&pcampaignid=web_share
-<p align="left">
-  <img src="https://github.com/PereiraSantos/planeje/blob/main/assets/planeje.png" width="600" height="400"/>
-</p>
