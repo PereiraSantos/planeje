@@ -1,13 +1,21 @@
+import 'package:planeje/database/app_database.dart';
 import 'package:planeje/login/entities/user.dart';
 
 abstract class UserDatabaseFactory {
-  Future<bool> validUser(User user);
+  Future<User?> validUser(User user);
+  Future<void> insertUser(User user);
 }
 
 class UserDatabase implements UserDatabaseFactory {
   @override
-  Future<bool> validUser(User user) async {
-    if (user.login == '1' && user.password == '1') return true;
-    return false;
+  Future<User?> validUser(User user) async {
+    final database = await getInstance();
+    return database.userDao.findUserLoginPassword(user.login, user.password);
+  }
+
+  @override
+  Future<void> insertUser(User user) async {
+    final database = await getInstance();
+    return database.userDao.insertUser(user);
   }
 }

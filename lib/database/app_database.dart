@@ -3,6 +3,8 @@ import 'package:floor/floor.dart';
 import 'package:planeje/annotation/datasource/dao/annotation_dao.dart';
 import 'package:planeje/learn/datasource/dao/learn_dao.dart';
 import 'package:planeje/learn/entities/learn.dart';
+import 'package:planeje/login/datasource/dao/user_dao.dart';
+import 'package:planeje/login/entities/user.dart';
 import 'package:planeje/quiz_revision/datasource/dao/question_dao.dart';
 import 'package:planeje/quiz_revision/datasource/dao/quiz_dao.dart';
 import 'package:planeje/revision/datasource/dao/date_revision_dao.dart';
@@ -27,8 +29,7 @@ import '../settings/entities/settings.dart';
 part 'app_database.g.dart';
 
 final migration1to2 = Migration(1, 2, (database) async {
-  await database.execute(
-      'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
+  await database.execute('CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
   await database.execute('ALTER TABLE annotation ADD COLUMN id_category INTEGER');
 });
 
@@ -42,13 +43,16 @@ final migration3to4 = Migration(3, 4, (database) async {
 });
 
 final migration4to5 = Migration(4, 5, (database) async {
-  await database.execute(
-      'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY, `keystone` TEXT, `value` TEXT)');
+  await database.execute('CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY, `keystone` TEXT, `value` TEXT)');
 });
 
 final migration5to6 = Migration(5, 6, (database) async {
   await database.execute(
       'CREATE TABLE IF NOT EXISTS `suggestion` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `id_learn` INTEGER,  `sortition` INTEGER)');
+});
+
+final migration6to7 = Migration(6, 7, (database) async {
+  await database.execute('CREATE TABLE IF NOT EXISTS `user` (`login` TEXT PRIMARY KEY, `password` TEXT)');
 });
 
 @Database(version: 6, entities: [
@@ -61,6 +65,7 @@ final migration5to6 = Migration(5, 6, (database) async {
   Cache,
   Settings,
   Suggestion,
+  User,
 ])
 abstract class AppDatabase extends FloorDatabase {
   RevisionDao get revisionDao;
@@ -72,10 +77,16 @@ abstract class AppDatabase extends FloorDatabase {
   CacheDao get cacheDao;
   SettingDao get settingDao;
   SuggestionDao get suggestionDao;
+  UserDao get userDao;
 }
 
 Future<AppDatabase> getInstance() async {
-  return await $FloorAppDatabase
-      .databaseBuilder('app_database.db')
-      .addMigrations([migration1to2, migration2to3, migration3to4, migration4to5, migration5to6]).build();
+  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([
+    migration1to2,
+    migration2to3,
+    migration3to4,
+    migration4to5,
+    migration5to6,
+    migration6to7,
+  ]).build();
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/login/datasource/database/user_database.dart';
 import 'package:planeje/login/entities/user.dart';
 import 'package:planeje/login/pages/login_page.dart';
+import 'package:planeje/login/utils/credentials.dart';
 import 'package:planeje/utils/message_user.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -69,12 +71,20 @@ class RegisterPage extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 10),
                           child: ElevatedButton(
                             onPressed: () async {
-                              if (!_formKey.currentState!.validate()) return;
-                              User(_login.text, _password.text);
+                              try {
+                                if (!_formKey.currentState!.validate()) return;
+                                FocusScope.of(context).requestFocus(FocusNode());
 
-                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+                                await Credentials(UserDatabase()).insertUser(User(_login.text, _password.text));
 
-                              MessageUser.message(context, 'Cadastro realizado!!!');
+                                if (context.mounted) {
+                                  MessageUser.message(context, 'Cadastro realizado!!!');
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+                                }
+                              } catch (e) {
+                                // ignore: use_build_context_synchronously
+                                MessageUser.message(context, 'Erro ao cadastrar!!!');
+                              }
                             },
                             style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),

@@ -79,11 +79,11 @@ class _LoginPageState extends State<LoginPage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (!_formKey.currentState!.validate()) return;
-                        if (await Credentials(UserDatabase()).login(User(_login.text, _password.text)) && context.mounted) {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
-                        } else {
-                          MessageUser.message(context, 'Login incorreto!!!');
-                        }
+                        FocusScope.of(context).requestFocus(FocusNode());
+
+                        await Credentials(UserDatabase()).login(User(_login.text, _password.text)) && context.mounted
+                            ? Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()))
+                            : MessageUser.message(context, 'Login incorreto!!!');
                       },
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),

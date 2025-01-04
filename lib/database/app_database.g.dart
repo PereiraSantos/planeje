@@ -6,21 +6,32 @@ part of 'app_database.dart';
 // FloorGenerator
 // **************************************************************************
 
+abstract class $AppDatabaseBuilderContract {
+  /// Adds migrations to the builder.
+  $AppDatabaseBuilderContract addMigrations(List<Migration> migrations);
+
+  /// Adds a database [Callback] to the builder.
+  $AppDatabaseBuilderContract addCallback(Callback callback);
+
+  /// Creates the database and initializes it.
+  Future<AppDatabase> build();
+}
+
 // ignore: avoid_classes_with_only_static_members
 class $FloorAppDatabase {
   /// Creates a database builder for a persistent database.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$AppDatabaseBuilder databaseBuilder(String name) =>
+  static $AppDatabaseBuilderContract databaseBuilder(String name) =>
       _$AppDatabaseBuilder(name);
 
   /// Creates a database builder for an in memory database.
   /// Information stored in an in memory database disappears when the process is killed.
   /// Once a database is built, you should keep a reference to it and re-use it.
-  static _$AppDatabaseBuilder inMemoryDatabaseBuilder() =>
+  static $AppDatabaseBuilderContract inMemoryDatabaseBuilder() =>
       _$AppDatabaseBuilder(null);
 }
 
-class _$AppDatabaseBuilder {
+class _$AppDatabaseBuilder implements $AppDatabaseBuilderContract {
   _$AppDatabaseBuilder(this.name);
 
   final String? name;
@@ -29,19 +40,19 @@ class _$AppDatabaseBuilder {
 
   Callback? _callback;
 
-  /// Adds migrations to the builder.
-  _$AppDatabaseBuilder addMigrations(List<Migration> migrations) {
+  @override
+  $AppDatabaseBuilderContract addMigrations(List<Migration> migrations) {
     _migrations.addAll(migrations);
     return this;
   }
 
-  /// Adds a database [Callback] to the builder.
-  _$AppDatabaseBuilder addCallback(Callback callback) {
+  @override
+  $AppDatabaseBuilderContract addCallback(Callback callback) {
     _callback = callback;
     return this;
   }
 
-  /// Creates the database and initializes it.
+  @override
   Future<AppDatabase> build() async {
     final path = name != null
         ? await sqfliteDatabaseFactory.getDatabasePath(name!)
@@ -78,6 +89,8 @@ class _$AppDatabase extends AppDatabase {
   SettingDao? _settingDaoInstance;
 
   SuggestionDao? _suggestionDaoInstance;
+
+  UserDao? _userDaoInstance;
 
   Future<sqflite.Database> open(
     String path,
@@ -118,6 +131,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `suggestion` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `id_learn` INTEGER, `sortition` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `user` (`login` TEXT NOT NULL, `password` TEXT NOT NULL, PRIMARY KEY (`login`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -169,6 +184,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   SuggestionDao get suggestionDao {
     return _suggestionDaoInstance ??= _$SuggestionDao(database, changeListener);
+  }
+
+  @override
+  UserDao get userDao {
+    return _userDaoInstance ??= _$UserDao(database, changeListener);
   }
 }
 
@@ -952,5 +972,45 @@ class _$SuggestionDao extends SuggestionDao {
   Future<int> updateSuggestion(Suggestion suggestion) {
     return _suggestionUpdateAdapter.updateAndReturnChangedRows(
         suggestion, OnConflictStrategy.abort);
+  }
+}
+
+class _$UserDao extends UserDao {
+  _$UserDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _userInsertionAdapter = InsertionAdapter(
+            database,
+            'user',
+            (User item) => <String, Object?>{
+                  'login': item.login,
+                  'password': item.password
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<User> _userInsertionAdapter;
+
+  @override
+  Future<User?> findUserLoginPassword(
+    String login,
+    String password,
+  ) async {
+    return _queryAdapter.query(
+        'select * from user where login = ?1 and password = ?2',
+        mapper: (Map<String, Object?> row) =>
+            User(row['login'] as String, row['password'] as String),
+        arguments: [login, password]);
+  }
+
+  @override
+  Future<int> insertUser(User user) {
+    return _userInsertionAdapter.insertAndReturnId(
+        user, OnConflictStrategy.abort);
   }
 }
