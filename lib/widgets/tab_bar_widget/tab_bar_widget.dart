@@ -69,8 +69,7 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
               return Row(
                 children: [
                   HomeAppBarWidget(
-                    onClick: () async =>
-                        await Navigator.of(context).push(TransitionsBuilder.createRoute(Home())),
+                    onClick: () async => await Navigator.of(context).push(TransitionsBuilder.createRoute(Home())),
                   ),
                   if (tabBarNotifier.searchNotifier.hideSearch) ...[
                     Container(
@@ -90,14 +89,12 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
                   ],
                   if (!tabBarNotifier.searchNotifier.hideSearch) ...[
                     AppBarButtonWidget(
-                      onClick: () async => await Navigator.of(context)
-                          .push(TransitionsBuilder.createRoute(const TabBarWidget())),
+                      onClick: () async => await Navigator.of(context).push(TransitionsBuilder.createRoute(const TabBarWidget())),
                       title: 'Revisão',
                       color: Colors.black54,
                     ),
                     AppBarButtonWidget(
-                      onClick: () async => await Navigator.of(context)
-                          .push(TransitionsBuilder.createRoute(const TabBarWidgetQuiz())),
+                      onClick: () async => await Navigator.of(context).push(TransitionsBuilder.createRoute(const TabBarWidgetQuiz())),
                       title: 'Quiz',
                     ),
                   ]
@@ -142,20 +139,17 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
                 }
                 if (_tabController.index == 1) {
                   notifier = tabBarNotifier.revisionNotifier;
-                  return RevisionAppBar(onClick: () => tabBarNotifier.revisionNotifier.update())
-                      .buildAdd(context);
+                  return RevisionAppBar(onClick: () => tabBarNotifier.revisionNotifier.update()).buildAdd(context);
                 }
 
                 if (_tabController.index == 2) {
                   notifier = tabBarNotifier.annotationNotifier;
-                  return AnnotationAppBar(onClick: () => tabBarNotifier.annotationNotifier.update())
-                      .buildAdd(context);
+                  return AnnotationAppBar(onClick: () => tabBarNotifier.annotationNotifier.update()).buildAdd(context);
                 }
 
                 if (_tabController.index == 3) {
                   notifier = tabBarNotifier.suggestionNotifier;
-                  return SuggestionAppBar(onClick: () => tabBarNotifier.suggestionNotifier.update())
-                      .buildAdd(context);
+                  return SuggestionAppBar(onClick: () => tabBarNotifier.suggestionNotifier.update()).buildAdd(context);
                 }
 
                 return const SizedBox();
@@ -176,20 +170,17 @@ class _TabBarWidgetState extends State<TabBarWidget> with SingleTickerProviderSt
           controller: _tabController,
           children: [
             ListenableBuilder(
-                listenable: tabBarNotifier.learnNotifier,
-                builder: (BuildContext context, Widget? child) => ListLearn(tabBarNotifier.learnNotifier)),
+                listenable: tabBarNotifier.learnNotifier, builder: (BuildContext context, Widget? child) => ListLearn(tabBarNotifier.learnNotifier)),
             ListenableBuilder(
               listenable: tabBarNotifier.revisionNotifier,
-              builder: (BuildContext context, Widget? child) => ListRevision(tabBarNotifier.revisionNotifier),
+              builder: (BuildContext context, Widget? child) => ListRevision(),
             ),
             ListenableBuilder(
                 listenable: tabBarNotifier.annotationNotifier,
-                builder: (BuildContext context, Widget? child) =>
-                    ListAnnotation(tabBarNotifier.annotationNotifier)),
+                builder: (BuildContext context, Widget? child) => ListAnnotation(tabBarNotifier.annotationNotifier)),
             ListenableBuilder(
                 listenable: tabBarNotifier.suggestionNotifier,
-                builder: (BuildContext context, Widget? child) =>
-                    ListSuggestion(tabBarNotifier.suggestionNotifier)),
+                builder: (BuildContext context, Widget? child) => ListSuggestion(tabBarNotifier.suggestionNotifier)),
           ],
         ),
       ),

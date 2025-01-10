@@ -18,7 +18,7 @@ class RegisterPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Container(
         alignment: Alignment.center,
-        margin: EdgeInsets.only(left: 40, right: 40),
+        margin: const EdgeInsets.only(left: 40, right: 40),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -39,7 +39,7 @@ class RegisterPage extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 20),
                   child: TextFormField(
                     controller: _password,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Senha',
                     ),
                     validator: (value) {
@@ -57,12 +57,12 @@ class RegisterPage extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: ElevatedButton(
-                            onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginPage())),
+                            onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const LoginPage())),
                             style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),
                               foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                             ),
-                            child: Text('Voltar', style: TextStyle(fontSize: 18)),
+                            child: const Text('Voltar', style: TextStyle(fontSize: 18)),
                           ),
                         ),
                       ),
@@ -79,7 +79,7 @@ class RegisterPage extends StatelessWidget {
 
                                 if (context.mounted) {
                                   MessageUser.message(context, 'Cadastro realizado!!!');
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const LoginPage()));
                                 }
                               } catch (e) {
                                 // ignore: use_build_context_synchronously
@@ -90,7 +90,7 @@ class RegisterPage extends StatelessWidget {
                               backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),
                               foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                             ),
-                            child: Text('Registrar', style: TextStyle(fontSize: 18)),
+                            child: const Text('Registrar', style: TextStyle(fontSize: 18)),
                           ),
                         ),
                       )

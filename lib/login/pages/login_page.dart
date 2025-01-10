@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: Container(
         alignment: Alignment.center,
-        margin: EdgeInsets.only(left: 40, right: 40),
+        margin: const EdgeInsets.only(left: 40, right: 40),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -67,8 +67,9 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       GestureDetector(
                           onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => RegisterPage())),
-                          child: Text('Cadastre-se')),
-                      GestureDetector(onTap: () {}, child: Text('Esqueci a senha')),
+                          child: const Text('Cadastre-se')),
+                      //GestureDetector(onTap: () {}, child: const Text('Esqueci a senha')),
+                      GestureDetector(onTap: () {}, child: const SizedBox()),
                     ],
                   ),
                 ),
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                         backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),
                         foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
                       ),
-                      child: Text('Entrar', style: TextStyle(fontSize: 18)),
+                      child: const Text('Entrar', style: TextStyle(fontSize: 18)),
                     ),
                   ),
                 )

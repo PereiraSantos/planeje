@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/dashboard/component/under_review.dart';
-import 'package:planeje/dashboard/controller/under_review_notifier.dart';
+import 'package:planeje/dashboard/pages/dashboard.dart';
 import 'package:planeje/dashboard/utils/check_setting.dart';
 import 'package:planeje/dashboard/utils/find_revision.dart';
-import 'package:planeje/dashboard/utils/next_revision_time.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
+import 'package:planeje/quiz_revision/pages/list_quiz/page/list_quiz.dart';
+import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
 import 'package:planeje/settings/pages/setting_page.dart';
-import 'package:planeje/utils/transitions_builder.dart';
-import 'package:planeje/widgets/app_bar_widget/app_bar_button_widget.dart';
-import 'package:planeje/widgets/app_bar_widget/app_bar_widget.dart';
-import 'package:planeje/widgets/app_bar_widget/home_app_bar_widget.dart';
-import 'package:planeje/widgets/app_bar_widget/notification_app_bar_widget.dart';
-import 'package:planeje/widgets/app_bar_widget/setting_app_bar_widget.dart';
-import 'package:planeje/widgets/tab_bar_widget/tab_bar_widget.dart';
-import 'package:planeje/widgets/tab_bar_widget/tab_bar_widget_quiz.dart';
-import '../component/next_revision.dart';
-import '../component/reviser_late.dart';
 
 class Home extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -29,7 +19,21 @@ class _HomeState extends State<Home> {
   void reloadPage() => setState(() {});
 
   final ReviserNotifier reviserNotifier = ReviserNotifier();
-  final UnderReviewNotifier underReviewNotifier = UnderReviewNotifier();
+
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  final List<Widget> _screen = [
+    // Dashboard(),
+    ListRevision(),
+    ListQuiz(),
+    SettingPage(),
+  ];
 
   @override
   void initState() {
@@ -45,7 +49,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
-      appBar: PreferredSize(
+      /*  appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55.0),
         child: ListenableBuilder(
           listenable: reviserNotifier,
@@ -55,8 +59,7 @@ class _HomeState extends State<Home> {
                 NotificationAppBarWidget(quantity: reviserNotifier.quantityReviserDelayed),
                 SettingAppBarWidget(
                   onClick: () async {
-                    var result =
-                        await Navigator.of(context).push(TransitionsBuilder.createRoute(SettingPage()));
+                    var result = await Navigator.of(context).push(TransitionsBuilder.createRoute(SettingPage()));
                     if (result != null && result) reloadPage();
                   },
                 ),
@@ -64,20 +67,16 @@ class _HomeState extends State<Home> {
               child: [
                 HomeAppBarWidget(onClick: () => null, color: Colors.black54),
                 AppBarButtonWidget(
-                    onClick: () async => await Navigator.of(context)
-                        .push(TransitionsBuilder.createRoute(const TabBarWidget())),
-                    title: 'Revisão'),
+                    onClick: () async => await Navigator.of(context).push(TransitionsBuilder.createRoute(const TabBarWidget())), title: 'Revisão'),
                 AppBarButtonWidget(
-                    value: 0.2,
-                    onClick: () async => await Navigator.of(context)
-                        .push(TransitionsBuilder.createRoute(const TabBarWidgetQuiz())),
-                    title: 'Quiz'),
+                    value: 0.2, onClick: () async => await Navigator.of(context).push(TransitionsBuilder.createRoute(const TabBarWidgetQuiz())), title: 'Quiz'),
               ],
             );
           },
         ),
-      ),
-      body: SingleChildScrollView(
+      ),*/
+      body: _screen[_selectedIndex],
+      /* body: SingleChildScrollView(
         child: ListenableBuilder(
           listenable: reviserNotifier,
           builder: (BuildContext context, Widget? child) {
@@ -112,6 +111,30 @@ class _HomeState extends State<Home> {
             );
           },
         ),
+      ),*/
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          /* BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),*/
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'Revisão',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.ballot),
+            label: 'Quiz',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Configuração',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
       ),
     );
   }

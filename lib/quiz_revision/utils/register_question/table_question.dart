@@ -45,13 +45,16 @@ class TableQuestionNotifier with ChangeNotifier {
 
   bool listQuestionuestionIsEmpty(BuildContext context) {
     if (questions.isNotEmpty) return true;
+    FocusScope.of(context).requestFocus(FocusNode());
     MessageUser.message(context, 'Obrigatório adicionar registro');
     return false;
   }
 
   bool isAnwserByListQuestion(BuildContext context) {
     if (_isAnwser()) return true;
+    FocusScope.of(context).requestFocus(FocusNode());
     MessageUser.message(context, 'Obrigatório marcar uma resposta');
+
     return false;
   }
 

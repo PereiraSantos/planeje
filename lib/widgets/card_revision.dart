@@ -48,15 +48,14 @@ class CardRevision extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           FutureBuilder(
-            future: GetLearn(LearnDatabase()).getById(revisionTime.revision.idLearn ?? -1),
+            future: GetLearn(LearnDatabase()).getById(revisionTime.revision.id ?? -1),
             builder: (BuildContext context, AsyncSnapshot<Learn?> snapshot) {
               if (snapshot.hasData) {
                 return SizedBox(
                   width: double.maxFinite,
                   child: TextCard(
                     padding: const EdgeInsets.only(left: 15, right: 0, top: 2),
-                    revisionEntity:
-                        '${snapshot.data?.description ?? ""} -  ${revisionTime.revision.description ?? ""}',
+                    revisionEntity: '${snapshot.data?.description ?? ""} -  ${revisionTime.revision.description ?? ""}',
                     maxLines: 5,
                   ),
                 );
@@ -76,9 +75,7 @@ class CardRevision extends StatelessWidget {
             width: double.maxFinite,
             child: TextCard(
               padding: const EdgeInsets.only(left: 15, right: 0, top: 2),
-              revisionEntity: revisionTime.dateRevision.nextDate != null
-                  ? FormatDate.formatDateString('${revisionTime.dateRevision.nextDate}')
-                  : '',
+              revisionEntity: revisionTime.dateRevision.nextDate != null ? FormatDate.formatDateString('${revisionTime.dateRevision.nextDate}') : '',
               maxLines: 5,
             ),
           ),

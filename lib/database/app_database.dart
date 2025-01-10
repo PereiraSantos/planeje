@@ -27,7 +27,7 @@ import '../revision/entities/revision.dart';
 import '../settings/entities/settings.dart';
 
 part 'app_database.g.dart';
-
+/*
 final migration1to2 = Migration(1, 2, (database) async {
   await database.execute('CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
   await database.execute('ALTER TABLE annotation ADD COLUMN id_category INTEGER');
@@ -53,9 +53,9 @@ final migration5to6 = Migration(5, 6, (database) async {
 
 final migration6to7 = Migration(6, 7, (database) async {
   await database.execute('CREATE TABLE IF NOT EXISTS `user` (`login` TEXT PRIMARY KEY, `password` TEXT)');
-});
+});*/
 
-@Database(version: 6, entities: [
+@Database(version: 1, entities: [
   Revision,
   DateRevision,
   Annotation,
@@ -80,13 +80,10 @@ abstract class AppDatabase extends FloorDatabase {
   UserDao get userDao;
 }
 
+Future<AppDatabase> migrationDatabase() async {
+  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([]).build();
+}
+
 Future<AppDatabase> getInstance() async {
-  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([
-    migration1to2,
-    migration2to3,
-    migration3to4,
-    migration4to5,
-    migration5to6,
-    migration6to7,
-  ]).build();
+  return await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 }

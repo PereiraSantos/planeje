@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class TextButtonWidget extends StatelessWidget {
-  const TextButtonWidget({super.key, required this.label, required this.onClick});
+  const TextButtonWidget({super.key, required this.label, required this.onClick, this.padding});
 
   final String label;
   final Function onClick;
+  final EdgeInsetsGeometry? padding;
 
   factory TextButtonWidget.cancel(Function onClick) => TextButtonWidget(label: 'CANCELA', onClick: onClick);
   factory TextButtonWidget.save(Function onClick) => TextButtonWidget(label: 'SALVAR', onClick: onClick);
@@ -12,7 +13,7 @@ class TextButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0),
+      padding: padding ?? const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0),
       child: TextButton(
         child: Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20.0),

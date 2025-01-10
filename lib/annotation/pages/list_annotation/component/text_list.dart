@@ -30,7 +30,7 @@ class TextList extends StatelessWidget {
         padding: EdgeInsets.only(left: left!, top: top, bottom: bottom),
         child: Text(
           annotationEntity.capitalize(),
-          maxLines: null,
+          maxLines: 2,
           style: TextStyle(
             fontSize: fontSize,
             color: color ?? Colors.black54,

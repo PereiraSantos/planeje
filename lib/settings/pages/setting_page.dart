@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/settings/datasource/database/setting_database.dart';
+import 'package:planeje/login/pages/login_page.dart';
 import 'package:planeje/settings/entities/settings.dart';
-
-import 'package:planeje/settings/utils/find_setting.dart';
-import 'package:planeje/settings/utils/future_build_custom.dart';
-import 'package:planeje/settings/utils/register_setting.dart';
-import 'package:planeje/utils/message_user.dart';
-import 'package:planeje/utils/type_message.dart';
-import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
 import 'package:planeje/widgets/text_button_widget.dart';
-import 'package:planeje/widgets/text_form_field_widget.dart';
 
 // ignore: must_be_immutable
 class SettingPage extends StatelessWidget {
@@ -43,7 +35,7 @@ class SettingPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
+                /*  Container(
                   width: double.maxFinite,
                   margin: const EdgeInsets.only(left: 15),
                   child: const Text(
@@ -90,13 +82,19 @@ class SettingPage extends StatelessWidget {
                       onChange: (value) => settingsNext.setValue = value ?? '',
                     );
                   },
+                ),*/
+
+                TextButtonWidget(
+                  label: 'Sair',
+                  onClick: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const LoginPage())),
+                  padding: const EdgeInsets.only(left: 0.0, right: 20.0, top: 5.0),
                 ),
               ],
             ),
           ),
         ),
       ),
-      bottomSheet: BottomSheetWidget(
+      /* bottomSheet: BottomSheetWidget(
         children: [
           TextButtonWidget.cancel(() => Navigator.pop(context, false)),
           TextButtonWidget.save(
@@ -127,7 +125,7 @@ class SettingPage extends StatelessWidget {
             },
           ),
         ],
-      ),
+      ),*/
     );
   }
 }

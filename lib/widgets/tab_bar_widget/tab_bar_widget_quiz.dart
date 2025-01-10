@@ -40,8 +40,7 @@ class _TabBarWidgetState extends State<TabBarWidgetQuiz> with SingleTickerProvid
             return Row(
               children: [
                 HomeAppBarWidget(
-                  onClick: () async =>
-                      await Navigator.of(context).push(TransitionsBuilder.createRoute(Home())),
+                  onClick: () async => await Navigator.of(context).push(TransitionsBuilder.createRoute(Home())),
                 ),
                 if (tabBarNotifier.searchNotifier.hideSearch) ...[
                   Container(
@@ -61,14 +60,12 @@ class _TabBarWidgetState extends State<TabBarWidgetQuiz> with SingleTickerProvid
                 ],
                 if (!tabBarNotifier.searchNotifier.hideSearch) ...[
                   AppBarButtonWidget(
-                    onClick: () async => await Navigator.of(context)
-                        .push(TransitionsBuilder.createRoute(const TabBarWidget())),
+                    onClick: () async => await Navigator.of(context).push(TransitionsBuilder.createRoute(const TabBarWidget())),
                     title: 'Revisão',
                   ),
                   AppBarButtonWidget(
                     value: 0.2,
-                    onClick: () async => await Navigator.of(context)
-                        .push(TransitionsBuilder.createRoute(const TabBarWidgetQuiz())),
+                    onClick: () async => await Navigator.of(context).push(TransitionsBuilder.createRoute(const TabBarWidgetQuiz())),
                     title: 'Quiz',
                     color: Colors.black54,
                   ),
@@ -116,7 +113,7 @@ class _TabBarWidgetState extends State<TabBarWidgetQuiz> with SingleTickerProvid
       ),
       body: ListenableBuilder(
         listenable: tabBarNotifier.quizNotifier,
-        builder: (BuildContext context, Widget? child) => ListQuiz(tabBarNotifier.quizNotifier),
+        builder: (BuildContext context, Widget? child) => ListQuiz(),
       ),
     );
   }

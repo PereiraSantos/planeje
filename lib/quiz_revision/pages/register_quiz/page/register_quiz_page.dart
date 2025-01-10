@@ -107,6 +107,7 @@ class RegisterQuizPage extends StatelessWidget {
                 if (!_tableQuestionNotifier.listQuestionuestionIsEmpty(context)) return;
 
                 if (!_tableQuestionNotifier.isAnwserByListQuestion(context)) return;
+                FocusScope.of(context).requestFocus(FocusNode());
 
                 registerQuiz.quiz.setId(registerQuiz.quiz.id);
                 registerQuiz.quiz.setTopic(topic.text);
@@ -120,11 +121,15 @@ class RegisterQuizPage extends StatelessWidget {
                 }
 
                 if (context.mounted && result != null) {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   MessageUser.message(context, registerQuiz.message.message);
                   Navigator.pop(context, true);
                 }
               } catch (e) {
-                if (context.mounted) MessageUser.message(context, 'Erro ao registrar!!!');
+                if (context.mounted) {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  MessageUser.message(context, 'Erro ao registrar!!!');
+                }
               }
             },
           ),

@@ -22,14 +22,12 @@ class FindRevisionDao {
 
     String group = 'select * from revision_temp group by id_revision';
 
-    group =
-        'select * from revision_temp where substr(next_date_revision,7)||substr(next_date_revision,4,2)||substr(next_date_revision,1,2) '
+    group = 'select * from revision_temp where substr(next_date_revision,7)||substr(next_date_revision,4,2)||substr(next_date_revision,1,2) '
         '${isBefore ? '>' : '<='} \'$date\' group by id_revision';
 
     String cte = 'with revision_temp as ($sql)';
 
-    String sqlBase =
-        '$cte $group order by substr(next_date_revision,7)||substr(next_date_revision,4,2)||substr(next_date_revision,1,2) asc';
+    String sqlBase = '$cte $group order by substr(next_date_revision,7)||substr(next_date_revision,4,2)||substr(next_date_revision,1,2) asc';
 
     if (limit != null) sqlBase = '$sqlBase limit $limit';
 
@@ -42,7 +40,7 @@ class FindRevisionDao {
             dateCreational: element['date_creational'],
             description: element['description'],
             id: element['id'],
-            idLearn: element['id_learn'],
+            title: element['title'],
           ),
           DateRevision(
               dateRevision: element['date_revision'],

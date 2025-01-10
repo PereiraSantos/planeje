@@ -98,7 +98,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 6,
+      version: 1,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -114,7 +114,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `date_creational` TEXT, `id_learn` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `description` TEXT, `date_creational` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER, `status` INTEGER, `day` INTEGER)');
         await database.execute(
@@ -202,9 +202,9 @@ class _$RevisionDao extends RevisionDao {
             'revision',
             (Revision item) => <String, Object?>{
                   'id': item.id,
+                  'title': item.title,
                   'description': item.description,
-                  'date_creational': item.dateCreational,
-                  'id_learn': item.idLearn
+                  'date_creational': item.dateCreational
                 }),
         _revisionUpdateAdapter = UpdateAdapter(
             database,
@@ -212,9 +212,9 @@ class _$RevisionDao extends RevisionDao {
             ['id'],
             (Revision item) => <String, Object?>{
                   'id': item.id,
+                  'title': item.title,
                   'description': item.description,
-                  'date_creational': item.dateCreational,
-                  'id_learn': item.idLearn
+                  'date_creational': item.dateCreational
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -232,9 +232,9 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.queryList('SELECT * FROM revision',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            title: row['title'] as String?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?,
-            idLearn: row['id_learn'] as int?));
+            dateCreational: row['date_creational'] as String?));
   }
 
   @override
@@ -242,9 +242,9 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.query('SELECT * FROM revision WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            title: row['title'] as String?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?,
-            idLearn: row['id_learn'] as int?),
+            dateCreational: row['date_creational'] as String?),
         arguments: [id]);
   }
 
@@ -253,9 +253,9 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.query('delete FROM revision WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            title: row['title'] as String?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?,
-            idLearn: row['id_learn'] as int?),
+            dateCreational: row['date_creational'] as String?),
         arguments: [id]);
   }
 
@@ -264,9 +264,9 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.queryList('SELECT * FROM revision WHERE text LIKE ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            title: row['title'] as String?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?,
-            idLearn: row['id_learn'] as int?),
+            dateCreational: row['date_creational'] as String?),
         arguments: [text]);
   }
 
@@ -1009,8 +1009,7 @@ class _$UserDao extends UserDao {
   }
 
   @override
-  Future<int> insertUser(User user) {
-    return _userInsertionAdapter.insertAndReturnId(
-        user, OnConflictStrategy.abort);
+  Future<void> insertUser(User user) async {
+    await _userInsertionAdapter.insert(user, OnConflictStrategy.abort);
   }
 }

@@ -7,25 +7,24 @@ class Revision {
   @ColumnInfo(name: 'id')
   int? id;
 
+  @ColumnInfo(name: 'title')
+  String? title;
+
   @ColumnInfo(name: 'description')
   String? description;
 
   @ColumnInfo(name: 'date_creational')
   String? dateCreational;
 
-  @ColumnInfo(name: 'id_learn')
-  int? idLearn;
-
   Revision({
     this.id,
+    this.title,
     this.description,
     this.dateCreational,
-    this.idLearn,
   });
 
   void setId(int? value) => id = value;
+  void setTitle(String value) => title = value;
   void setDescription(String value) => description = value;
-  void setDateCreational(String? value) =>
-      dateCreational = value ?? FormatDate.formatDate(FormatDate.newDate());
-  void setIdLearn(int? value) => idLearn = value;
+  void setDateCreational(String? value) => dateCreational = value ?? FormatDate.formatDate(FormatDate.newDate());
 }
