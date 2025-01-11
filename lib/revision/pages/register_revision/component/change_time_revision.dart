@@ -24,8 +24,8 @@ class _ChangeTimeRevisionState extends State<ChangeTimeRevision> {
 
   void initTime() {
     if (widget.revisionEntity != null) {
-      timeInit = widget.revisionEntity!.hourInit;
-      timeEnd = widget.revisionEntity!.hourEnd;
+      // timeInit = widget.revisionEntity!.hourInit;
+      // timeEnd = widget.revisionEntity!.hourEnd;
     }
   }
 

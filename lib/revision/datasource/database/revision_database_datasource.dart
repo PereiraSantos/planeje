@@ -53,7 +53,8 @@ class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
 
   @override
   Future<int> getQuantiyRevision(String date, bool isBefore) async {
-    final database = await getInstance();
-    return await FindRevisionDao().getQuantiyRevision(database, date, isBefore);
+    // final database = await getInstance();
+    //  return await FindRevisionDao().getQuantiyRevision(database, date, isBefore);
+    return 0;
   }
 }

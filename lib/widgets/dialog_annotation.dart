@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DialogAnnotation {
-  build<T>(BuildContext context, Function(String title, String description) onPressed) async {
+  build<T>(BuildContext context, Function(String title, String description) onPressed, {String? titleArg, String? descriptionArg}) async {
     final formKey = GlobalKey<FormState>();
-    final TextEditingController description = TextEditingController();
-    final TextEditingController title = TextEditingController();
+    final TextEditingController description = TextEditingController(text: descriptionArg);
+    final TextEditingController title = TextEditingController(text: titleArg);
 
     return await showDialog(
       context: context,

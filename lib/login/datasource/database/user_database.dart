@@ -4,6 +4,7 @@ import 'package:planeje/login/entities/user.dart';
 abstract class UserDatabaseFactory {
   Future<User?> validUser(User user);
   Future<void> insertUser(User user);
+  Future<int?> haveRegistration();
 }
 
 class UserDatabase implements UserDatabaseFactory {
@@ -17,5 +18,11 @@ class UserDatabase implements UserDatabaseFactory {
   Future<void> insertUser(User user) async {
     final database = await getInstance();
     return database.userDao.insertUser(user);
+  }
+
+  @override
+  Future<int?> haveRegistration() async {
+    final database = await getInstance();
+    return database.userDao.haveRegistration();
   }
 }

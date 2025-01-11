@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/annotation/datasource/database/database_datasource.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
+import 'package:planeje/annotation/utils/delete_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
 import 'package:planeje/utils/type_message.dart';
@@ -33,7 +34,7 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
     super.initState();
     description.text = widget.revision.revision.description ?? '';
     title.text = widget.revision.revision.title ?? '';
-    widget.annotations = [];
+    if (widget.revision.revision.id == null) widget.annotations = [];
   }
 
   @override
@@ -85,16 +86,70 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                   itemCount: widget.annotations!.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  padding: EdgeInsets.only(left: 20, right: 5),
                   separatorBuilder: (context, index) {
                     return const Divider(endIndent: 5, indent: 5);
                   },
                   itemBuilder: (context, index) {
-                    return Column(
+                    return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Título: ${widget.annotations![index].title}', style: TextStyle(color: Colors.black54)),
-                        Text('Descrição: ${widget.annotations![index].text}', style: TextStyle(color: Colors.black54)),
+                        Expanded(
+                          flex: 18,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('Título: ${widget.annotations![index].title}', style: TextStyle(color: Colors.black54)),
+                              Text('Descrição: ${widget.annotations![index].text}', style: TextStyle(color: Colors.black54)),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            height: 35,
+                            child: IconButton(
+                                onPressed: () async {
+                                  var id = widget.annotations![index].id;
+
+                                  await DialogAnnotation().build(
+                                      titleArg: widget.annotations![index].title,
+                                      descriptionArg: widget.annotations![index].text ?? '',
+                                      context, <AnnotationRevision>(String title, String description) async {
+                                    if (id != null) {
+                                      widget.annotations![index].title = title;
+                                      widget.annotations![index].text = description;
+                                    } else {
+                                      widget.annotations!.add(Annotation(title: title, text: description));
+                                    }
+
+                                    setState(() {});
+                                  });
+                                },
+                                icon: Icon(Icons.edit, size: 18, color: Colors.blue)),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            height: 35,
+                            child: IconButton(
+                                onPressed: () async {
+                                  if (widget.annotations![index].id != null) {
+                                    await DeleteAnnotation(AnnotationDatabase()).deleteById(widget.annotations![index].id!);
+                                  }
+
+                                  setState(() {
+                                    FocusScope.of(context).requestFocus(FocusNode());
+                                    widget.annotations!.removeAt(index);
+                                    MessageUser.message(context, 'Deletado com sucesso!!!');
+                                  });
+                                },
+                                icon: Icon(Icons.delete, size: 18, color: Colors.red)),
+                          ),
+                        )
                       ],
                     );
                   },
@@ -111,8 +166,8 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
             () async {
               try {
                 if (!formKey.currentState!.validate()) return;
-                FocusScope.of(context).requestFocus(FocusNode());
 
+                widget.revision.revision.setId(widget.revision.revision.id);
                 widget.revision.revision.setTitle(title.text);
                 widget.revision.revision.setDescription(description.text);
                 widget.revision.revision.setDateCreational(widget.revision.revision.dateCreational);
@@ -121,28 +176,27 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
 
                 if (idRevision == null) return;
 
-                for (Annotation e in widget.annotations!) {
-                  registerAnnotation.annotation.setTitle(e.title ?? '');
-                  registerAnnotation.annotation.setText(e.text ?? '');
-                  registerAnnotation.annotation.setIdRevision(idRevision);
+                for (Annotation annotation in widget.annotations!) {
+                  registerAnnotation.annotation.setTitle(annotation.title ?? '');
+                  registerAnnotation.annotation.setText(annotation.text ?? '');
+                  registerAnnotation.annotation.setIdRevision(widget.revision.revision.id ?? idRevision);
                   registerAnnotation.annotation.setDateText(null);
-
-                  await registerAnnotation.write();
+                  annotation.id == null
+                      ? await registerAnnotation.write()
+                      : await UpdateAnnotation(
+                              AnnotationDatabase(),
+                              Annotation(
+                                id: annotation.id,
+                                idRevision: annotation.idRevision,
+                                title: annotation.title,
+                                text: annotation.text,
+                              ),
+                              StatusNotification())
+                          .write();
                 }
 
-                widget.revision.registerDate.date.setDate(widget.revision.registerDate.date.dateRevision);
-                widget.revision.registerDate.date.setIdRevision(widget.revision.revision.id ?? idRevision);
-                widget.revision.registerDate.date.setNextDate(nextDate);
-                widget.revision.registerDate.date.setDay(widget.revision.registerDate.date.day);
-
-                if (nextDate == '') {
-                  widget.revision.registerDate.date.setNextDate(null);
-                  widget.revision.registerDate.date.setDay(0);
-                }
-
-                var result = await widget.revision.registerDate.writeDateRevision();
-
-                if (result != null && context.mounted) {
+                if (idRevision != null && context.mounted) {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   MessageUser.message(context, widget.revision.message.message);
                   Navigator.pop(context, true);
                 }

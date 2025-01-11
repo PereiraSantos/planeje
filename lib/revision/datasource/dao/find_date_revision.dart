@@ -21,12 +21,8 @@ class FindDateRevisionDao {
           ),
           DateRevision(
             dateRevision: element['date_revision'],
-            hourEnd: element['hour_end'],
-            hourInit: element['hour_init'],
             idRevision: element['id_revision'],
-            nextDate: element['next_date_revision'],
             id: element['id_date'],
-            day: element['day'],
           ),
         ),
       );

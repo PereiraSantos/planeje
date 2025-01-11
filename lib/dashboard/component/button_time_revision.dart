@@ -51,23 +51,23 @@ class ButtonTimeRevision extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Visibility(
-            visible: revisionTime.dateRevision.hourInit != null,
+            visible: true, //revisionTime.dateRevision.hourInit != null,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 labelCard('Próxima:'),
-                Expanded(
+                /*  Expanded(
                   child: SizedBox(
                     width: double.maxFinite,
                     child: TextCard(
                       padding: const EdgeInsets.only(top: 0, left: 5),
                       revisionEntity: FormatDate.formatDateString(
-                          nextRevision(revisionTime.dateRevision.nextDate!, revisionTime.dateRevision.day!)),
+                          nextRevision(revisionTime.dateRevision.dateRevision!, revisionTime.dateRevision.day!)),
                       maxLines: 1,
                     ),
                   ),
-                ),
+                ),*/
               ],
             ),
           ),
@@ -75,8 +75,8 @@ class ButtonTimeRevision extends StatelessWidget {
         Expanded(
           flex: 2,
           child: Visibility(
-            visible:
-                !(revisionTime.dateRevision.status ?? false) && revisionTime.dateRevision.hourInit == null,
+            visible: true,
+            // !(revisionTime.dateRevision.status ?? false) && revisionTime.dateRevision.hourInit == null,
             replacement: Align(
               alignment: Alignment.bottomRight,
               child: SizedBox(
@@ -86,7 +86,7 @@ class ButtonTimeRevision extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 5),
                   child: IconButton(
                     onPressed: () async {
-                      await UpdateHour(DateRevisionDatabaseDataSource()).updateHourEnd(
+                      /*  await UpdateHour(DateRevisionDatabaseDataSource()).updateHourEnd(
                           getTime(),
                           revisionTime.dateRevision.nextDate!,
                           nextRevision(revisionTime.dateRevision.nextDate!, revisionTime.dateRevision.day!),
@@ -96,7 +96,7 @@ class ButtonTimeRevision extends StatelessWidget {
                           .whenComplete(() {
                         underReviewNotifier.resetIdDateRevision();
                         finishReviser();
-                      });
+                      });*/
                     },
                     icon: const Icon(Icons.stop_circle_outlined),
                     padding: EdgeInsets.zero,

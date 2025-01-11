@@ -116,7 +116,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `description` TEXT, `date_creational` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `next_date_revision` TEXT, `hour_init` TEXT, `hour_end` TEXT, `id_revision` INTEGER, `status` INTEGER, `day` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `id_revision` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
         await database.execute(
@@ -294,12 +294,7 @@ class _$DateRevisionDao extends DateRevisionDao {
             (DateRevision item) => <String, Object?>{
                   'id_date': item.id,
                   'date_revision': item.dateRevision,
-                  'next_date_revision': item.nextDate,
-                  'hour_init': item.hourInit,
-                  'hour_end': item.hourEnd,
-                  'id_revision': item.idRevision,
-                  'status': item.status == null ? null : (item.status! ? 1 : 0),
-                  'day': item.day
+                  'id_revision': item.idRevision
                 }),
         _dateRevisionUpdateAdapter = UpdateAdapter(
             database,
@@ -308,12 +303,7 @@ class _$DateRevisionDao extends DateRevisionDao {
             (DateRevision item) => <String, Object?>{
                   'id_date': item.id,
                   'date_revision': item.dateRevision,
-                  'next_date_revision': item.nextDate,
-                  'hour_init': item.hourInit,
-                  'hour_end': item.hourEnd,
-                  'id_revision': item.idRevision,
-                  'status': item.status == null ? null : (item.status! ? 1 : 0),
-                  'day': item.day
+                  'id_revision': item.idRevision
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -332,12 +322,7 @@ class _$DateRevisionDao extends DateRevisionDao {
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             dateRevision: row['date_revision'] as String?,
-            nextDate: row['next_date_revision'] as String?,
-            hourInit: row['hour_init'] as String?,
-            hourEnd: row['hour_end'] as String?,
-            idRevision: row['id_revision'] as int?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            day: row['day'] as int?));
+            idRevision: row['id_revision'] as int?));
   }
 
   @override
@@ -346,12 +331,7 @@ class _$DateRevisionDao extends DateRevisionDao {
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             dateRevision: row['date_revision'] as String?,
-            nextDate: row['next_date_revision'] as String?,
-            hourInit: row['hour_init'] as String?,
-            hourEnd: row['hour_end'] as String?,
-            idRevision: row['id_revision'] as int?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            day: row['day'] as int?),
+            idRevision: row['id_revision'] as int?),
         arguments: [id]);
   }
 
@@ -362,12 +342,7 @@ class _$DateRevisionDao extends DateRevisionDao {
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             dateRevision: row['date_revision'] as String?,
-            nextDate: row['next_date_revision'] as String?,
-            hourInit: row['hour_init'] as String?,
-            hourEnd: row['hour_end'] as String?,
-            idRevision: row['id_revision'] as int?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            day: row['day'] as int?),
+            idRevision: row['id_revision'] as int?),
         arguments: [idRevision]);
   }
 
@@ -410,12 +385,7 @@ class _$DateRevisionDao extends DateRevisionDao {
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             dateRevision: row['date_revision'] as String?,
-            nextDate: row['next_date_revision'] as String?,
-            hourInit: row['hour_init'] as String?,
-            hourEnd: row['hour_end'] as String?,
-            idRevision: row['id_revision'] as int?,
-            status: row['status'] == null ? null : (row['status'] as int) != 0,
-            day: row['day'] as int?),
+            idRevision: row['id_revision'] as int?),
         arguments: [id]);
   }
 
@@ -1006,6 +976,12 @@ class _$UserDao extends UserDao {
         mapper: (Map<String, Object?> row) =>
             User(row['login'] as String, row['password'] as String),
         arguments: [login, password]);
+  }
+
+  @override
+  Future<int?> haveRegistration() async {
+    return _queryAdapter.query('select count(login) from user',
+        mapper: (Map<String, Object?> row) => row.values.first as int);
   }
 
   @override

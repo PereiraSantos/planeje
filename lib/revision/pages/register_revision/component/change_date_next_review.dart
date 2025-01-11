@@ -30,12 +30,12 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
 
   void generateNextRevision({int? value, bool? edit = false}) {
     var dateTemp = FormatDate.formatDate(FormatDate.newDate());
-
+/*
     if (widget.revisionEntity?.nextDate != null) dateTemp = widget.revisionEntity!.nextDate!;
     if (dateNextRevision != '') dateTemp = dateNextRevision;
     if (edit!) {
       dateTemp = widget.revisionEntity!.nextDate ?? FormatDate.formatDate(FormatDate.newDate());
-    }
+    }*/
 
     dateNextRevision = nextRevision(dateTemp, value ?? int.parse(day.text));
 
@@ -61,12 +61,12 @@ class _ChangeDateNextReviewState extends State<ChangeDateNextReview> {
   @override
   void initState() {
     super.initState();
-    if (widget.revisionEntity?.day != null) {
+    /* if (widget.revisionEntity?.day != null) {
       day.text = (widget.revisionEntity!.day).toString();
       dateNextRevision = (widget.revisionEntity!.nextDate).toString();
       showRevisionDate = true;
       widget.onClickCalendar(dateNextRevision);
-    }
+    }*/
   }
 
   @override

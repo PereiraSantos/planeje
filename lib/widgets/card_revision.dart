@@ -71,14 +71,14 @@ class CardRevision extends StatelessWidget {
               }
             },
           ),
-          SizedBox(
+          /*  SizedBox(
             width: double.maxFinite,
             child: TextCard(
               padding: const EdgeInsets.only(left: 15, right: 0, top: 2),
               revisionEntity: revisionTime.dateRevision.nextDate != null ? FormatDate.formatDateString('${revisionTime.dateRevision.nextDate}') : '',
               maxLines: 5,
             ),
-          ),
+          ),*/
           child ?? const SizedBox(),
         ],
       ),

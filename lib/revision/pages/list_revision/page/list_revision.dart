@@ -38,7 +38,7 @@ class _ListRevisionState extends State<ListRevision> {
         elevation: 0,
         title: const Text(
           'Revisão',
-          style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
         actions: [
           AddAppBarWidget(
@@ -55,6 +55,7 @@ class _ListRevisionState extends State<ListRevision> {
                   ),
                 ),
               );
+
               if (result) setState(() {});
             },
           )
@@ -122,6 +123,8 @@ class _ListRevisionState extends State<ListRevision> {
                           //  child: CardRevision(revisionTime: snapshot.data![index]),
                           child: ExpansionTileWidgets(
                             revision: snapshot.data![index].revision,
+                            dateRevision: snapshot.data![index].dateRevision,
+                            onClick: () => setState(() {}),
                           ),
                         ),
                       ),

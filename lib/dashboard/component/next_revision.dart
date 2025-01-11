@@ -32,25 +32,19 @@ class NextRevision extends StatelessWidget {
   String getTime() => FormatDate.formatTimeByString(FormatDate.newDate());
 
   Future<void> updateStatus(int id) async {
-    DateRevision? dateRevision =
-        await FindDateRevision(DateRevisionDatabaseDataSource()).findDateRevisionById(id);
+    DateRevision? dateRevision = await FindDateRevision(DateRevisionDatabaseDataSource()).findDateRevisionById(id);
 
-    if (dateRevision != null && (dateRevision.status ?? false)) {
+    if (dateRevision != null) {
       var result = await RegisterDateRevision(
           DateRevisionDatabaseDataSource(),
           DateRevision(
-            status: false,
             dateRevision: dateRevision.dateRevision,
-            nextDate: dateRevision.nextDate,
             idRevision: dateRevision.idRevision,
-            day: dateRevision.day,
           )).writeDateRevision();
 
       underReviewNotifier.setIdDateRevision(result!).update();
     } else {
-      await UpdateHour(DateRevisionDatabaseDataSource())
-          .updateStatus(false, id)
-          .whenComplete(() => underReviewNotifier.setIdDateRevision(id).update());
+      await UpdateHour(DateRevisionDatabaseDataSource()).updateStatus(false, id).whenComplete(() => underReviewNotifier.setIdDateRevision(id).update());
     }
   }
 
@@ -90,8 +84,7 @@ class NextRevision extends StatelessWidget {
                                 RevisionDatabaseDataSource(),
                                 snapshot.data![index].revision,
                                 StatusNotification(TypeMessage.Atualizar),
-                                UpdateDateRevision(
-                                    DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
+                                UpdateDateRevision(DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
                               ),
                             ),
                           ),
@@ -130,8 +123,7 @@ class NextRevision extends StatelessWidget {
                                   width: double.maxFinite,
                                   child: TextCard(
                                     padding: const EdgeInsets.only(bottom: 0, top: 3),
-                                    revisionEntity: FormatDate.formatDateString(
-                                        "${snapshot.data![index].dateRevision.nextDate}"),
+                                    revisionEntity: FormatDate.formatDateString("${snapshot.data![index].dateRevision.dateRevision}"),
                                     maxLines: 5,
                                     textAlign: TextAlign.right,
                                   ),
@@ -145,9 +137,7 @@ class NextRevision extends StatelessWidget {
                                     width: 35,
                                     height: 25,
                                     child: IconButton(
-                                      onPressed: () async =>
-                                          await updateStatus(snapshot.data![index].dateRevision.id!)
-                                              .whenComplete(() {
+                                      onPressed: () async => await updateStatus(snapshot.data![index].dateRevision.id!).whenComplete(() {
                                         finishUpdaterReviser();
                                       }),
                                       icon: const Icon(

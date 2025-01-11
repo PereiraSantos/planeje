@@ -13,4 +13,8 @@ class Credentials {
   Future<void> insertUser(User user) async {
     return await userDatabaseFactory.insertUser(user);
   }
+
+  Future<int?> haveRegistration() async {
+    return await userDatabaseFactory.haveRegistration();
+  }
 }

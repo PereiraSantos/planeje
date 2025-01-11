@@ -8,4 +8,7 @@ abstract class UserDao {
 
   @Query('select * from user where login = :login and password = :password')
   Future<User?> findUserLoginPassword(String login, String password);
+
+  @Query('select count(login) from user')
+  Future<int?> haveRegistration();
 }

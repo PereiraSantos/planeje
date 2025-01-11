@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                       hintText: 'Senha',
                       suffixIcon: IconButton(
                         onPressed: () => setState(() => obscureText = !obscureText),
-                        icon: Icon(obscureText ? Icons.lock_outline : Icons.lock_open_rounded),
+                        icon: Icon(obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined),
                       ),
                     ),
                     obscureText: obscureText,
