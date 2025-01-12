@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:planeje/dashboard/controller/under_review_notifier.dart';
 import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
-import 'package:planeje/revision/pages/list_revision/component/text_list.dart';
 import 'package:planeje/revision/utils/update_hour.dart';
 import 'package:planeje/utils/format_date.dart';
 

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:planeje/annotation/datasource/dao/annotation_dao.dart';
-import 'package:planeje/learn/datasource/dao/learn_dao.dart';
-import 'package:planeje/learn/entities/learn.dart';
 import 'package:planeje/login/datasource/dao/user_dao.dart';
 import 'package:planeje/login/entities/user.dart';
 import 'package:planeje/quiz_revision/datasource/dao/question_dao.dart';
@@ -10,10 +8,6 @@ import 'package:planeje/quiz_revision/datasource/dao/quiz_dao.dart';
 import 'package:planeje/revision/datasource/dao/date_revision_dao.dart';
 import 'package:planeje/revision/datasource/dao/revision_dao.dart';
 import 'package:planeje/settings/datasource/dao/setting_dao.dart';
-import 'package:planeje/suggestion/datasource/dao/suggestion_dao.dart';
-import 'package:planeje/suggestion/entities/suggestion.dart';
-import 'package:planeje/utils/cache/cache.dart';
-import 'package:planeje/utils/cache/cache_dao.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:sqflite/sqflite.dart' as sqflite;
@@ -61,10 +55,7 @@ final migration6to7 = Migration(6, 7, (database) async {
   Annotation,
   Quiz,
   Question,
-  Learn,
-  Cache,
   Settings,
-  Suggestion,
   User,
 ])
 abstract class AppDatabase extends FloorDatabase {
@@ -73,10 +64,7 @@ abstract class AppDatabase extends FloorDatabase {
   AnnotationDao get annotationDao;
   QuizDao get quizDao;
   QuestionDao get questionDao;
-  LearnDao get learnDao;
-  CacheDao get cacheDao;
   SettingDao get settingDao;
-  SuggestionDao get suggestionDao;
   UserDao get userDao;
 }
 

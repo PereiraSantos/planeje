@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/dashboard/pages/dashboard.dart';
 import 'package:planeje/dashboard/utils/check_setting.dart';
 import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';

@@ -1,3 +1,4 @@
 abstract class DeleteFactory<T> {
-  Future<T?> deleteById(int id);
+  Future<void> deleteById(int id);
+  Future<void> deleteByIdRevision(int id);
 }

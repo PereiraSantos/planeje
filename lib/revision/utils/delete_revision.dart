@@ -13,4 +13,9 @@ class DeleteRevision implements DeleteRevisionFactory {
   Future<Revision?> deleteById(int id) async {
     return await revisionDatabase.deleteRevisionById(id);
   }
+
+  @override
+  Future<void> deleteByIdRevision(int id) {
+    throw UnimplementedError();
+  }
 }

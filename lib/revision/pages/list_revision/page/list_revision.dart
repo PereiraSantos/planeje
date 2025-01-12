@@ -38,7 +38,7 @@ class _ListRevisionState extends State<ListRevision> {
         elevation: 0,
         title: const Text(
           'Revisão',
-          style: TextStyle(fontSize: 20, color: Colors.black54, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
         actions: [
           AddAppBarWidget(
@@ -85,6 +85,29 @@ class _ListRevisionState extends State<ListRevision> {
                             // ignore: use_build_context_synchronously
                             MessageUser.message(context, 'Erro ao abrir dialogo');
                           }
+                        } else {
+                          try {
+                            List<Annotation>? list = await GetAnnotation(AnnotationDatabase()).getAnnotationWidthIdRevision(snapshot.data![index].revision.id!);
+
+                            // ignore: use_build_context_synchronously
+                            var result = await Navigator.of(context).push(
+                              TransitionsBuilder.createRoute(
+                                RegisterRevisionPage(
+                                  revision: Update(
+                                    RevisionDatabaseDataSource(),
+                                    snapshot.data![index].revision,
+                                    StatusNotification(TypeMessage.Atualizar),
+                                    UpdateDateRevision(DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
+                                  ),
+                                  annotations: list,
+                                ),
+                              ),
+                            );
+                            if (result) setState(() {});
+                          } catch (e) {
+                            // ignore: use_build_context_synchronously
+                            MessageUser.message(context, 'Erro na rota revisão');
+                          }
                         }
                         return null;
                       },
@@ -92,40 +115,16 @@ class _ListRevisionState extends State<ListRevision> {
                         alignment: Alignment(-0.9, 0),
                         child: Icon(Icons.delete, color: Colors.red, size: 30),
                       ),
+                      secondaryBackground: const Align(
+                        alignment: Alignment(-0.9, 0),
+                        child: Icon(Icons.edit, color: Colors.blue, size: 30),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-                        child: GestureDetector(
-                          onTap: () async {
-                            try {
-                              List<Annotation>? list =
-                                  await GetAnnotation(AnnotationDatabase()).getAnnotationWidthIdRevision(snapshot.data![index].revision.id!);
-
-                              // ignore: use_build_context_synchronously
-                              var result = await Navigator.of(context).push(
-                                TransitionsBuilder.createRoute(
-                                  RegisterRevisionPage(
-                                    revision: Update(
-                                      RevisionDatabaseDataSource(),
-                                      snapshot.data![index].revision,
-                                      StatusNotification(TypeMessage.Atualizar),
-                                      UpdateDateRevision(DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
-                                    ),
-                                    annotations: list,
-                                  ),
-                                ),
-                              );
-                              if (result) setState(() {});
-                            } catch (e) {
-                              // ignore: use_build_context_synchronously
-                              MessageUser.message(context, 'Erro na rota revisão');
-                            }
-                          },
-                          //  child: CardRevision(revisionTime: snapshot.data![index]),
-                          child: ExpansionTileWidgets(
-                            revision: snapshot.data![index].revision,
-                            dateRevision: snapshot.data![index].dateRevision,
-                            onClick: () => setState(() {}),
-                          ),
+                        child: ExpansionTileWidgets(
+                          revision: snapshot.data![index].revision,
+                          dateRevision: snapshot.data![index].dateRevision,
+                          onClick: () => setState(() {}),
                         ),
                       ),
                     );
@@ -135,7 +134,7 @@ class _ListRevisionState extends State<ListRevision> {
                 return const Center(
                   child: Text(
                     "Não há revisão!!!",
-                    style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.w300),
+                    style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w300),
                   ),
                 );
               }

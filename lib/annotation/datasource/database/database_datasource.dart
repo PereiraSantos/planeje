@@ -7,14 +7,15 @@ import '../../entities/annotation_revision.dart';
 abstract class AnnotationDatabaseFactory {
   Future<int?> insertAnnotation(Annotation annotationEntity);
   Future<int?> updateAnnotation(Annotation annotationEntity);
-  Future<Annotation?> delete(int id);
+  Future<void> delete(int id);
   Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text);
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
+  Future<void> deleteByIdRevision(int id);
 }
 
 class AnnotationDatabase implements AnnotationDatabaseFactory {
   @override
-  Future<Annotation?> delete(int id) async {
+  Future<void> delete(int id) async {
     final database = await getInstance();
     return await database.annotationDao.delete(id);
   }
@@ -41,5 +42,11 @@ class AnnotationDatabase implements AnnotationDatabaseFactory {
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision) async {
     final database = await getInstance();
     return await database.annotationDao.getAnnotationWidthIdRevision(idRevision);
+  }
+
+  @override
+  Future<void> deleteByIdRevision(int id) async {
+    final database = await getInstance();
+    return await database.annotationDao.deleteByIdRevision(id);
   }
 }

@@ -92,6 +92,24 @@ class _ListQuizState extends State<ListQuiz> {
                             // ignore: use_build_context_synchronously
                             MessageUser.message(context, 'Erro ao abrir dialogo');
                           }
+                        } else {
+                          try {
+                            var result = await Navigator.of(context).push(
+                              TransitionsBuilder.createRoute(
+                                RegisterQuizPage(
+                                  registerQuiz: UpdateQuiz(
+                                    QuizDatabase(),
+                                    (snapshot.data![index]),
+                                    StatusNotification(TypeMessage.Atualizar),
+                                  ),
+                                ),
+                              ),
+                            );
+                            if (result) setState(() {});
+                          } catch (e) {
+                            // ignore: use_build_context_synchronously
+                            MessageUser.message(context, 'Erro na rota quiz revisão');
+                          }
                         }
                         return null;
                       },
@@ -99,57 +117,40 @@ class _ListQuizState extends State<ListQuiz> {
                         alignment: Alignment(-0.9, 0),
                         child: Icon(Icons.delete, color: Colors.red, size: 30),
                       ),
+                      secondaryBackground: const Align(
+                        alignment: Alignment(-0.9, 0),
+                        child: Icon(Icons.edit, color: Colors.blue, size: 30),
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-                        child: GestureDetector(
-                          onTap: () async {
-                            try {
-                              var result = await Navigator.of(context).push(
-                                TransitionsBuilder.createRoute(
-                                  RegisterQuizPage(
-                                    registerQuiz: UpdateQuiz(
-                                      QuizDatabase(),
-                                      (snapshot.data![index]),
-                                      StatusNotification(TypeMessage.Atualizar),
-                                    ),
-                                  ),
-                                ),
-                              );
-                              if (result) setState(() {});
-                            } catch (e) {
-                              // ignore: use_build_context_synchronously
-                              MessageUser.message(context, 'Erro na rota quiz revisão');
-                            }
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-                                child: Text("Tema: ${snapshot.data![index].topic ?? ''}", style: const TextStyle(fontSize: 16, color: Colors.black54)),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 05),
-                                child: Text("Pegunta: ${snapshot.data![index].description} ?",
-                                    overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 16, color: Colors.black54)),
-                              ),
-                              FutureBuilder(
-                                future: GetQuestion(QuestionDatabase()).getQuestionByIdQuiz(snapshot.data![index].id!),
-                                builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
-                                  if (snapshot.hasData) {
-                                    if (snapshot.data!.isNotEmpty) {
-                                      return ListQuestion(listQuestion: snapshot.data ?? []);
-                                    }
-
-                                    return const SizedBox();
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                              child: Text("Tema: ${snapshot.data![index].topic ?? ''}", style: const TextStyle(fontSize: 16, color: Colors.black54)),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 05),
+                              child: Text("Pegunta: ${snapshot.data![index].description} ?",
+                                  overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 16, color: Colors.black54)),
+                            ),
+                            FutureBuilder(
+                              future: GetQuestion(QuestionDatabase()).getQuestionByIdQuiz(snapshot.data![index].id!),
+                              builder: (BuildContext context, AsyncSnapshot<List<Question>?> snapshot) {
+                                if (snapshot.hasData) {
+                                  if (snapshot.data!.isNotEmpty) {
+                                    return ListQuestion(listQuestion: snapshot.data ?? []);
                                   }
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+
+                                  return const SizedBox();
+                                }
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -159,7 +160,7 @@ class _ListQuizState extends State<ListQuiz> {
                 return const Center(
                   child: Text(
                     "Não há quiz!!!",
-                    style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.w300),
+                    style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w300),
                   ),
                 );
               }
