@@ -108,6 +108,7 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                                         visible: snapshot.data![index].title != '',
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Expanded(
                                               child: Text(
@@ -127,6 +128,7 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                                       ),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: Text(

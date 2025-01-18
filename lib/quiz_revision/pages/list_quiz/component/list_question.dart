@@ -33,29 +33,12 @@ class _ListQuestionState extends State<ListQuestion> {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.only(left: 02, right: 10),
+              padding: const EdgeInsets.only(left: 05, right: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 08),
-                      child: Text(
-                        '${(index + 1).toString()}:',
-                        style: const TextStyle(fontSize: 16, color: Colors.black45),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 12,
-                    child: Text(
-                      '${widget.listQuestion[index].description}',
-                      style: const TextStyle(fontSize: 16, color: Colors.black45),
-                    ),
-                  ),
                   Expanded(
                     flex: 1,
                     child: CheckBoxCustom(
@@ -64,6 +47,13 @@ class _ListQuestionState extends State<ListQuestion> {
                         listQuestionController.updateAnswer(index, value, widget.listQuestion);
                         setState(() {});
                       },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 12,
+                    child: Text(
+                      '${widget.listQuestion[index].description}',
+                      style: const TextStyle(fontSize: 16, color: Colors.black45),
                     ),
                   ),
                 ],
@@ -94,8 +84,7 @@ class _ListQuestionState extends State<ListQuestion> {
                   margin: const EdgeInsets.only(left: 05),
                   child: const Text(
                     "Verificar resposta",
-                    style: TextStyle(
-                        fontSize: 14, color: Color.fromARGB(137, 10, 5, 5), fontWeight: FontWeight.w400),
+                    style: TextStyle(fontSize: 14, color: Color.fromARGB(137, 10, 5, 5), fontWeight: FontWeight.w400),
                   ),
                 ),
               ),

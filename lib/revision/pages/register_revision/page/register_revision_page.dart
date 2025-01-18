@@ -76,7 +76,16 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                 TextButton(
                   onPressed: () async {
                     await DialogAnnotation().build(context, <AnnotationRevision>(String title, String description) async {
-                      widget.annotations!.add(Annotation(title: title, text: description));
+                      Annotation annotation = Annotation(title: title, text: description);
+
+                      if (widget.annotations!.isEmpty) annotation.setId(-1);
+                      if (widget.annotations!.isNotEmpty) {
+                        var id = (widget.annotations!.last.id ?? -1);
+                        if (id > 0) id = 0;
+                        annotation.setId(id - 1);
+                      }
+
+                      widget.annotations!.add(annotation);
                       setState(() {});
                     });
                   },
@@ -112,18 +121,12 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                             height: 35,
                             child: IconButton(
                                 onPressed: () async {
-                                  var id = widget.annotations![index].id;
-
                                   await DialogAnnotation().build(
                                       titleArg: widget.annotations![index].title,
                                       descriptionArg: widget.annotations![index].text ?? '',
                                       context, <AnnotationRevision>(String title, String description) async {
-                                    if (id != null) {
-                                      widget.annotations![index].title = title;
-                                      widget.annotations![index].text = description;
-                                    } else {
-                                      widget.annotations!.add(Annotation(title: title, text: description));
-                                    }
+                                    widget.annotations![index].title = title;
+                                    widget.annotations![index].text = description;
 
                                     setState(() {});
                                   });
@@ -177,6 +180,11 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                 if (idRevision == null) return;
 
                 for (Annotation annotation in widget.annotations!) {
+                  if (annotation.id != null && annotation.id! < 0) {
+                    registerAnnotation.annotation.setId(null);
+                    annotation.id = null;
+                  }
+
                   registerAnnotation.annotation.setTitle(annotation.title ?? '');
                   registerAnnotation.annotation.setText(annotation.text ?? '');
                   registerAnnotation.annotation.setIdRevision(widget.revision.revision.id ?? idRevision);

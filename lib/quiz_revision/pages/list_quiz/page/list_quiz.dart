@@ -126,13 +126,16 @@ class _ListQuizState extends State<ListQuiz> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-                              child: Text("Tema: ${snapshot.data![index].topic ?? ''}", style: const TextStyle(fontSize: 16, color: Colors.black54)),
+                            Visibility(
+                              visible: snapshot.data![index].topic != '',
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+                                child: Text(snapshot.data![index].topic ?? '', style: const TextStyle(fontSize: 16, color: Colors.black54)),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10, right: 10, bottom: 05),
-                              child: Text("Pegunta: ${snapshot.data![index].description} ?",
+                              child: Text("${snapshot.data![index].description}?",
                                   overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 16, color: Colors.black54)),
                             ),
                             FutureBuilder(
