@@ -15,23 +15,19 @@ class FormatDate {
 
   static String getDateNumber() => FormatDate.formatDateBase(FormatDate.newDate()).replaceAll('/', '');
 
-  static String formatDateWek(String date) =>
-      date != '' ? DateFormat("EEEE - MMMM").format(dateParse(date)).replaceAll("-feira", "") : '';
+  static String formatDateWek(String date) => date != '' ? DateFormat("EEEE - MMMM").format(dateParse(date)).replaceAll("-feira", "") : '';
 
-  static String formatDateString(String date) =>
-      date != '' ? DateFormat("dd/MM/yy").format(dateParse(date)) : '';
+  static String formatDateString(String date) => date != '' ? DateFormat("dd/MM/yy").format(dateParse(date)) : '';
 
-  static String formatDateStringDb(String date) =>
-      date != '' ? DateFormat("dd/MM/yyyy").format(dateParse(date)) : '';
+  static String formatDateStringDb(String date) => date != '' ? DateFormat("dd/MM/yyyy").format(dateParse(date)) : '';
 
   static String formatDateStringNotification(DateTime date) => DateFormat('dd/MM/yyyy hh:mm:ss').format(date);
 
   static DateTime dateParse(String date) => DateFormat('dd/MM/yyyy').parse(date);
 
-  static DateTime dateParseAlert(String date) => DateFormat('yyyy-MM-dd hh:mm:ss').parse(date);
+  static DateTime dateTimeParse(String date) => DateFormat('dd/MM/yyyy hh:mm:ss').parse(date);
 
-  static String formatTimeString(String time) =>
-      time != '' ? DateFormat("hh:mm").format(timeParse(time)) : '';
+  static String formatTimeString(String time) => time != '' ? DateFormat("hh:mm").format(timeParse(time)) : '';
 
   static DateTime timeParse(String date) => DateFormat('hh:mm').parse(date);
 
