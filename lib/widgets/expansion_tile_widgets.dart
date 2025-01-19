@@ -28,6 +28,13 @@ class ExpansionTileWidgets extends StatefulWidget {
 class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
   bool reviser = false;
 
+  String componentDate() {
+    DateTime date = FormatDate.dateTimeParse(widget.dateRevision.dateRevision!);
+    int day = FormatDate.newDate().difference(date).inDays;
+
+    return day > 0 ? '- há $day dias' : '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
@@ -37,7 +44,10 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Conteúdo: ${widget.revision.description ?? ''}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300)),
-          Text(widget.dateRevision.dateRevision == null ? 'Não revisada' : 'Revisada: ${widget.dateRevision.dateRevision ?? ''}',
+          Text(
+              widget.dateRevision.dateRevision == null
+                  ? 'Não revisada'
+                  : 'Revisada: ${FormatDate.formatDateString(widget.dateRevision.dateRevision!)} ${componentDate()}',
               style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w300))
         ],
       ),
