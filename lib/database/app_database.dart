@@ -21,12 +21,11 @@ import '../revision/entities/revision.dart';
 import '../settings/entities/settings.dart';
 
 part 'app_database.g.dart';
-/*
-final migration1to2 = Migration(1, 2, (database) async {
-  await database.execute('CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT)');
-  await database.execute('ALTER TABLE annotation ADD COLUMN id_category INTEGER');
-});
 
+final migration1to2 = Migration(1, 2, (database) async {
+  await database.execute('ALTER TABLE user ADD COLUMN keep_logged INTEGER');
+});
+/*
 final migration2to3 = Migration(2, 3, (database) async {
   await database.execute('CREATE TABLE IF NOT EXISTS `cache` (`id` INTEGER PRIMARY KEY, `hash` TEXT)');
 });
@@ -69,7 +68,7 @@ abstract class AppDatabase extends FloorDatabase {
 }
 
 Future<AppDatabase> migrationDatabase() async {
-  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([]).build();
+  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([migration1to2]).build();
 }
 
 Future<AppDatabase> getInstance() async {

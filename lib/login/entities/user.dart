@@ -9,5 +9,11 @@ class User {
   @ColumnInfo(name: 'password')
   String password;
 
-  User(this.login, this.password);
+  @ColumnInfo(name: 'keep_logged')
+  bool keepLogged;
+
+  @ColumnInfo(name: 'logged_in')
+  bool loggedIn;
+
+  User(this.login, this.password, this.keepLogged, this.loggedIn);
 }

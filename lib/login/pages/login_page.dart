@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:planeje/dashboard/pages/home.dart';
 import 'package:planeje/login/datasource/database/user_database.dart';
 import 'package:planeje/login/entities/user.dart';
+import 'package:planeje/login/entities/user_global.dart';
 import 'package:planeje/login/utils/credentials.dart';
 import 'package:planeje/register/pages/register_page.dart';
 import 'package:planeje/utils/message_user.dart';
+import 'package:planeje/widgets/checkbox_custom.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,6 +20,29 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _login = TextEditingController();
   final TextEditingController _password = TextEditingController();
   bool obscureText = true;
+  bool keepMeLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    initValues();
+  }
+
+  Future<void> initValues() async {
+    User? user = await Credentials(UserDatabase()).findLoggedIn();
+
+    user??=  UserGlobal().getUser();
+    
+    if (user != null){
+      _login.text = user.login;
+      _password.text = user.password;
+
+     if (user.keepLogged) keepMeLoggedIn = user.keepLogged;
+
+      setState(() {});
+    } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,15 +86,22 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 15, right: 10),
+                  padding: const EdgeInsets.only(left: 0, top: 15, right: 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
-                          onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => RegisterPage())),
-                          child: const Text('Cadastre-se')),
-                      //GestureDetector(onTap: () {}, child: const Text('Esqueci a senha')),
-                      GestureDetector(onTap: () {}, child: const SizedBox()),
+                      Expanded(child: CheckBoxCustom(onClick: (value){
+                          setState(() => keepMeLoggedIn = value?? false);
+                      },isChecked: keepMeLoggedIn, activeColor: keepMeLoggedIn ? Colors.white : Colors.grey, checkColor: Colors.green,),),
+                      Expanded(
+                        flex: 8,
+                        child: const Text('Mantenha-me conectado')),
+                       Expanded(
+                        flex: 3,
+                         child: GestureDetector(
+                            onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => RegisterPage())),
+                            child: const Text('Cadastre-se')),
+                       ),
                     ],
                   ),
                 ),
@@ -81,10 +113,14 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () async {
                         if (!_formKey.currentState!.validate()) return;
                         FocusScope.of(context).requestFocus(FocusNode());
-
-                        await Credentials(UserDatabase()).login(User(_login.text, _password.text)) && context.mounted
-                            ? Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()))
-                            : MessageUser.message(context, 'Login incorreto!!!');
+                        User user = User(_login.text, _password.text, keepMeLoggedIn, true);
+                        if(await Credentials(UserDatabase()).login(user) && context.mounted){
+                          Credentials(UserDatabase()).updateKeepLogged(user);
+                          UserGlobal().user = user;
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
+                        } else {
+                          MessageUser.message(context, 'Login incorreto!!!');
+                        } 
                       },
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),
@@ -93,7 +129,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text('Entrar', style: TextStyle(fontSize: 18)),
                     ),
                   ),
-                )
+                ),
+                GestureDetector(onTap: () {}, child: const Text('Esqueci minha senha')),
+                
               ],
             ),
           ),

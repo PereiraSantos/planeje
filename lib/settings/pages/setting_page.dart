@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/login/datasource/database/user_database.dart';
+import 'package:planeje/login/entities/user.dart';
+import 'package:planeje/login/entities/user_global.dart';
 import 'package:planeje/login/pages/login_page.dart';
+import 'package:planeje/login/utils/credentials.dart';
 import 'package:planeje/settings/entities/settings.dart';
 import 'package:planeje/widgets/text_button_widget.dart';
 
@@ -86,7 +90,16 @@ class SettingPage extends StatelessWidget {
 
                 TextButtonWidget(
                   label: 'Sair',
-                  onClick: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const LoginPage())),
+                  onClick: () {
+                    User? user = UserGlobal().getUser();
+
+                    if (user != null) {
+                      user.loggedIn = false;
+                      Credentials(UserDatabase()).updateKeepLogged(user);
+                    }
+
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const LoginPage()));
+                  },
                   padding: const EdgeInsets.only(left: 0.0, right: 20.0, top: 5.0),
                 ),
               ],

@@ -75,7 +75,7 @@ class RegisterPage extends StatelessWidget {
                                 if (!_formKey.currentState!.validate()) return;
                                 FocusScope.of(context).requestFocus(FocusNode());
 
-                                await Credentials(UserDatabase()).insertUser(User(_login.text, _password.text));
+                                await Credentials(UserDatabase()).insertUser(User(_login.text, _password.text, false, false));
 
                                 if (context.mounted) {
                                   MessageUser.message(context, 'Cadastro realizado!!!');
