@@ -25,30 +25,13 @@ part 'app_database.g.dart';
 final migration1to2 = Migration(1, 2, (database) async {
   await database.execute('ALTER TABLE user ADD COLUMN keep_logged INTEGER');
 });
-/*
+
 final migration2to3 = Migration(2, 3, (database) async {
-  await database.execute('CREATE TABLE IF NOT EXISTS `cache` (`id` INTEGER PRIMARY KEY, `hash` TEXT)');
+  await database.execute('ALTER TABLE user ADD COLUMN logged_in INTEGER');
 });
 
-final migration3to4 = Migration(3, 4, (database) async {
-  await database.execute('ALTER TABLE date_revision ADD status INTEGER');
-  await database.execute('ALTER TABLE date_revision ADD day INTEGER');
-});
 
-final migration4to5 = Migration(4, 5, (database) async {
-  await database.execute('CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY, `keystone` TEXT, `value` TEXT)');
-});
-
-final migration5to6 = Migration(5, 6, (database) async {
-  await database.execute(
-      'CREATE TABLE IF NOT EXISTS `suggestion` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `id_learn` INTEGER,  `sortition` INTEGER)');
-});
-
-final migration6to7 = Migration(6, 7, (database) async {
-  await database.execute('CREATE TABLE IF NOT EXISTS `user` (`login` TEXT PRIMARY KEY, `password` TEXT)');
-});*/
-
-@Database(version: 1, entities: [
+@Database(version: 3, entities: [
   Revision,
   DateRevision,
   Annotation,
@@ -68,7 +51,7 @@ abstract class AppDatabase extends FloorDatabase {
 }
 
 Future<AppDatabase> migrationDatabase() async {
-  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([migration1to2]).build();
+  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([migration1to2, migration2to3]).build();
 }
 
 Future<AppDatabase> getInstance() async {
