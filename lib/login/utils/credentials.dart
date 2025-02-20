@@ -18,12 +18,9 @@ class Credentials {
     return await userDatabaseFactory.haveRegistration();
   }
 
-  Future<int?> updateKeepLogged(User user) async {
-    return await userDatabaseFactory.updateKeepLogged(user);
+  Future<int?> updateKeepLogged(bool keepLogged) async {
+    return await userDatabaseFactory.updateKeepLogged(keepLogged);
   }
 
-  Future<User?> findLoggedIn() async{
-    return await userDatabaseFactory.findLoggedIn();
-  }
 
 }

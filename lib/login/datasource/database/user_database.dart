@@ -5,8 +5,7 @@ abstract class UserDatabaseFactory {
   Future<User?> validUser(User user);
   Future<void> insertUser(User user);
   Future<int?> haveRegistration();
-  Future<int?> updateKeepLogged(User user);
-  Future<User?> findLoggedIn();
+  Future<int?> updateKeepLogged(bool keepLogged);
 }
 
 class UserDatabase implements UserDatabaseFactory {
@@ -29,14 +28,9 @@ class UserDatabase implements UserDatabaseFactory {
   }
   
   @override
-  Future<int?> updateKeepLogged(User user) async {
+  Future<int?> updateKeepLogged(bool keepLogged) async {
     final database = await getInstance();
-    return await database.userDao.updateKeepLogged(user.keepLogged, user.loggedIn, user.login, user.password);
+    return await database.userDao.updateKeepLogged(keepLogged);
   }
   
-  @override
-  Future<User?> findLoggedIn() async {
-    final database = await getInstance();
-    return await database.userDao.findLoggedIn();
-  }
 }

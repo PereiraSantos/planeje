@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:planeje/dashboard/pages/home.dart';
 import 'package:planeje/login/datasource/database/user_database.dart';
 import 'package:planeje/login/entities/user.dart';
-import 'package:planeje/login/entities/user_global.dart';
 import 'package:planeje/login/utils/credentials.dart';
 import 'package:planeje/register/pages/register_page.dart';
 import 'package:planeje/utils/message_user.dart';
@@ -10,6 +9,7 @@ import 'package:planeje/widgets/checkbox_custom.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -25,25 +25,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-
-    initValues();
   }
 
-  Future<void> initValues() async {
-    User? user = await Credentials(UserDatabase()).findLoggedIn();
-
-    user??=  UserGlobal().getUser();
-    
-    if (user != null){
-      _login.text = user.login;
-      _password.text = user.password;
-
-     if (user.keepLogged) keepMeLoggedIn = user.keepLogged;
-
-      setState(() {});
-    } 
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,10 +97,10 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () async {
                         if (!_formKey.currentState!.validate()) return;
                         FocusScope.of(context).requestFocus(FocusNode());
-                        User user = User(_login.text, _password.text, keepMeLoggedIn, true);
+                        User user = User(_login.text, _password.text, keepMeLoggedIn);
                         if(await Credentials(UserDatabase()).login(user) && context.mounted){
-                          Credentials(UserDatabase()).updateKeepLogged(user);
-                          UserGlobal().user = user;
+                          Credentials(UserDatabase()).updateKeepLogged(keepMeLoggedIn);
+                         
                           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
                         } else {
                           MessageUser.message(context, 'Login incorreto!!!');

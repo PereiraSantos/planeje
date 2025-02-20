@@ -3,6 +3,9 @@ import 'package:floor/floor.dart';
 @Entity(tableName: 'user')
 class User {
   @PrimaryKey(autoGenerate: false)
+  @ColumnInfo(name: 'id')
+  int id = 1;
+
   @ColumnInfo(name: 'login')
   String login;
 
@@ -12,8 +15,5 @@ class User {
   @ColumnInfo(name: 'keep_logged')
   bool keepLogged;
 
-  @ColumnInfo(name: 'logged_in')
-  bool loggedIn;
-
-  User(this.login, this.password, this.keepLogged, this.loggedIn);
+  User(this.login, this.password, this.keepLogged);
 }

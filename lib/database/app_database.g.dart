@@ -120,7 +120,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `user` (`login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, `logged_in` INTEGER NOT NULL, PRIMARY KEY (`login`))');
+            'CREATE TABLE IF NOT EXISTS `user` (`id` INTEGER NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -694,10 +694,10 @@ class _$UserDao extends UserDao {
             database,
             'user',
             (User item) => <String, Object?>{
+                  'id': item.id,
                   'login': item.login,
                   'password': item.password,
-                  'keep_logged': item.keepLogged ? 1 : 0,
-                  'logged_in': item.loggedIn ? 1 : 0
+                  'keep_logged': item.keepLogged ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -715,22 +715,9 @@ class _$UserDao extends UserDao {
   ) async {
     return _queryAdapter.query(
         'select * from user where login = ?1 and password = ?2',
-        mapper: (Map<String, Object?> row) => User(
-            row['login'] as String,
-            row['password'] as String,
-            (row['keep_logged'] as int) != 0,
-            (row['logged_in'] as int) != 0),
+        mapper: (Map<String, Object?> row) => User(row['login'] as String,
+            row['password'] as String, (row['keep_logged'] as int) != 0),
         arguments: [login, password]);
-  }
-
-  @override
-  Future<User?> findLoggedIn() async {
-    return _queryAdapter.query('select * from user where logged_in = 1',
-        mapper: (Map<String, Object?> row) => User(
-            row['login'] as String,
-            row['password'] as String,
-            (row['keep_logged'] as int) != 0,
-            (row['logged_in'] as int) != 0));
   }
 
   @override
@@ -740,16 +727,10 @@ class _$UserDao extends UserDao {
   }
 
   @override
-  Future<int?> updateKeepLogged(
-    bool keepLogged,
-    bool loggedIn,
-    String login,
-    String password,
-  ) async {
-    return _queryAdapter.query(
-        'update user set keep_logged = ?1, logged_in = ?2 where login = ?3 and password = ?4',
+  Future<int?> updateKeepLogged(bool keepLogged) async {
+    return _queryAdapter.query('update user set keep_logged = ?1',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [keepLogged ? 1 : 0, loggedIn ? 1 : 0, login, password]);
+        arguments: [keepLogged ? 1 : 0]);
   }
 
   @override
