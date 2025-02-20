@@ -14,13 +14,11 @@ class Credentials {
     return await userDatabaseFactory.insertUser(user);
   }
 
-  Future<int?> haveRegistration() async {
-    return await userDatabaseFactory.haveRegistration();
+  Future<User?> findUserById() async {
+    return await userDatabaseFactory.findUserById();
   }
 
   Future<int?> updateKeepLogged(bool keepLogged) async {
     return await userDatabaseFactory.updateKeepLogged(keepLogged);
   }
-
-
 }

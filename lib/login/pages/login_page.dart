@@ -8,8 +8,16 @@ import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/widgets/checkbox_custom.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({
+    super.key,
+    this.login,
+    this.password,
+    this.keepMeLoggedIn,
+  });
 
+  final String? login;
+  final String? password;
+  final bool? keepMeLoggedIn;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -19,15 +27,17 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _login = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  bool obscureText = true;
-  bool keepMeLoggedIn = false;
+  bool _obscureText = true;
+  bool _keepMeLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
+    _login.text = widget.login ?? '';
+    _password.text = widget.password ?? '';
+    _keepMeLoggedIn = widget.keepMeLoggedIn ?? false;
   }
 
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,11 +68,11 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       hintText: 'Senha',
                       suffixIcon: IconButton(
-                        onPressed: () => setState(() => obscureText = !obscureText),
-                        icon: Icon(obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+                        onPressed: () => setState(() => _obscureText = !_obscureText),
+                        icon: Icon(_obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined),
                       ),
                     ),
-                    obscureText: obscureText,
+                    obscureText: _obscureText,
                     validator: (value) {
                       if (value == null || value.isEmpty) return 'Senha obrigatória';
                       return null;
@@ -74,18 +84,23 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(child: CheckBoxCustom(onClick: (value){
-                          setState(() => keepMeLoggedIn = value?? false);
-                      },isChecked: keepMeLoggedIn, activeColor: keepMeLoggedIn ? Colors.white : Colors.grey, checkColor: Colors.green,),),
                       Expanded(
-                        flex: 8,
-                        child: const Text('Mantenha-me conectado')),
-                       Expanded(
+                        child: CheckBoxCustom(
+                          onClick: (value) {
+                            setState(() => _keepMeLoggedIn = value ?? false);
+                          },
+                          isChecked: _keepMeLoggedIn,
+                          activeColor: _keepMeLoggedIn ? Colors.white : Colors.grey,
+                          checkColor: Colors.green,
+                        ),
+                      ),
+                      Expanded(flex: 8, child: const Text('Mantenha-me conectado')),
+                      Expanded(
                         flex: 3,
-                         child: GestureDetector(
+                        child: GestureDetector(
                             onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => RegisterPage())),
                             child: const Text('Cadastre-se')),
-                       ),
+                      ),
                     ],
                   ),
                 ),
@@ -97,14 +112,14 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () async {
                         if (!_formKey.currentState!.validate()) return;
                         FocusScope.of(context).requestFocus(FocusNode());
-                        User user = User(_login.text, _password.text, keepMeLoggedIn);
-                        if(await Credentials(UserDatabase()).login(user) && context.mounted){
-                          Credentials(UserDatabase()).updateKeepLogged(keepMeLoggedIn);
-                         
+                        User user = User(_login.text, _password.text, _keepMeLoggedIn);
+                        if (await Credentials(UserDatabase()).login(user) && context.mounted) {
+                          Credentials(UserDatabase()).updateKeepLogged(_keepMeLoggedIn);
+
                           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
                         } else {
                           MessageUser.message(context, 'Login incorreto!!!');
-                        } 
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(const Color.fromARGB(221, 33, 149, 243)),
@@ -115,7 +130,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 GestureDetector(onTap: () {}, child: const Text('Esqueci minha senha')),
-                
               ],
             ),
           ),

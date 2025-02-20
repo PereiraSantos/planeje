@@ -92,7 +92,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -721,9 +721,10 @@ class _$UserDao extends UserDao {
   }
 
   @override
-  Future<int?> haveRegistration() async {
-    return _queryAdapter.query('select count(login) from user',
-        mapper: (Map<String, Object?> row) => row.values.first as int);
+  Future<User?> findUserById() async {
+    return _queryAdapter.query('select * from user where id = 1',
+        mapper: (Map<String, Object?> row) => User(row['login'] as String,
+            row['password'] as String, (row['keep_logged'] as int) != 0));
   }
 
   @override

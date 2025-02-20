@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:planeje/dashboard/pages/home.dart';
 import 'package:planeje/login/datasource/database/user_database.dart';
+import 'package:planeje/login/entities/user.dart';
 import 'package:planeje/login/pages/login_page.dart';
 import 'package:planeje/login/utils/credentials.dart';
 import 'package:planeje/register/pages/register_page.dart';
@@ -16,13 +18,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    haveRegistration();
+    findUserById();
   }
 
-  Future<void> haveRegistration() async {
-    int isRegistration = await Credentials(UserDatabase()).haveRegistration() ?? 0;
-    if(isRegistration > 0){
-      _goTo(LoginPage());
+  Future<void> findUserById() async {
+    User? user = await Credentials(UserDatabase()).findUserById();
+
+    if (user != null) {
+      user.keepLogged ? _goTo(Home()) : _goTo(LoginPage());
     } else {
       _goTo(RegisterPage());
     }

@@ -4,7 +4,7 @@ import 'package:planeje/login/entities/user.dart';
 abstract class UserDatabaseFactory {
   Future<User?> validUser(User user);
   Future<void> insertUser(User user);
-  Future<int?> haveRegistration();
+  Future<User?> findUserById();
   Future<int?> updateKeepLogged(bool keepLogged);
 }
 
@@ -22,15 +22,14 @@ class UserDatabase implements UserDatabaseFactory {
   }
 
   @override
-  Future<int?> haveRegistration() async {
+  Future<User?> findUserById() async {
     final database = await getInstance();
-    return await database.userDao.haveRegistration();
+    return await database.userDao.findUserById();
   }
-  
+
   @override
   Future<int?> updateKeepLogged(bool keepLogged) async {
     final database = await getInstance();
     return await database.userDao.updateKeepLogged(keepLogged);
   }
-  
 }

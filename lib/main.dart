@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:planeje/dashboard/pages/home.dart';
 import 'package:planeje/database/app_database.dart';
 
 import 'package:planeje/login/pages/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await migrationDatabase();
+  await migrationDatabase();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -36,8 +35,7 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [
         Locale('pt', 'BR'),
       ],
-    //  home: const SplashScreen(),
-    home: Home(),
+      home: const SplashScreen(),
     );
   }
 }
