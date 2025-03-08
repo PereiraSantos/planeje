@@ -20,6 +20,7 @@ class TextFormFieldWidget extends StatelessWidget {
     this.padding = const EdgeInsets.only(left: 20.0, top: 10, right: 20, bottom: 10),
     this.fontSize = 18,
     this.autofocus,
+    this.contentPadding,
   });
 
   final TextEditingController controller;
@@ -37,6 +38,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? fontSize;
   final bool? autofocus;
+  final EdgeInsetsGeometry? contentPadding;
 
   InputBorder theme(double value) {
     return OutlineInputBorder(
@@ -53,40 +55,42 @@ class TextFormFieldWidget extends StatelessWidget {
     return Padding(
       padding: padding!,
       child: TextFormField(
-          controller: controller,
-          maxLines: maxLine,
-          minLines: minLine,
-          readOnly: readOnly,
-          autofocus: autofocus ?? true,
-          keyboardType: keyboardType,
-          inputFormatters: inputFormatter,
-          enableInteractiveSelection: false,
-          textCapitalization: TextCapitalization.sentences,
-          style: TextStyle(fontSize: fontSize!, color: Colors.black54),
-          decoration: InputDecoration(
-            labelText: hintText,
-            labelStyle: TextStyle(
-              color: Colors.black54,
-              fontSize: fontSize!,
-              fontWeight: FontWeight.w300,
-            ),
-            suffixIcon: suffixIcon,
-            hintStyle: TextStyle(
-              color: Colors.black,
-              fontSize: fontSize!,
-              fontFamily: 'helvetica_neue_light',
-            ),
-            border: borderRadius != null ? theme(borderRadius!) : null,
+        controller: controller,
+        maxLines: maxLine,
+        minLines: minLine,
+        readOnly: readOnly,
+        autofocus: autofocus ?? true,
+        keyboardType: keyboardType,
+        inputFormatters: inputFormatter,
+        enableInteractiveSelection: false,
+        textCapitalization: TextCapitalization.sentences,
+        style: TextStyle(fontSize: fontSize!, color: Colors.black54),
+        decoration: InputDecoration(
+          labelText: hintText,
+          labelStyle: TextStyle(
+            color: Colors.black54,
+            fontSize: fontSize!,
+            fontWeight: FontWeight.w300,
           ),
-          validator: (value) {
-            if (valid) {
-              return validator(value);
-            }
-            return null;
-          },
-          onChanged: (value) {
-            if (onChange != null) onChange!(value);
-          }),
+          suffixIcon: suffixIcon,
+          hintStyle: TextStyle(
+            color: Colors.black,
+            fontSize: fontSize!,
+            fontFamily: 'helvetica_neue_light',
+          ),
+          border: borderRadius != null ? theme(borderRadius!) : null,
+          contentPadding: contentPadding,
+        ),
+        validator: (value) {
+          if (valid) {
+            return validator(value);
+          }
+          return null;
+        },
+        onChanged: (value) {
+          if (onChange != null) onChange!(value);
+        },
+      ),
     );
   }
 

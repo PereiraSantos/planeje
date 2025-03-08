@@ -17,8 +17,7 @@ import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/app_bar_widget/add_app_bar_widget.dart';
 import 'package:planeje/widgets/expansion_tile_widgets.dart';
-
-// ignore: must_be_immutable
+import 'package:planeje/widgets/search.dart';
 
 class ListRevision extends StatefulWidget {
   const ListRevision({super.key});
@@ -28,6 +27,8 @@ class ListRevision extends StatefulWidget {
 }
 
 class _ListRevisionState extends State<ListRevision> {
+  String search = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +37,14 @@ class _ListRevisionState extends State<ListRevision> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
-        title: const Text(
-          'Revisão',
-          style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
-        ),
+        toolbarHeight: 46,
+        title: const Text('Revisão', style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold)),
         actions: [
+          Search(
+            setValue: (value) {
+              setState(() => search = value ?? '');
+            },
+          ),
           AddAppBarWidget(
             onClick: () async {
               var result = await Navigator.of(context).push(
@@ -63,7 +67,7 @@ class _ListRevisionState extends State<ListRevision> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription('', false),
+          future: GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription(search, false),
           builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
