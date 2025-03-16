@@ -9,6 +9,7 @@ import 'package:planeje/quiz_revision/utils/register_quiz/remove_quiz.dart';
 import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/app_bar_widget/add_app_bar_widget.dart';
+import 'package:planeje/widgets/search.dart';
 import '../../../../utils/transitions_builder.dart';
 
 import '../../../datasource/database/quiz_database.dart';
@@ -27,6 +28,8 @@ class ListQuiz extends StatefulWidget {
 }
 
 class _ListQuizState extends State<ListQuiz> {
+  String search = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,11 +38,14 @@ class _ListQuizState extends State<ListQuiz> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
-        title: const Text(
-          'Quiz',
-          style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
-        ),
+        toolbarHeight: 46,
+        title: const Text('Quiz', style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold)),
         actions: [
+          Search(
+            setValue: (value) {
+              setState(() => search = value ?? '');
+            },
+          ),
           AddAppBarWidget(
             onClick: () async {
               var result = await Navigator.of(context).push(
@@ -56,7 +62,7 @@ class _ListQuizState extends State<ListQuiz> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: GetQuiz(QuizDatabase()).getAllQuiz(''),
+          future: GetQuiz(QuizDatabase()).getAllQuiz(search),
           builder: (BuildContext context, AsyncSnapshot<List<Quiz>?> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
