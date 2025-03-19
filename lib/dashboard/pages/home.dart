@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/dashboard/pages/dashboard.dart';
 import 'package:planeje/dashboard/utils/check_setting.dart';
 import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
@@ -28,7 +29,7 @@ class _HomeState extends State<Home> {
   }
 
   final List<Widget> _screen = [
-    // Dashboard(),
+    Dashboard(),
     ListRevision(),
     ListQuiz(),
     SettingPage(),
@@ -114,10 +115,10 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
-          /* BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-          ),*/
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.school),
             label: 'Revisão',
@@ -132,7 +133,8 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black87,
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
     );

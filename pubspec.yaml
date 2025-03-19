@@ -38,6 +38,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   shared_preferences: ^2.3.5
+  graphic: ^2.5.1
 
 
 dev_dependencies:

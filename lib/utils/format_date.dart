@@ -11,11 +11,11 @@ class FormatDate {
 
   static String formatDate(DateTime date) => DateFormat('dd/MM/yyyy').format(date);
 
+  static String formatDateTime(DateTime date) => DateFormat('dd/MM/yyyy hh:mm:ss').format(date);
+
   static String formatDateBase(DateTime date) => DateFormat('yyyy/MM/dd').format(date);
 
   static String getDateNumber() => FormatDate.formatDateBase(FormatDate.newDate()).replaceAll('/', '');
-
-  static String formatDateWek(String date) => date != '' ? DateFormat("EEEE - MMMM").format(dateParse(date)).replaceAll("-feira", "") : '';
 
   static String formatDateString(String date) => date != '' ? DateFormat("dd/MM/yy").format(dateParse(date)) : '';
 
@@ -32,4 +32,6 @@ class FormatDate {
   static DateTime timeParse(String date) => DateFormat('hh:mm').parse(date);
 
   static String formatTimeByString(DateTime date) => DateFormat('hh:mm').format(date);
+
+  String formatDateWek(String date) => date != '' ? DateFormat("EEEE").format(dateParse(date)) : '';
 }

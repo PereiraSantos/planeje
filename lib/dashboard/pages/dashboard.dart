@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:planeje/dashboard/controller/reviser_notifier.dart';
-import 'package:planeje/dashboard/controller/under_review_notifier.dart';
-import 'package:planeje/dashboard/utils/check_setting.dart';
-import 'package:planeje/dashboard/utils/find_revision.dart';
+import 'package:graphic/graphic.dart';
+import 'package:planeje/dashboard/controller/build_data_graphic.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/entities/date_revision.dart';
+import 'package:planeje/widgets/chart_widget.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -13,20 +13,11 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final ReviserNotifier reviserNotifier = ReviserNotifier();
-
-  final UnderReviewNotifier underReviewNotifier = UnderReviewNotifier();
-
   void reloadPage() => setState(() {});
 
   @override
   void initState() {
     super.initState();
-    CheckSetting().checkRealize();
-    CheckSetting().checkNext();
-
-    GetDelayedRevision(reviserNotifier).getRevision();
-    GetCompletedRevision(reviserNotifier).getRevision();
   }
 
   @override
@@ -37,48 +28,51 @@ class _DashboardState extends State<Dashboard> {
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
+        toolbarHeight: 46,
         title: const Text(
           'Home',
           style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
-          child:
-              SizedBox() /*ListenableBuilder(
-          listenable: reviserNotifier,
-          builder: (BuildContext context, Widget? child) {
-            return Column(
-              children: [
-                ReviserLate(
-                  quantityCompleted: reviserNotifier.quantityReviserCompleted,
-                  quantityDelayed: reviserNotifier.quantityReviserDelayed,
-                ),
-                ListenableBuilder(
-                  listenable: underReviewNotifier,
-                  builder: (BuildContext context, Widget? child) {
-                    return UnderReview(
-                      underReviewNotifier: underReviewNotifier,
-                      finishReviser: () => reloadPage(),
-                    );
-                  },
-                ),
-                NextRevision(
-                  future: NetRevisionTime(false).getNextRevision('realize'),
-                  text: 'Realizar',
-                  finishUpdaterReviser: () => reloadPage(),
-                  underReviewNotifier: underReviewNotifier,
-                ),
-                NextRevision(
-                  future: NetRevisionTime(true).getNextRevision('next'),
-                  text: 'Próximas',
-                  finishUpdaterReviser: () => reloadPage(),
-                  underReviewNotifier: underReviewNotifier,
-                ),
-              ],
-            );
+        child: FutureBuilder(
+          future: DateRevisionDatabaseDataSource().findAllDateRevisions(),
+          builder: (BuildContext context, AsyncSnapshot<List<DateRevision>?> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data!.isNotEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ChartWidget(
+                      data: BuildDataGraphic().buildRevisionYear(snapshot.data ?? []),
+                      title: 'Ano',
+                      color: ColorEncode(value: const Color.fromARGB(164, 76, 175, 79)),
+                    ),
+                    Padding(padding: EdgeInsets.all(10)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(child: ChartWidget(data: BuildDataGraphic().buildRevisionMonth(snapshot.data ?? []), title: 'Mês')),
+                        Expanded(child: ChartWidget(data: BuildDataGraphic().buildRevisionWeek(snapshot.data ?? []), title: 'Semana')),
+                      ],
+                    )
+                  ],
+                );
+              } else {
+                return const Center(
+                  child: Text(
+                    "Não há revisões!!!",
+                    style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.w300),
+                  ),
+                );
+              }
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
           },
-        ),*/
-          ),
+        ),
+      ),
     );
   }
 }
