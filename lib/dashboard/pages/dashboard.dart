@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graphic/graphic.dart';
 import 'package:planeje/dashboard/controller/build_data_graphic.dart';
 import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 import 'package:planeje/revision/entities/date_revision.dart';
@@ -44,19 +43,8 @@ class _DashboardState extends State<Dashboard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ChartWidget(
-                      data: BuildDataGraphic().buildRevisionYear(snapshot.data ?? []),
-                      title: 'Ano',
-                      color: ColorEncode(value: const Color.fromARGB(164, 76, 175, 79)),
-                    ),
+                    ChartWidget(data: BuildDataGraphic().buildRevisionYear(snapshot.data ?? []), title: 'Ano'),
                     Padding(padding: EdgeInsets.all(10)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: ChartWidget(data: BuildDataGraphic().buildRevisionMonth(snapshot.data ?? []), title: 'Mês')),
-                        Expanded(child: ChartWidget(data: BuildDataGraphic().buildRevisionWeek(snapshot.data ?? []), title: 'Semana')),
-                      ],
-                    )
                   ],
                 );
               } else {

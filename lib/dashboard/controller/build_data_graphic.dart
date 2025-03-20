@@ -1,67 +1,56 @@
-import 'package:intl/intl.dart';
+import 'package:planeje/dashboard/entities/revision_data.dart';
 import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/utils/format_date.dart';
 
 class BuildDataGraphic {
-  int seg = 0;
-  int ter = 0;
-  int qua = 0;
-  int qui = 0;
-  int sex = 0;
-  int sab = 0;
-  int dom = 0;
+  int jan = 0;
+  int fev = 0;
+  int mar = 0;
+  int abr = 0;
+  int mai = 0;
+  int jun = 0;
+  int jul = 0;
+  int ago = 0;
+  int set = 0;
+  int out = 0;
+  int nov = 0;
+  int dez = 0;
 
-  List<Map<dynamic, dynamic>> buildRevisionYear(List<DateRevision> dateRevision) {
-    return [
-      {'revision': 'Jan.', 'quantiy': 20},
-      {'revision': 'Fev.', 'quantiy': 11},
-      {'revision': 'Mar.', 'quantiy': 15},
-      {'revision': 'Abr.', 'quantiy': 12},
-      {'revision': 'Mai.', 'quantiy': 18},
-      {'revision': 'Jun.', 'quantiy': 30},
-      {'revision': 'Jul.', 'quantiy': 25},
-      {'revision': 'Ago.', 'quantiy': 8},
-      {'revision': 'Set.', 'quantiy': 29},
-      {'revision': 'Out.', 'quantiy': 9},
-      {'revision': 'Nov.', 'quantiy': 10},
-      {'revision': 'Dez.', 'quantiy': 11},
-    ];
-  }
-
-  List<Map<dynamic, dynamic>> buildRevisionMonth(List<DateRevision> dateRevision) {
-    return [
-      {'revision': '2-8', 'quantiy': 3},
-      {'revision': '9-15', 'quantiy': 4},
-      {'revision': '16-22', 'quantiy': 1},
-      {'revision': '23-29', 'quantiy': 5}
-    ];
-  }
-
-  List<Map<dynamic, dynamic>> buildRevisionWeek(List<DateRevision> dateRevision) {
+  List<RevisionData> buildRevisionYear(List<DateRevision> dateRevision) {
     for (DateRevision item in dateRevision) {
       if (item.dateRevision != null) {
         DateTime date = FormatDate.dateTimeParse(item.dateRevision!);
 
-        if (FormatDate.newDate().day - date.day <= 7) {
-          String day = FormatDate().formatDateWek(item.dateRevision!);
-          if (day.substring(0, 3) == 'dom') dom++;
-          if (day.substring(0, 3) == 'seg') seg++;
-          if (day.substring(0, 3) == 'ter') ter++;
-          if (day.substring(0, 3) == 'qua') qua++;
-          if (day.substring(0, 3) == 'qui') qui++;
-          if (day.substring(0, 3) == 'sex') sex++;
-          if (day.substring(0, 3) == 'sab') sab++;
+        if (FormatDate.newDate().day - date.day <= 360) {
+          if (date.month == 1) jan++;
+          if (date.month == 2) fev++;
+          if (date.month == 3) mar++;
+          if (date.month == 4) abr++;
+          if (date.month == 5) mai++;
+          if (date.month == 6) jun++;
+          if (date.month == 7) jul++;
+          if (date.month == 8) ago++;
+          if (date.month == 9) set++;
+          if (date.month == 10) out++;
+          if (date.month == 11) nov++;
+          if (date.month == 12) dez++;
         }
       }
     }
+
     return [
-      {'revision': 'Dom', 'quantiy': dom},
-      {'revision': 'Seg', 'quantiy': seg},
-      {'revision': 'Ter', 'quantiy': ter},
-      {'revision': 'Qua', 'quantiy': qua},
-      {'revision': 'Qui', 'quantiy': qui},
-      {'revision': 'Sex', 'quantiy': sex},
-      {'revision': 'Sab', 'quantiy': sab},
+      RevisionData('Jan.', jan),
+      RevisionData('Fev.', fev),
+      RevisionData('Mar.', mar),
+      RevisionData('Abr.', abr),
+      RevisionData('Mai.', mai),
+      RevisionData('Jun.', jun),
+      RevisionData('Jul.', jul),
+      RevisionData('Ago.', ago),
+      RevisionData('Set.', set),
+      RevisionData('Out.', out),
+      RevisionData('Nov.', nov),
+      RevisionData('Dez.', dez),
     ];
   }
 }
