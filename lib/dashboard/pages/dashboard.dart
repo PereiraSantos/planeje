@@ -43,7 +43,7 @@ class _DashboardState extends State<Dashboard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ChartWidget(data: BuildDataGraphic().buildRevisionYear(snapshot.data ?? []), title: 'Ano'),
+                    ChartWidget(data: BuildDataGraphic().buildRevisionYear(snapshot.data ?? []), title: 'Revisão ano ${DateTime.now().year}.'),
                     Padding(padding: EdgeInsets.all(10)),
                   ],
                 );
