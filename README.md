@@ -3,7 +3,7 @@
 Aplicativo desenvolvido para controle de revisão.
  
 ## Finalidade do aplicativo
-- `Revisão` - Cria uma revisão para estudo.
+- `Revisão` - Cria uma revisão.
 - `Anotação` - Cria anotação de uma revisão, vinculada a revisão.
 - `Quiz` - Cria quiz, jogo de quiz, para medir seu conhecimento sobre os seus estudos.
 - `Gráfico de revisão` - Mostrar a frequência com que estão sendo feitas as revisões.
