@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:planeje/dashboard/component/future_builder_component.dart';
+import 'package:planeje/dashboard/component/graphic_revision_quiz.dart';
 import 'package:planeje/dashboard/controller/build_data_graphic.dart';
+import 'package:planeje/quiz_revision/datasource/database/revision_quiz_database.dart';
+import 'package:planeje/quiz_revision/entities/revision_quiz.dart';
+import 'package:planeje/quiz_revision/utils/revision_quiz/revision_quiz.dart';
 import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/widgets/chart_widget.dart';
@@ -34,31 +39,17 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
       body: SingleChildScrollView(
-        child: FutureBuilder(
-          future: DateRevisionDatabaseDataSource().findAllDateRevisions(),
-          builder: (BuildContext context, AsyncSnapshot<List<DateRevision>?> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data!.isNotEmpty) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ChartWidget(data: BuildDataGraphic().buildRevisionYear(snapshot.data ?? []), title: 'Ano'),
-                    Padding(padding: EdgeInsets.all(10)),
-                  ],
-                );
-              } else {
-                return const Center(
-                  child: Text(
-                    "Não há revisões!!!",
-                    style: TextStyle(fontSize: 22, color: Colors.black54, fontWeight: FontWeight.w300),
-                  ),
-                );
-              }
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
+        child: Column(
+          children: [
+            FutureBuilderComponent<DateRevision>(
+              future: DateRevisionDatabaseDataSource().findAllDateRevisions(),
+              children: (value) => ChartWidget(data: BuildDataGraphic().buildRevisionYear(value), title: 'Revisões realizadas.'),
+            ),
+            FutureBuilderComponent<RevisionQuiz>(
+              future: GetRevisionQuiz(RevisionQuizDatabase()).getAllRevisionQuiz(''),
+              children: (value) => GraphicRevisionQuiz(value: value),
+            ),
+          ],
         ),
       ),
     );
