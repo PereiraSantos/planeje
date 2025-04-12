@@ -86,13 +86,15 @@ class _$AppDatabase extends AppDatabase {
 
   UserDao? _userDaoInstance;
 
+  RevisionQuizDao? _revisionQuizDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 3,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -121,6 +123,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `user` (`id` INTEGER NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -162,6 +166,12 @@ class _$AppDatabase extends AppDatabase {
   @override
   UserDao get userDao {
     return _userDaoInstance ??= _$UserDao(database, changeListener);
+  }
+
+  @override
+  RevisionQuizDao get revisionQuizDao {
+    return _revisionQuizDaoInstance ??=
+        _$RevisionQuizDao(database, changeListener);
   }
 }
 
@@ -737,5 +747,104 @@ class _$UserDao extends UserDao {
   @override
   Future<void> insertUser(User user) async {
     await _userInsertionAdapter.insert(user, OnConflictStrategy.abort);
+  }
+}
+
+class _$RevisionQuizDao extends RevisionQuizDao {
+  _$RevisionQuizDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _revisionQuizInsertionAdapter = InsertionAdapter(
+            database,
+            'revision_quiz',
+            (RevisionQuiz item) => <String, Object?>{
+                  'id': item.id,
+                  'date_revision': item.dateRevision,
+                  'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
+                  'id_quiz': item.idQuiz
+                }),
+        _revisionQuizUpdateAdapter = UpdateAdapter(
+            database,
+            'revision_quiz',
+            ['id'],
+            (RevisionQuiz item) => <String, Object?>{
+                  'id': item.id,
+                  'date_revision': item.dateRevision,
+                  'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
+                  'id_quiz': item.idQuiz
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<RevisionQuiz> _revisionQuizInsertionAdapter;
+
+  final UpdateAdapter<RevisionQuiz> _revisionQuizUpdateAdapter;
+
+  @override
+  Future<List<RevisionQuiz>?> getAllRevisionQuiz() async {
+    return _queryAdapter.queryList('SELECT * FROM revision_quiz',
+        mapper: (Map<String, Object?> row) => RevisionQuiz(
+            id: row['id'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            idQuiz: row['id_quiz'] as int?));
+  }
+
+  @override
+  Future<RevisionQuiz?> getRevisionQuizById(int id) async {
+    return _queryAdapter.query('SELECT * FROM revision_quiz WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => RevisionQuiz(
+            id: row['id'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            idQuiz: row['id_quiz'] as int?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<List<RevisionQuiz>?> getRevisionQuizByIdQuiz(int idQuiz) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision_quiz WHERE id_quiz = ?1',
+        mapper: (Map<String, Object?> row) => RevisionQuiz(
+            id: row['id'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            idQuiz: row['id_quiz'] as int?),
+        arguments: [idQuiz]);
+  }
+
+  @override
+  Future<RevisionQuiz?> deleteRevisionQuiz(int id) async {
+    return _queryAdapter.query('delete FROM revision_quiz WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => RevisionQuiz(
+            id: row['id'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            idQuiz: row['id_quiz'] as int?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> deleteRevisionQuizByIdQuiz(int idQuiz) async {
+    await _queryAdapter.queryNoReturn(
+        'delete FROM revision_quiz WHERE id_quiz = ?1',
+        arguments: [idQuiz]);
+  }
+
+  @override
+  Future<int> insertRevisionQuiz(RevisionQuiz revisionQuiz) {
+    return _revisionQuizInsertionAdapter.insertAndReturnId(
+        revisionQuiz, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateRevisionQuiz(RevisionQuiz revisionQuiz) {
+    return _revisionQuizUpdateAdapter.updateAndReturnChangedRows(
+        revisionQuiz, OnConflictStrategy.abort);
   }
 }

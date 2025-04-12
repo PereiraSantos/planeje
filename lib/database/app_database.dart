@@ -6,6 +6,8 @@ import 'package:planeje/login/datasource/dao/user_dao.dart';
 import 'package:planeje/login/entities/user.dart';
 import 'package:planeje/quiz_revision/datasource/dao/question_dao.dart';
 import 'package:planeje/quiz_revision/datasource/dao/quiz_dao.dart';
+import 'package:planeje/quiz_revision/datasource/dao/revision_quiz_dao.dart';
+import 'package:planeje/quiz_revision/entities/revision_quiz.dart';
 import 'package:planeje/revision/datasource/dao/date_revision_dao.dart';
 import 'package:planeje/revision/datasource/dao/revision_dao.dart';
 import 'package:planeje/settings/datasource/dao/setting_dao.dart';
@@ -28,7 +30,12 @@ final migration1to2 = Migration(1, 2, (database) async {
       'CREATE TABLE IF NOT EXISTS `user` (`id` INTEGER NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 });
 
-@Database(version: 2, entities: [
+final migration2to3 = Migration(2, 3, (database) async {
+  await database.execute(
+      'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER)');
+});
+
+@Database(version: 3, entities: [
   Revision,
   DateRevision,
   Annotation,
@@ -36,6 +43,7 @@ final migration1to2 = Migration(1, 2, (database) async {
   Question,
   Settings,
   User,
+  RevisionQuiz,
 ])
 abstract class AppDatabase extends FloorDatabase {
   RevisionDao get revisionDao;
@@ -45,10 +53,11 @@ abstract class AppDatabase extends FloorDatabase {
   QuestionDao get questionDao;
   SettingDao get settingDao;
   UserDao get userDao;
+  RevisionQuizDao get revisionQuizDao;
 }
 
 Future<AppDatabase> migrationDatabase() async {
-  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([migration1to2]).build();
+  return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([migration1to2, migration2to3]).build();
 }
 
 Future<AppDatabase> getInstance() async {

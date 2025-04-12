@@ -3,9 +3,10 @@ import 'package:planeje/dashboard/entities/revision_data.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartWidget extends StatelessWidget {
-  const ChartWidget({super.key, required this.data, required this.title});
+  const ChartWidget({super.key, required this.data, required this.title, this.otherData});
 
-  final List<RevisionData> data;
+  final List<GraphicData> data;
+  final List<GraphicData>? otherData;
   final String title;
 
   @override
@@ -19,13 +20,20 @@ class ChartWidget extends StatelessWidget {
           margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
           primaryXAxis: CategoryAxis(),
           series: <CartesianSeries>[
-            LineSeries<RevisionData, String>(
+            LineSeries<GraphicData, String>(
+              dataSource: otherData ?? [],
+              xValueMapper: (GraphicData otherData, _) => otherData.revision,
+              yValueMapper: (GraphicData otherData, _) => otherData.quantiy,
+              markerSettings: MarkerSettings(isVisible: false),
+              color: Colors.red,
+            ),
+            LineSeries<GraphicData, String>(
               dataSource: data,
-              xValueMapper: (RevisionData data, _) => data.revision,
-              yValueMapper: (RevisionData data, _) => data.quantiy,
-              markerSettings: MarkerSettings(isVisible: true, width: 4, height: 4),
+              xValueMapper: (GraphicData data, _) => data.revision,
+              yValueMapper: (GraphicData data, _) => data.quantiy,
+              markerSettings: MarkerSettings(isVisible: false),
               color: Colors.green,
-            )
+            ),
           ],
         ),
       ),

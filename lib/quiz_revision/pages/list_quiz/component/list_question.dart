@@ -68,12 +68,15 @@ class _ListQuestionState extends State<ListQuestion> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (listQuestionController.index == -1) {
                     MessageUser.message(context, 'Necessário escolher um registro!!!');
                     return;
                   }
                   listQuestionController.showAnswer = true;
+
+                  await listQuestionController.registerRevisionQuiz(widget.listQuestion, listQuestionController.index);
+
                   setState(() {});
                 },
                 child: Container(
