@@ -88,6 +88,8 @@ class _$AppDatabase extends AppDatabase {
 
   RevisionQuizDao? _revisionQuizDaoInstance;
 
+  RevisionThemeDao? _revisionThemeDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -110,21 +112,23 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `description` TEXT, `date_creational` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `description` TEXT, `date_creational` TEXT, `id_revision_theme` INTEGER, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `id_revision` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `id_revision` INTEGER, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER, `sync` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `user` (`id` INTEGER NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER, `sync` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `sync` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -173,6 +177,12 @@ class _$AppDatabase extends AppDatabase {
     return _revisionQuizDaoInstance ??=
         _$RevisionQuizDao(database, changeListener);
   }
+
+  @override
+  RevisionThemeDao get revisionThemeDao {
+    return _revisionThemeDaoInstance ??=
+        _$RevisionThemeDao(database, changeListener);
+  }
 }
 
 class _$RevisionDao extends RevisionDao {
@@ -187,7 +197,9 @@ class _$RevisionDao extends RevisionDao {
                   'id': item.id,
                   'title': item.title,
                   'description': item.description,
-                  'date_creational': item.dateCreational
+                  'date_creational': item.dateCreational,
+                  'id_revision_theme': item.idRevisionTheme,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 }),
         _revisionUpdateAdapter = UpdateAdapter(
             database,
@@ -197,7 +209,9 @@ class _$RevisionDao extends RevisionDao {
                   'id': item.id,
                   'title': item.title,
                   'description': item.description,
-                  'date_creational': item.dateCreational
+                  'date_creational': item.dateCreational,
+                  'id_revision_theme': item.idRevisionTheme,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -217,7 +231,21 @@ class _$RevisionDao extends RevisionDao {
             id: row['id'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?));
+            dateCreational: row['date_creational'] as String?,
+            idRevisionTheme: row['id_revision_theme'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+  }
+
+  @override
+  Future<List<Revision>?> findAllRevisionsSync() async {
+    return _queryAdapter.queryList('SELECT * FROM revision where sync = 0',
+        mapper: (Map<String, Object?> row) => Revision(
+            id: row['id'] as int?,
+            title: row['title'] as String?,
+            description: row['description'] as String?,
+            dateCreational: row['date_creational'] as String?,
+            idRevisionTheme: row['id_revision_theme'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
   }
 
   @override
@@ -227,7 +255,9 @@ class _$RevisionDao extends RevisionDao {
             id: row['id'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?),
+            dateCreational: row['date_creational'] as String?,
+            idRevisionTheme: row['id_revision_theme'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [id]);
   }
 
@@ -238,7 +268,9 @@ class _$RevisionDao extends RevisionDao {
             id: row['id'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?),
+            dateCreational: row['date_creational'] as String?,
+            idRevisionTheme: row['id_revision_theme'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [id]);
   }
 
@@ -249,8 +281,32 @@ class _$RevisionDao extends RevisionDao {
             id: row['id'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?),
+            dateCreational: row['date_creational'] as String?,
+            idRevisionTheme: row['id_revision_theme'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [text]);
+  }
+
+  @override
+  Future<List<Revision>?> findRevisioByIdRevisionTheme(
+      int idRevisionTheme) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision where id_revision_theme = ?1',
+        mapper: (Map<String, Object?> row) => Revision(
+            id: row['id'] as int?,
+            title: row['title'] as String?,
+            description: row['description'] as String?,
+            dateCreational: row['date_creational'] as String?,
+            idRevisionTheme: row['id_revision_theme'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+        arguments: [idRevisionTheme]);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    return _queryAdapter.query('select count(*) from revision where id  = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
+        arguments: [id]);
   }
 
   @override
@@ -260,9 +316,20 @@ class _$RevisionDao extends RevisionDao {
   }
 
   @override
+  Future<List<int>> insertRevisionList(List<Revision> revision) {
+    return _revisionInsertionAdapter.insertListAndReturnIds(
+        revision, OnConflictStrategy.abort);
+  }
+
+  @override
   Future<int> updateRevision(Revision revision) {
     return _revisionUpdateAdapter.updateAndReturnChangedRows(
         revision, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateRevisionList(List<Revision> revision) async {
+    await _revisionUpdateAdapter.updateList(revision, OnConflictStrategy.abort);
   }
 }
 
@@ -277,7 +344,8 @@ class _$DateRevisionDao extends DateRevisionDao {
             (DateRevision item) => <String, Object?>{
                   'id_date': item.id,
                   'date_revision': item.dateRevision,
-                  'id_revision': item.idRevision
+                  'id_revision': item.idRevision,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 }),
         _dateRevisionUpdateAdapter = UpdateAdapter(
             database,
@@ -286,7 +354,8 @@ class _$DateRevisionDao extends DateRevisionDao {
             (DateRevision item) => <String, Object?>{
                   'id_date': item.id,
                   'date_revision': item.dateRevision,
-                  'id_revision': item.idRevision
+                  'id_revision': item.idRevision,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -305,7 +374,18 @@ class _$DateRevisionDao extends DateRevisionDao {
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             dateRevision: row['date_revision'] as String?,
-            idRevision: row['id_revision'] as int?));
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+  }
+
+  @override
+  Future<List<DateRevision>?> findAllDateRevisionSync() async {
+    return _queryAdapter.queryList('SELECT * FROM date_revision where sync = 0',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
   }
 
   @override
@@ -314,7 +394,8 @@ class _$DateRevisionDao extends DateRevisionDao {
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             dateRevision: row['date_revision'] as String?,
-            idRevision: row['id_revision'] as int?),
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [id]);
   }
 
@@ -325,7 +406,8 @@ class _$DateRevisionDao extends DateRevisionDao {
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             dateRevision: row['date_revision'] as String?,
-            idRevision: row['id_revision'] as int?),
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idRevision]);
   }
 
@@ -364,11 +446,20 @@ class _$DateRevisionDao extends DateRevisionDao {
   @override
   Future<DateRevision?> findDateRevisionById(int id) async {
     return _queryAdapter.query(
-        'select * from date_revision  where id_date  = ?1',
+        'select * from date_revision  where id_date = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             dateRevision: row['date_revision'] as String?,
-            idRevision: row['id_revision'] as int?),
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+        arguments: [id]);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    return _queryAdapter.query(
+        'select count(*) from date_revision where id_date = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [id]);
   }
 
@@ -379,8 +470,20 @@ class _$DateRevisionDao extends DateRevisionDao {
   }
 
   @override
+  Future<List<int>> insertDateRevisionList(List<DateRevision> dateRevision) {
+    return _dateRevisionInsertionAdapter.insertListAndReturnIds(
+        dateRevision, OnConflictStrategy.abort);
+  }
+
+  @override
   Future<int> updateDateRevision(DateRevision dateRevision) {
     return _dateRevisionUpdateAdapter.updateAndReturnChangedRows(
+        dateRevision, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateDateRevisionList(List<DateRevision> dateRevision) async {
+    await _dateRevisionUpdateAdapter.updateList(
         dateRevision, OnConflictStrategy.abort);
   }
 }
@@ -398,7 +501,8 @@ class _$AnnotationDao extends AnnotationDao {
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
-                  'id_revision': item.idRevision
+                  'id_revision': item.idRevision,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 }),
         _annotationUpdateAdapter = UpdateAdapter(
             database,
@@ -409,7 +513,8 @@ class _$AnnotationDao extends AnnotationDao {
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
-                  'id_revision': item.idRevision
+                  'id_revision': item.idRevision,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -421,6 +526,13 @@ class _$AnnotationDao extends AnnotationDao {
   final InsertionAdapter<Annotation> _annotationInsertionAdapter;
 
   final UpdateAdapter<Annotation> _annotationUpdateAdapter;
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    return _queryAdapter.query('select count(*) from annotation where id = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
+        arguments: [id]);
+  }
 
   @override
   Future<void> delete(int id) async {
@@ -444,8 +556,33 @@ class _$AnnotationDao extends AnnotationDao {
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?),
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idRevision]);
+  }
+
+  @override
+  Future<List<Annotation>?> getAnnotationAll() async {
+    return _queryAdapter.queryList('select * from  annotation',
+        mapper: (Map<String, Object?> row) => Annotation(
+            id: row['id'] as int?,
+            title: row['title'] as String?,
+            text: row['text'] as String?,
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+  }
+
+  @override
+  Future<List<Annotation>?> findAnnotationSync() async {
+    return _queryAdapter.queryList('select * from annotation where sync = 0',
+        mapper: (Map<String, Object?> row) => Annotation(
+            id: row['id'] as int?,
+            title: row['title'] as String?,
+            text: row['text'] as String?,
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
   }
 
   @override
@@ -455,9 +592,21 @@ class _$AnnotationDao extends AnnotationDao {
   }
 
   @override
+  Future<List<int>> insertAnnotationList(List<Annotation> annotationEntity) {
+    return _annotationInsertionAdapter.insertListAndReturnIds(
+        annotationEntity, OnConflictStrategy.abort);
+  }
+
+  @override
   Future<int> updateAnnotation(Annotation annotationEntity) {
     return _annotationUpdateAdapter.updateAndReturnChangedRows(
         annotationEntity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateAnnotationList(List<Annotation> annotation) async {
+    await _annotationUpdateAdapter.updateList(
+        annotation, OnConflictStrategy.abort);
   }
 }
 
@@ -472,7 +621,8 @@ class _$QuizDao extends QuizDao {
             (Quiz item) => <String, Object?>{
                   'id': item.id,
                   'topic': item.topic,
-                  'description': item.description
+                  'description': item.description,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 }),
         _quizUpdateAdapter = UpdateAdapter(
             database,
@@ -481,7 +631,8 @@ class _$QuizDao extends QuizDao {
             (Quiz item) => <String, Object?>{
                   'id': item.id,
                   'topic': item.topic,
-                  'description': item.description
+                  'description': item.description,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -500,7 +651,18 @@ class _$QuizDao extends QuizDao {
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
             topic: row['topic'] as String?,
-            description: row['description'] as String?));
+            description: row['description'] as String?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+  }
+
+  @override
+  Future<List<Quiz>?> findAllQuizSync() async {
+    return _queryAdapter.queryList('SELECT * FROM quiz where sync = 0',
+        mapper: (Map<String, Object?> row) => Quiz(
+            id: row['id'] as int?,
+            topic: row['topic'] as String?,
+            description: row['description'] as String?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
   }
 
   @override
@@ -509,8 +671,16 @@ class _$QuizDao extends QuizDao {
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
             topic: row['topic'] as String?,
-            description: row['description'] as String?),
+            description: row['description'] as String?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [text]);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    return _queryAdapter.query('select count(*) from quiz where id = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
+        arguments: [id]);
   }
 
   @override
@@ -519,7 +689,8 @@ class _$QuizDao extends QuizDao {
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
             topic: row['topic'] as String?,
-            description: row['description'] as String?),
+            description: row['description'] as String?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [id]);
   }
 
@@ -529,7 +700,8 @@ class _$QuizDao extends QuizDao {
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
             topic: row['topic'] as String?,
-            description: row['description'] as String?),
+            description: row['description'] as String?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [id]);
   }
 
@@ -540,9 +712,20 @@ class _$QuizDao extends QuizDao {
   }
 
   @override
+  Future<List<int>> insertQuizList(List<Quiz> quiz) {
+    return _quizInsertionAdapter.insertListAndReturnIds(
+        quiz, OnConflictStrategy.abort);
+  }
+
+  @override
   Future<int> updateQuiz(Quiz quiz) {
     return _quizUpdateAdapter.updateAndReturnChangedRows(
         quiz, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateQuizList(List<Quiz> quiz) async {
+    await _quizUpdateAdapter.updateList(quiz, OnConflictStrategy.abort);
   }
 }
 
@@ -558,7 +741,8 @@ class _$QuestionDao extends QuestionDao {
                   'id': item.id,
                   'id_quiz': item.idQuiz,
                   'description': item.description,
-                  'answer': item.answer == null ? null : (item.answer! ? 1 : 0)
+                  'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 }),
         _questionUpdateAdapter = UpdateAdapter(
             database,
@@ -568,7 +752,8 @@ class _$QuestionDao extends QuestionDao {
                   'id': item.id,
                   'id_quiz': item.idQuiz,
                   'description': item.description,
-                  'answer': item.answer == null ? null : (item.answer! ? 1 : 0)
+                  'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -588,8 +773,19 @@ class _$QuestionDao extends QuestionDao {
             id: row['id'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
-            answer:
-                row['answer'] == null ? null : (row['answer'] as int) != 0));
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+  }
+
+  @override
+  Future<List<Question>?> findAllQuestionSync() async {
+    return _queryAdapter.queryList('SELECT * FROM question where sync = 0',
+        mapper: (Map<String, Object?> row) => Question(
+            id: row['id'] as int?,
+            idQuiz: row['id_quiz'] as int?,
+            description: row['description'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
   }
 
   @override
@@ -599,7 +795,8 @@ class _$QuestionDao extends QuestionDao {
             id: row['id'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
-            answer: row['answer'] == null ? null : (row['answer'] as int) != 0),
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [id]);
   }
 
@@ -610,7 +807,8 @@ class _$QuestionDao extends QuestionDao {
             id: row['id'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
-            answer: row['answer'] == null ? null : (row['answer'] as int) != 0),
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idQuiz]);
   }
 
@@ -627,8 +825,21 @@ class _$QuestionDao extends QuestionDao {
   }
 
   @override
+  Future<int?> isRegistration(int id) async {
+    return _queryAdapter.query('select count(*) from question where id  = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
+        arguments: [id]);
+  }
+
+  @override
   Future<int> insertQuestion(Question question) {
     return _questionInsertionAdapter.insertAndReturnId(
+        question, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<List<int>> insertQuestionList(List<Question> question) {
+    return _questionInsertionAdapter.insertListAndReturnIds(
         question, OnConflictStrategy.abort);
   }
 
@@ -636,6 +847,11 @@ class _$QuestionDao extends QuestionDao {
   Future<int> updateQuestion(Question question) {
     return _questionUpdateAdapter.updateAndReturnChangedRows(
         question, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateQuestionList(List<Question> question) async {
+    await _questionUpdateAdapter.updateList(question, OnConflictStrategy.abort);
   }
 }
 
@@ -762,7 +978,8 @@ class _$RevisionQuizDao extends RevisionQuizDao {
                   'id': item.id,
                   'date_revision': item.dateRevision,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
-                  'id_quiz': item.idQuiz
+                  'id_quiz': item.idQuiz,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 }),
         _revisionQuizUpdateAdapter = UpdateAdapter(
             database,
@@ -772,7 +989,8 @@ class _$RevisionQuizDao extends RevisionQuizDao {
                   'id': item.id,
                   'date_revision': item.dateRevision,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
-                  'id_quiz': item.idQuiz
+                  'id_quiz': item.idQuiz,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -792,7 +1010,19 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             id: row['id'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            idQuiz: row['id_quiz'] as int?));
+            idQuiz: row['id_quiz'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+  }
+
+  @override
+  Future<List<RevisionQuiz>?> findAllRevisionQuizSync() async {
+    return _queryAdapter.queryList('SELECT * FROM revision_quiz where sync = 0',
+        mapper: (Map<String, Object?> row) => RevisionQuiz(
+            id: row['id'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            idQuiz: row['id_quiz'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
   }
 
   @override
@@ -802,7 +1032,8 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             id: row['id'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            idQuiz: row['id_quiz'] as int?),
+            idQuiz: row['id_quiz'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [id]);
   }
 
@@ -814,7 +1045,8 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             id: row['id'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            idQuiz: row['id_quiz'] as int?),
+            idQuiz: row['id_quiz'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idQuiz]);
   }
 
@@ -825,7 +1057,8 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             id: row['id'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            idQuiz: row['id_quiz'] as int?),
+            idQuiz: row['id_quiz'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [id]);
   }
 
@@ -837,8 +1070,22 @@ class _$RevisionQuizDao extends RevisionQuizDao {
   }
 
   @override
+  Future<int?> isRegistration(int id) async {
+    return _queryAdapter.query(
+        'select count(*) from revision_quiz where id = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
+        arguments: [id]);
+  }
+
+  @override
   Future<int> insertRevisionQuiz(RevisionQuiz revisionQuiz) {
     return _revisionQuizInsertionAdapter.insertAndReturnId(
+        revisionQuiz, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertRevisionQuizList(List<RevisionQuiz> revisionQuiz) async {
+    await _revisionQuizInsertionAdapter.insertList(
         revisionQuiz, OnConflictStrategy.abort);
   }
 
@@ -846,5 +1093,130 @@ class _$RevisionQuizDao extends RevisionQuizDao {
   Future<int> updateRevisionQuiz(RevisionQuiz revisionQuiz) {
     return _revisionQuizUpdateAdapter.updateAndReturnChangedRows(
         revisionQuiz, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateRevisionQuizList(List<RevisionQuiz> revisionQuiz) async {
+    await _revisionQuizUpdateAdapter.updateList(
+        revisionQuiz, OnConflictStrategy.abort);
+  }
+}
+
+class _$RevisionThemeDao extends RevisionThemeDao {
+  _$RevisionThemeDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _revisionThemeInsertionAdapter = InsertionAdapter(
+            database,
+            'revision_theme',
+            (RevisionTheme item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                }),
+        _revisionThemeUpdateAdapter = UpdateAdapter(
+            database,
+            'revision_theme',
+            ['id'],
+            (RevisionTheme item) => <String, Object?>{
+                  'id': item.id,
+                  'description': item.description,
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<RevisionTheme> _revisionThemeInsertionAdapter;
+
+  final UpdateAdapter<RevisionTheme> _revisionThemeUpdateAdapter;
+
+  @override
+  Future<List<RevisionTheme>> findAllRevisionTheme() async {
+    return _queryAdapter.queryList('SELECT * FROM revision_theme',
+        mapper: (Map<String, Object?> row) => RevisionTheme(
+            id: row['id'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            description: row['description'] as String?));
+  }
+
+  @override
+  Future<List<RevisionTheme>?> findAllRevisionThemeSync() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision_theme where sync = 0',
+        mapper: (Map<String, Object?> row) => RevisionTheme(
+            id: row['id'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            description: row['description'] as String?));
+  }
+
+  @override
+  Future<RevisionTheme?> findRevisionThemeById(int id) async {
+    return _queryAdapter.query('SELECT * FROM revision_theme WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => RevisionTheme(
+            id: row['id'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            description: row['description'] as String?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<RevisionTheme?> deleteRevisionThemeById(int id) async {
+    return _queryAdapter.query('delete FROM revision_theme WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => RevisionTheme(
+            id: row['id'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            description: row['description'] as String?),
+        arguments: [id]);
+  }
+
+  @override
+  Future<List<RevisionTheme>> findRevisionThemeByDescription(
+      String text) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision_theme WHERE description LIKE ?1',
+        mapper: (Map<String, Object?> row) => RevisionTheme(
+            id: row['id'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            description: row['description'] as String?),
+        arguments: [text]);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    return _queryAdapter.query(
+        'select count(*) from revision_theme where id  = ?1',
+        mapper: (Map<String, Object?> row) => row.values.first as int,
+        arguments: [id]);
+  }
+
+  @override
+  Future<int> insertRevisionTheme(RevisionTheme revisionTheme) {
+    return _revisionThemeInsertionAdapter.insertAndReturnId(
+        revisionTheme, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<List<int>> insertRevisionThemeList(
+      List<RevisionTheme> revisionThemes) {
+    return _revisionThemeInsertionAdapter.insertListAndReturnIds(
+        revisionThemes, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateRevisionTheme(RevisionTheme revisionTheme) {
+    return _revisionThemeUpdateAdapter.updateAndReturnChangedRows(
+        revisionTheme, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateRevisionThemeList(
+      List<RevisionTheme> revisionThemes) async {
+    await _revisionThemeUpdateAdapter.updateList(
+        revisionThemes, OnConflictStrategy.abort);
   }
 }

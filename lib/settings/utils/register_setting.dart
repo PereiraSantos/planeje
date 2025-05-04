@@ -10,7 +10,7 @@ abstract class RegisterSettingFactory extends RegisterFactory {
 class InsertSetting implements RegisterSettingFactory {
   SettingDatabaseFactory settingDatabaseDataSource;
 
-  InsertSetting(this.settingDatabaseDataSource, this.settings, this.message);
+  InsertSetting(this.settingDatabaseDataSource, this.settings, {this.message});
 
   @override
   Future<int?> write() async {
@@ -21,13 +21,19 @@ class InsertSetting implements RegisterSettingFactory {
   Settings settings;
 
   @override
-  StatusNotification message;
+  StatusNotification? message;
+
+  @override
+  Future writeList() {
+    // TODO: implement writeList
+    throw UnimplementedError();
+  }
 }
 
 class UpdateSetting implements RegisterSettingFactory {
   SettingDatabaseFactory settingDatabaseDataSource;
 
-  UpdateSetting(this.settingDatabaseDataSource, this.settings, this.message);
+  UpdateSetting(this.settingDatabaseDataSource, this.settings, {this.message});
 
   @override
   Future<int?> write() async {
@@ -38,5 +44,11 @@ class UpdateSetting implements RegisterSettingFactory {
   Settings settings;
 
   @override
-  StatusNotification message;
+  StatusNotification? message;
+
+  @override
+  Future writeList() {
+    // TODO: implement writeList
+    throw UnimplementedError();
+  }
 }

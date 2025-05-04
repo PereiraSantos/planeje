@@ -50,9 +50,7 @@ class _ListQuizState extends State<ListQuiz> {
             onClick: () async {
               var result = await Navigator.of(context).push(
                 TransitionsBuilder.createRoute(
-                  RegisterQuizPage(
-                    registerQuiz: SaveQuiz(QuizDatabase(), Quiz(), StatusNotification()),
-                  ),
+                  RegisterQuizPage(registerQuiz: SaveQuiz(QuizDatabase(), quiz: Quiz(), message: StatusNotification())),
                 ),
               );
               if (result) setState(() {});
@@ -91,12 +89,12 @@ class _ListQuizState extends State<ListQuiz> {
                               tableQuestionNotifier.clearList();
 
                               if (!context.mounted) return;
-                              MessageUser.message(context, 'Removido com sucesso');
+                              await MessageUser.message(context, 'Removido com sucesso');
                               setState(() {});
                             }
                           } catch (e) {
                             // ignore: use_build_context_synchronously
-                            MessageUser.message(context, 'Erro ao abrir dialogo');
+                            await MessageUser.message(context, 'Erro ao abrir dialogo');
                           }
                         } else {
                           try {
@@ -105,8 +103,8 @@ class _ListQuizState extends State<ListQuiz> {
                                 RegisterQuizPage(
                                   registerQuiz: UpdateQuiz(
                                     QuizDatabase(),
-                                    (snapshot.data![index]),
-                                    StatusNotification(TypeMessage.Atualizar),
+                                    quiz: (snapshot.data![index]),
+                                    message: StatusNotification(TypeMessage.Atualizar),
                                   ),
                                 ),
                               ),

@@ -12,9 +12,9 @@ import '../component/table_question.dart';
 
 class RegisterQuizPage extends StatelessWidget {
   RegisterQuizPage({super.key, required this.registerQuiz}) {
-    description.text = registerQuiz.quiz.description ?? "";
-    topic.text = registerQuiz.quiz.topic ?? "";
-    _tableQuestionNotifier.initListQuestionEdit(registerQuiz.quiz.id);
+    description.text = registerQuiz.quiz?.description ?? "";
+    topic.text = registerQuiz.quiz?.topic ?? "";
+    _tableQuestionNotifier.initListQuestionEdit(registerQuiz.quiz?.id);
   }
 
   final RegisterQuizFactory registerQuiz;
@@ -33,7 +33,7 @@ class RegisterQuizPage extends StatelessWidget {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         title: Text(
-          registerQuiz.message.getTypeQuiz?.name ?? '',
+          registerQuiz.message?.getTypeQuiz?.name ?? '',
           style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
@@ -48,7 +48,7 @@ class RegisterQuizPage extends StatelessWidget {
               children: [
                 TextFormFieldWidget(
                   controller: topic,
-                  onChange: registerQuiz.quiz.setTopic,
+                  onChange: registerQuiz.quiz?.setTopic,
                   hintText: 'Tema',
                   keyboardType: TextInputType.text,
                   textArea: false,
@@ -56,7 +56,7 @@ class RegisterQuizPage extends StatelessWidget {
                 ),
                 TextFormFieldWidget(
                   controller: description,
-                  onChange: registerQuiz.quiz.setDescription,
+                  onChange: registerQuiz.quiz?.setDescription,
                   maxLine: 5,
                   hintText: 'Pergunta',
                   keyboardType: TextInputType.multiline,
@@ -72,10 +72,10 @@ class RegisterQuizPage extends StatelessWidget {
                 ),
                 TextButtonWidget(
                   label: 'Adicionar questão',
-                  onClick: () {
+                  onClick: () async {
                     question.text.trim() == ''
-                        ? MessageUser.message(context, 'Obrigatório ter uma questão.')
-                        : _tableQuestionNotifier.addQuestion(Question(description: question.text));
+                        ? await MessageUser.message(context, 'Obrigatório ter uma questão.')
+                        : _tableQuestionNotifier.addQuestion(Question(description: question.text, sync: false));
 
                     question.text = '';
                   },
@@ -109,26 +109,28 @@ class RegisterQuizPage extends StatelessWidget {
                 if (!_tableQuestionNotifier.isAnwserByListQuestion(context)) return;
                 FocusScope.of(context).requestFocus(FocusNode());
 
-                registerQuiz.quiz.setId(registerQuiz.quiz.id);
-                registerQuiz.quiz.setTopic(topic.text);
-                registerQuiz.quiz.setDescription(description.text);
+                registerQuiz.quiz?.setId(registerQuiz.quiz?.id);
+                registerQuiz.quiz?.setTopic(topic.text);
+                registerQuiz.quiz?.setDescription(description.text);
+                registerQuiz.quiz?.setSync();
 
                 var result = await registerQuiz.writeQuiz();
 
                 if (result != null) {
-                  if (registerQuiz.quiz.id != null) result = registerQuiz.quiz.id;
+                  if (registerQuiz.quiz?.id != null) result = registerQuiz.quiz?.id;
                   await _tableQuestionNotifier.updateIdQuiz(result!);
                 }
 
                 if (context.mounted && result != null) {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  MessageUser.message(context, registerQuiz.message.message);
+                  await MessageUser.message(context, registerQuiz.message!.message);
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, true);
                 }
               } catch (e) {
                 if (context.mounted) {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  MessageUser.message(context, 'Erro ao registrar!!!');
+                  await MessageUser.message(context, 'Erro ao registrar!!!, $e');
                 }
               }
             },

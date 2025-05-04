@@ -23,12 +23,13 @@ class DialogDelete {
                         var result = await onPressed();
 
                         if (result != null && context.mounted) {
-                          MessageUser.message(context, 'Removido com sucesso');
+                          await MessageUser.message(context, 'Removido com sucesso');
+                          // ignore: use_build_context_synchronously
                           Navigator.pop(context, true);
                         }
                       } catch (e) {
                         // ignore: use_build_context_synchronously
-                        MessageUser.message(context, 'Erro ao deletar');
+                        await MessageUser.message(context, 'Erro ao deletar');
                       }
                     },
                     style: ButtonStyle(

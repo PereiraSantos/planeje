@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
 
                           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
                         } else {
-                          MessageUser.message(context, 'Login incorreto!!!');
+                          await MessageUser.message(context, 'Login incorreto!!!');
                         }
                       },
                       style: ButtonStyle(

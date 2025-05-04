@@ -7,13 +7,15 @@ class FindRevisionDao {
   Future<List<RevisionTime>> findRevision(
     AppDatabase database,
     String text,
+    int id,
     bool isBefore, {
     int? limit,
   }) async {
     List<RevisionTime> listRevisionTime = [];
-    String filter = text != '' ? 'where r.title like \'%$text%\' or r.description like \'%$text%\' ' : '';
+    String filter =
+        text != '' ? 'where r.id_revision_theme = $id and (r.title like \'%$text%\' or r.description like \'%$text%\')' : 'where r.id_revision_theme = $id ';
 
-    String sqlBase = 'SELECT * FROM revision as r left join date_revision as d on r.id = d.id_revision $filter group by id';
+    String sqlBase = 'SELECT * FROM revision as r left join date_revision as d on r.id = d.id_revision $filter group by id order by date_revision desc';
 
     List<Map> list = await database.database.rawQuery(sqlBase);
 

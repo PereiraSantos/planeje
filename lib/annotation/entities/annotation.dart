@@ -18,12 +18,16 @@ class Annotation {
   @ColumnInfo(name: 'id_revision')
   int? idRevision;
 
+  @ColumnInfo(name: 'sync')
+  bool? sync;
+
   Annotation({
     this.id,
     this.title,
     this.text,
     this.dateText,
     this.idRevision,
+    this.sync = true,
   });
 
   void setId(int? value) => id = value;
@@ -31,4 +35,20 @@ class Annotation {
   void setText(String value) => text = value;
   void setDateText(String? date) => dateText = date ?? FormatDate.formatDate(FormatDate.newDate());
   void setIdRevision(int? value) => idRevision = value;
+  void setSync({bool? value}) => sync = value ?? false;
+
+  static Annotation fromMapToObject(Map<String, dynamic> json) => Annotation(
+        id: json['id'],
+        title: json['title'],
+        text: json['text'],
+        dateText: json['dateText'],
+        idRevision: json['idRevision'],
+      );
+
+  static Map<String, dynamic> fromObjectToMap(Annotation annotation) => {
+        "title": annotation.title,
+        "text": annotation.text,
+        "dateText": annotation.dateText,
+        "idRevision": annotation.idRevision,
+      };
 }

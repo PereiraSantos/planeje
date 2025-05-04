@@ -9,8 +9,8 @@ import '../component/drop_down_revision.dart';
 // ignore: must_be_immutable
 class RegisterAnnotation extends StatelessWidget {
   RegisterAnnotation({super.key, required this.registerAnnotation}) {
-    description.text = registerAnnotation.annotation.text ?? '';
-    title.text = registerAnnotation.annotation.title ?? '';
+    description.text = registerAnnotation.annotation?.text ?? '';
+    title.text = registerAnnotation.annotation?.title ?? '';
   }
 
   RegisterAnnotationFactory registerAnnotation;
@@ -27,7 +27,7 @@ class RegisterAnnotation extends StatelessWidget {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         title: Text(
-          registerAnnotation.message.getTypeQuiz!.name,
+          registerAnnotation.message!.getTypeQuiz!.name,
           style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
@@ -42,8 +42,8 @@ class RegisterAnnotation extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropDownButtonRevision(
-                  onClick: (value) => registerAnnotation.annotation.setIdRevision(value),
-                  idRevision: registerAnnotation.annotation.idRevision,
+                  onClick: (value) => registerAnnotation.annotation!.setIdRevision(value),
+                  idRevision: registerAnnotation.annotation!.idRevision,
                 ),
                 Flexible(
                   child: TextFormField(
@@ -98,19 +98,20 @@ class RegisterAnnotation extends StatelessWidget {
               try {
                 if (!formKey.currentState!.validate()) return;
 
-                registerAnnotation.annotation.setTitle(title.text);
-                registerAnnotation.annotation.setText(description.text);
-                registerAnnotation.annotation.setDateText(registerAnnotation.annotation.dateText);
+                registerAnnotation.annotation!.setTitle(title.text);
+                registerAnnotation.annotation!.setText(description.text);
+                registerAnnotation.annotation!.setDateText(registerAnnotation.annotation!.dateText);
 
                 await registerAnnotation.write();
 
                 if (context.mounted) {
-                  MessageUser.message(context, registerAnnotation.message.message);
+                  await MessageUser.message(context, registerAnnotation.message!.message);
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, true);
                 }
               } catch (e) {
                 // ignore: use_build_context_synchronously
-                MessageUser.message(context, 'Erro ao registrar anotação');
+                await MessageUser.message(context, 'Erro ao registrar anotação');
               }
             },
           ),

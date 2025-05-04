@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class FutureBuilderComponent<T> extends StatelessWidget {
-  const FutureBuilderComponent({super.key, required this.future, required this.children});
+  const FutureBuilderComponent({super.key, required this.future, required this.children, this.message});
 
   final Future<List<T>?> future;
   final Widget Function(List<T>) children;
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,17 @@ class FutureBuilderComponent<T> extends StatelessWidget {
             );
           }
 
-          return const SizedBox();
+          return SizedBox(
+            child: Visibility(
+              visible: message != null,
+              child: Center(
+                child: Text(
+                  '$message',
+                  style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+          );
         }
 
         return const Center(child: CircularProgressIndicator(strokeWidth: 1));

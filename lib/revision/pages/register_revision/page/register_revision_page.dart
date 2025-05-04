@@ -13,10 +13,11 @@ import '../../../../widgets/text_form_field_widget.dart';
 
 // ignore: must_be_immutable
 class RegisterRevisionPage extends StatefulWidget {
-  RegisterRevisionPage({super.key, required this.revision, this.annotations});
+  RegisterRevisionPage({super.key, required this.revision, required this.id, this.annotations});
 
   RevisionFactory revision;
   List<Annotation>? annotations;
+  int id;
 
   @override
   State<RegisterRevisionPage> createState() => _RegisterRevisionPageState();
@@ -26,15 +27,15 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController title = TextEditingController();
   final TextEditingController description = TextEditingController();
-  InsertAnnotation registerAnnotation = InsertAnnotation(AnnotationDatabase(), Annotation(), StatusNotification());
+  InsertAnnotation registerAnnotation = InsertAnnotation(AnnotationDatabase(), annotation: Annotation());
   String nextDate = '';
 
   @override
   void initState() {
     super.initState();
-    description.text = widget.revision.revision.description ?? '';
-    title.text = widget.revision.revision.title ?? '';
-    if (widget.revision.revision.id == null) widget.annotations = [];
+    description.text = widget.revision.revision?.description ?? '';
+    title.text = widget.revision.revision?.title ?? '';
+    if (widget.revision.revision?.id == null) widget.annotations = [];
   }
 
   @override
@@ -46,7 +47,7 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         title: Text(
-          widget.revision.message.getTypeQuiz!.name,
+          widget.revision.message!.getTypeQuiz!.name,
           style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
@@ -171,10 +172,12 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
               try {
                 if (!formKey.currentState!.validate()) return;
 
-                widget.revision.revision.setId(widget.revision.revision.id);
-                widget.revision.revision.setTitle(title.text);
-                widget.revision.revision.setDescription(description.text);
-                widget.revision.revision.setDateCreational(widget.revision.revision.dateCreational);
+                widget.revision.revision?.setId(widget.revision.revision?.id);
+                widget.revision.revision?.setTitle(title.text);
+                widget.revision.revision?.setDescription(description.text);
+                widget.revision.revision?.setDateCreational(widget.revision.revision?.dateCreational);
+                widget.revision.revision?.setSync();
+                widget.revision.revision?.setIdTevisionTheme(widget.id);
 
                 var idRevision = await widget.revision.write();
 
@@ -182,37 +185,39 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
 
                 for (Annotation annotation in widget.annotations!) {
                   if (annotation.id != null && annotation.id! < 0) {
-                    registerAnnotation.annotation.setId(null);
+                    registerAnnotation.annotation?.setId(null);
                     annotation.id = null;
                   }
 
-                  registerAnnotation.annotation.setTitle(annotation.title ?? '');
-                  registerAnnotation.annotation.setText(annotation.text ?? '');
-                  registerAnnotation.annotation.setIdRevision(widget.revision.revision.id ?? idRevision);
-                  registerAnnotation.annotation.setDateText(null);
+                  registerAnnotation.annotation?.setTitle(annotation.title ?? '');
+                  registerAnnotation.annotation?.setText(annotation.text ?? '');
+                  registerAnnotation.annotation?.setIdRevision(widget.revision.revision?.id ?? idRevision);
+                  registerAnnotation.annotation?.setDateText(null);
+                  registerAnnotation.annotation?.setSync();
+
                   annotation.id == null
                       ? await registerAnnotation.write()
-                      : await UpdateAnnotation(
-                              AnnotationDatabase(),
-                              Annotation(
+                      : await UpdateAnnotation(AnnotationDatabase(),
+                              annotation: Annotation(
                                 id: annotation.id,
                                 idRevision: annotation.idRevision,
                                 title: annotation.title,
                                 text: annotation.text,
                               ),
-                              StatusNotification())
+                              message: StatusNotification())
                           .write();
                 }
 
                 if (idRevision != null && context.mounted) {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  MessageUser.message(context, widget.revision.message.message);
+                  await MessageUser.message(context, widget.revision.message!.message);
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context, true);
                 }
               } catch (e) {
                 if (context.mounted) {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  MessageUser.message(context, 'Erro ao registrar!!!');
+                  await MessageUser.message(context, 'Erro ao registrar!!!, $e');
                 }
               }
             },

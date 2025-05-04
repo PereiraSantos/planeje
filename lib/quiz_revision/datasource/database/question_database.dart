@@ -4,12 +4,16 @@ import '../../../database/app_database.dart';
 
 abstract class QuestionDatabaseFactory {
   Future<List<Question>?> getAllQuestion();
+  Future<List<Question>?> findAllQuestionSync();
   Future<int> insertQuestion(Question question);
+  Future<List<int>> insertQuestionList(List<Question> questions);
   Future<Question?> getQuestionById(int id);
   Future<void> deleteQuestion(int id);
   Future<void> deleteQuestionByIdQuiz(int idQuiz);
   Future<int> updateQuestion(Question question);
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
+  Future<void> updateQuestionList(List<Question> question);
+  Future<int?> isRegistration(int id);
 }
 
 class QuestionDatabase implements QuestionDatabaseFactory {
@@ -53,5 +57,29 @@ class QuestionDatabase implements QuestionDatabaseFactory {
   Future<void> deleteQuestionByIdQuiz(int idQuiz) async {
     final database = await getInstance();
     return await database.questionDao.deleteQuestionByIdQuiz(idQuiz);
+  }
+
+  @override
+  Future<List<int>> insertQuestionList(List<Question> questions) async {
+    final database = await getInstance();
+    return await database.questionDao.insertQuestionList(questions);
+  }
+
+  @override
+  Future<List<Question>?> findAllQuestionSync() async {
+    final database = await getInstance();
+    return await database.questionDao.findAllQuestionSync();
+  }
+
+  @override
+  Future<void> updateQuestionList(List<Question> question) async {
+    final database = await getInstance();
+    return await database.questionDao.updateQuestionList(question);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    final database = await getInstance();
+    return await database.questionDao.isRegistration(id);
   }
 }

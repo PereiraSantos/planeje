@@ -5,46 +5,67 @@ import 'package:planeje/utils/register.dart';
 import 'package:planeje/utils/type_message.dart';
 
 abstract class RevisionFactory extends RegisterFactory {
-  late Revision revision;
-  late DateFactory registerDate;
+  Revision? revision;
+  List<Revision>? revisions = [];
+  DateFactory? registerDate;
 }
 
 class Register implements RevisionFactory {
   RevisionDatabaseFactory revisionDatabase;
 
-  Register(this.revisionDatabase, this.revision, this.message, this.registerDate);
+  Register(this.revisionDatabase, {this.registerDate, this.revision, this.message, this.revisions});
 
   @override
   Future<int?> write() async {
-    return await revisionDatabase.insertRevision(revision);
+    if (revision == null) throw ('Teve passar um objeto revision');
+    return await revisionDatabase.insertRevision(revision!);
   }
 
   @override
-  Revision revision;
+  Revision? revision;
 
   @override
-  StatusNotification message;
+  StatusNotification? message;
 
   @override
-  DateFactory registerDate;
+  DateFactory? registerDate;
+
+  @override
+  Future writeList() async {
+    if (revisions == null) throw ('Teve passar a uma lista de revisions');
+    return await revisionDatabase.insertRevisionList(revisions!);
+  }
+
+  @override
+  List<Revision>? revisions;
 }
 
 class Update implements RevisionFactory {
   RevisionDatabaseDataSource revisionDatabase;
 
-  Update(this.revisionDatabase, this.revision, this.message, this.registerDate);
+  Update(this.revisionDatabase, {this.revision, this.message, this.registerDate, this.revisions});
 
   @override
-  Revision revision;
+  Revision? revision;
 
   @override
   Future<int?> write() async {
-    return await revisionDatabase.updateRevision(revision);
+    if (revision == null) throw ('Teve passar um objeto revision');
+    return await revisionDatabase.updateRevision(revision!);
   }
 
   @override
-  StatusNotification message;
+  StatusNotification? message;
 
   @override
-  DateFactory registerDate;
+  DateFactory? registerDate;
+
+  @override
+  Future writeList() async {
+    if (revisions == null) throw ('Teve passar a uma lista de revisions');
+    return await revisionDatabase.updateRevisionList(revisions!);
+  }
+
+  @override
+  List<Revision>? revisions;
 }

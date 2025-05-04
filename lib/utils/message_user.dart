@@ -1,12 +1,23 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 class MessageUser {
-  static void message(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  static Future<void> message(BuildContext context, String message, {String? title}) async {
+    await Flushbar(
+      title: title,
+      message: message,
+      duration: Duration(seconds: 3),
+      flushbarPosition: FlushbarPosition.TOP,
+      margin: EdgeInsets.all(8),
+      borderRadius: BorderRadius.circular(8),
+      backgroundColor: Colors.green,
+    ).show(context);
+
+    /* ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),
       dismissDirection: DismissDirection.up,
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height - 100, left: 10, right: 10),
-    ));
+    ));*/
   }
 }

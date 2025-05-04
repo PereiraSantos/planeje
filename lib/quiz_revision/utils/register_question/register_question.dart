@@ -4,18 +4,22 @@ import 'package:planeje/quiz_revision/utils/register_question/question_list.dart
 
 abstract class RegisterQuestionFactory {
   Future<bool> writeQuestion(List<QuestionList> questionList);
+  Future<void> writeQuestionList();
+  List<Question>? questions;
 }
 
 abstract class FindQuestion {
   Future<List<Question>?> getAllQuestion();
   Future<Question?> getQuestionById(int id);
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
+  Future<List<Question>?> findAllQuestionSync();
+  Future<int?> isRegistration(int id);
 }
 
 class SaveQuestion implements RegisterQuestionFactory {
   QuestionDatabaseFactory questionDatabase;
 
-  SaveQuestion(this.questionDatabase);
+  SaveQuestion(this.questionDatabase, {this.questions});
 
   @override
   Future<bool> writeQuestion(List<QuestionList> questionList) async {
@@ -25,6 +29,37 @@ class SaveQuestion implements RegisterQuestionFactory {
     }
     return true;
   }
+
+  @override
+  Future<void> writeQuestionList() async {
+    await questionDatabase.insertQuestionList(questions!);
+  }
+
+  @override
+  List<Question>? questions;
+}
+
+class UpdateQuestion implements RegisterQuestionFactory {
+  QuestionDatabaseFactory questionDatabase;
+
+  UpdateQuestion(this.questionDatabase, {this.questions});
+
+  @override
+  Future<bool> writeQuestion(List<QuestionList> questionList) async {
+    for (var item in questionList) {
+      if (item.add) await questionDatabase.insertQuestion(item.question!);
+      if (item.update) await questionDatabase.updateQuestion(item.question!);
+    }
+    return true;
+  }
+
+  @override
+  Future<void> writeQuestionList() async {
+    await questionDatabase.updateQuestionList(questions!);
+  }
+
+  @override
+  List<Question>? questions;
 }
 
 class GetQuestion implements FindQuestion {
@@ -44,5 +79,15 @@ class GetQuestion implements FindQuestion {
   @override
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz) async {
     return await questionDatabase.getQuestionByIdQuiz(idQuiz);
+  }
+
+  @override
+  Future<List<Question>?> findAllQuestionSync() async {
+    return await questionDatabase.findAllQuestionSync();
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    return await questionDatabase.isRegistration(id);
   }
 }

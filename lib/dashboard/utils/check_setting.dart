@@ -2,7 +2,6 @@ import 'package:planeje/settings/datasource/database/setting_database.dart';
 import 'package:planeje/settings/entities/settings.dart';
 import 'package:planeje/settings/utils/find_setting.dart';
 import 'package:planeje/settings/utils/register_setting.dart';
-import 'package:planeje/utils/type_message.dart';
 
 class CheckSetting {
   void checkRealize() async {
@@ -15,11 +14,7 @@ class CheckSetting {
     if (setting == null) insertSettingnextIsNull();
   }
 
-  void insertSettingRealizeIsNull() =>
-      InsertSetting(SettingDatabaseDataSource(), Settings(key: 'realize', value: '3'), StatusNotification())
-          .write();
+  void insertSettingRealizeIsNull() => InsertSetting(SettingDatabaseDataSource(), Settings(key: 'realize', value: '3')).write();
 
-  void insertSettingnextIsNull() =>
-      InsertSetting(SettingDatabaseDataSource(), Settings(key: 'next', value: '3'), StatusNotification())
-          .write();
+  void insertSettingnextIsNull() => InsertSetting(SettingDatabaseDataSource(), Settings(key: 'next', value: '3')).write();
 }

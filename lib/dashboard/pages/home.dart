@@ -4,7 +4,7 @@ import 'package:planeje/dashboard/utils/check_setting.dart';
 import 'package:planeje/dashboard/utils/find_revision.dart';
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
 import 'package:planeje/quiz_revision/pages/list_quiz/page/list_quiz.dart';
-import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
+import 'package:planeje/revision_theme/pages/list_revision_theme/page/list_revision_theme.dart';
 import 'package:planeje/settings/pages/setting_page.dart';
 
 class Home extends StatefulWidget {
@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
 
   final List<Widget> _screen = [
     Dashboard(),
-    ListRevision(),
+    ListRevisionTheme(),
     ListQuiz(),
     SettingPage(),
   ];

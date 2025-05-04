@@ -78,12 +78,13 @@ class RegisterPage extends StatelessWidget {
                                 await Credentials(UserDatabase()).insertUser(User(_login.text, _password.text, false));
 
                                 if (context.mounted) {
-                                  MessageUser.message(context, 'Cadastro realizado!!!');
+                                  await MessageUser.message(context, 'Cadastro realizado!!!');
+                                  // ignore: use_build_context_synchronously
                                   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const LoginPage()));
                                 }
                               } catch (e) {
                                 // ignore: use_build_context_synchronously
-                                MessageUser.message(context, 'Erro ao cadastrar!!!');
+                                await MessageUser.message(context, 'Erro ao cadastrar!!!');
                               }
                             },
                             style: ButtonStyle(

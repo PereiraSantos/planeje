@@ -26,8 +26,7 @@ class ListAnnotation extends StatelessWidget {
       child: Column(
         children: [
           FutureBuilder(
-            future: GetAnnotation(AnnotationDatabase())
-                .getAnnotationWidthRevision(annotationNotifier.search ?? ''),
+            future: GetAnnotation(AnnotationDatabase()).getAnnotationWidthRevision(annotationNotifier.search ?? ''),
             builder: (BuildContext context, AsyncSnapshot<List<AnnotationRevision>?> snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data!.isNotEmpty) {
@@ -53,13 +52,12 @@ class ListAnnotation extends StatelessWidget {
                                     context,
                                     snapshot.data![index].text!,
                                     <AnnotationRevision>() async {
-                                      return await DeleteAnnotation(AnnotationDatabase())
-                                          .deleteById(snapshot.data![index].id!);
+                                      return await DeleteAnnotation(AnnotationDatabase()).deleteById(snapshot.data![index].id!);
                                     },
                                   );
                                 } catch (e) {
                                   // ignore: use_build_context_synchronously
-                                  MessageUser.message(context, 'Erro ao abrir dialogo');
+                                  await MessageUser.message(context, 'Erro ao abrir dialogo');
                                 }
                               }
                               return null;
@@ -78,8 +76,8 @@ class ListAnnotation extends StatelessWidget {
                                         RegisterAnnotation(
                                           registerAnnotation: UpdateAnnotation(
                                             AnnotationDatabase(),
-                                            snapshot.data![index],
-                                            StatusNotification(TypeMessage.Atualizar),
+                                            annotation: snapshot.data![index],
+                                            message: StatusNotification(TypeMessage.Atualizar),
                                           ),
                                         ),
                                       ),
@@ -87,7 +85,7 @@ class ListAnnotation extends StatelessWidget {
                                     if (result) annotationNotifier.update();
                                   } catch (e) {
                                     // ignore: use_build_context_synchronously
-                                    MessageUser.message(context, 'Erro na rota anotação');
+                                    await MessageUser.message(context, 'Erro na rota anotação');
                                   }
                                 },
                                 child: Column(
@@ -100,8 +98,7 @@ class ListAnnotation extends StatelessWidget {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           const TextList("Tema:", flex: 1),
-                                          TextList("${snapshot.data![index].description}",
-                                              flex: 6, fontSize: 17),
+                                          TextList("${snapshot.data![index].description}", flex: 6, fontSize: 17),
                                         ],
                                       ),
                                     ),

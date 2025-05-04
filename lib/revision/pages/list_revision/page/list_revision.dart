@@ -4,7 +4,6 @@ import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
 import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
-import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 import 'package:planeje/revision/pages/list_revision/component/dialog_delete.dart';
@@ -12,6 +11,7 @@ import 'package:planeje/revision/pages/register_revision/page/register_revision_
 import 'package:planeje/revision/utils/find_revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/revision_theme/entities/revision_theme.dart';
 import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/utils/type_message.dart';
@@ -20,7 +20,9 @@ import 'package:planeje/widgets/expansion_tile_widgets.dart';
 import 'package:planeje/widgets/search.dart';
 
 class ListRevision extends StatefulWidget {
-  const ListRevision({super.key});
+  const ListRevision({super.key, required this.revisionTheme});
+
+  final RevisionTheme revisionTheme;
 
   @override
   State<ListRevision> createState() => _ListRevisionState();
@@ -38,7 +40,7 @@ class _ListRevisionState extends State<ListRevision> {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         toolbarHeight: 46,
-        title: const Text('Revisão', style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold)),
+        title: Text('Revisões ${widget.revisionTheme.description}', style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold)),
         actions: [
           Search(
             setValue: (value) {
@@ -50,12 +52,8 @@ class _ListRevisionState extends State<ListRevision> {
               var result = await Navigator.of(context).push(
                 TransitionsBuilder.createRoute(
                   RegisterRevisionPage(
-                    revision: Register(
-                      RevisionDatabaseDataSource(),
-                      Revision(),
-                      StatusNotification(),
-                      RegisterDateRevision(DateRevisionDatabaseDataSource(), DateRevision()),
-                    ),
+                    revision: Register(RevisionDatabaseDataSource(), revision: Revision(), message: StatusNotification()),
+                    id: widget.revisionTheme.id!,
                   ),
                 ),
               );
@@ -67,7 +65,7 @@ class _ListRevisionState extends State<ListRevision> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription(search, false),
+          future: GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription(search, widget.revisionTheme.id!, false),
           builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
@@ -87,7 +85,7 @@ class _ListRevisionState extends State<ListRevision> {
                             return await DialogDelete.build(context, snapshot.data![index].revision);
                           } catch (e) {
                             // ignore: use_build_context_synchronously
-                            MessageUser.message(context, 'Erro ao abrir dialogo');
+                            await MessageUser.message(context, 'Erro ao abrir dialogo');
                           }
                         } else {
                           try {
@@ -99,10 +97,11 @@ class _ListRevisionState extends State<ListRevision> {
                                 RegisterRevisionPage(
                                   revision: Update(
                                     RevisionDatabaseDataSource(),
-                                    snapshot.data![index].revision,
-                                    StatusNotification(TypeMessage.Atualizar),
-                                    UpdateDateRevision(DateRevisionDatabaseDataSource(), snapshot.data![index].dateRevision),
+                                    revision: snapshot.data![index].revision,
+                                    message: StatusNotification(TypeMessage.Atualizar),
+                                    registerDate: UpdateDateRevision(DateRevisionDatabaseDataSource(), dateRevision: snapshot.data![index].dateRevision),
                                   ),
+                                  id: widget.revisionTheme.id!,
                                   annotations: list,
                                 ),
                               ),
@@ -110,7 +109,7 @@ class _ListRevisionState extends State<ListRevision> {
                             if (result) setState(() {});
                           } catch (e) {
                             // ignore: use_build_context_synchronously
-                            MessageUser.message(context, 'Erro na rota revisão');
+                            await MessageUser.message(context, 'Erro na rota revisão');
                           }
                         }
                         return null;

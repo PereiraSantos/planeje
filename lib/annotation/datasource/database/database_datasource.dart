@@ -6,11 +6,16 @@ import '../../entities/annotation_revision.dart';
 
 abstract class AnnotationDatabaseFactory {
   Future<int?> insertAnnotation(Annotation annotationEntity);
+  Future<List<int>> insertAnnotationList(List<Annotation> annotations);
   Future<int?> updateAnnotation(Annotation annotationEntity);
   Future<void> delete(int id);
   Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text);
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
   Future<void> deleteByIdRevision(int id);
+  Future<List<Annotation>?> getAnnotationAll();
+  Future<List<Annotation>?> findAnnotationSync();
+  Future<void> updateAnnotationList(List<Annotation> annotation);
+  Future<int?> isRegistration(int id);
 }
 
 class AnnotationDatabase implements AnnotationDatabaseFactory {
@@ -48,5 +53,35 @@ class AnnotationDatabase implements AnnotationDatabaseFactory {
   Future<void> deleteByIdRevision(int id) async {
     final database = await getInstance();
     return await database.annotationDao.deleteByIdRevision(id);
+  }
+
+  @override
+  Future<List<int>> insertAnnotationList(List<Annotation> annotations) async {
+    final database = await getInstance();
+    return await database.annotationDao.insertAnnotationList(annotations);
+  }
+
+  @override
+  Future<List<Annotation>?> getAnnotationAll() async {
+    final database = await getInstance();
+    return await database.annotationDao.getAnnotationAll();
+  }
+
+  @override
+  Future<List<Annotation>?> findAnnotationSync() async {
+    final database = await getInstance();
+    return await database.annotationDao.findAnnotationSync();
+  }
+
+  @override
+  Future<void> updateAnnotationList(List<Annotation> annotation) async {
+    final database = await getInstance();
+    return await database.annotationDao.updateAnnotationList(annotation);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    final database = await getInstance();
+    return await database.annotationDao.isRegistration(id);
   }
 }

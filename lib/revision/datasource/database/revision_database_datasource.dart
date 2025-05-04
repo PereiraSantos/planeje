@@ -8,10 +8,15 @@ abstract class RevisionDatabaseFactory {
   Future<List<Revision>> findAllRevisions();
   Future<Revision?> findRevisionById(int id);
   Future<Revision?> deleteRevisionById(int id);
-  Future<List<RevisionTime>> findRevisionByDescription(String text, bool isBefore, {int? limit});
+  Future<List<RevisionTime>> findRevisionByDescription(String text, int id, bool isBefore, {int? limit});
   Future<int?> updateRevision(Revision revision);
   Future<int?> insertRevision(Revision revision);
+  Future<List<int>> insertRevisionList(List<Revision> revisions);
   Future<int> getQuantiyRevision(String date, bool isBefore);
+  Future<List<Revision>?> findAllRevisionsSync();
+  Future<void> updateRevisionList(List<Revision> revision);
+  Future<int?> isRegistration(int id);
+  Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
 }
 
 class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
@@ -28,9 +33,9 @@ class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
   }
 
   @override
-  Future<List<RevisionTime>> findRevisionByDescription(String text, bool isBefore, {int? limit}) async {
+  Future<List<RevisionTime>> findRevisionByDescription(String text, int id, bool isBefore, {int? limit}) async {
     final database = await getInstance();
-    return await FindRevisionDao().findRevision(database, text, isBefore, limit: limit);
+    return await FindRevisionDao().findRevision(database, text, id, isBefore, limit: limit);
   }
 
   @override
@@ -56,5 +61,35 @@ class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
     // final database = await getInstance();
     //  return await FindRevisionDao().getQuantiyRevision(database, date, isBefore);
     return 0;
+  }
+
+  @override
+  Future<List<int>> insertRevisionList(List<Revision> revisions) async {
+    final database = await getInstance();
+    return await database.revisionDao.insertRevisionList(revisions);
+  }
+
+  @override
+  Future<List<Revision>?> findAllRevisionsSync() async {
+    final database = await getInstance();
+    return await database.revisionDao.findAllRevisionsSync();
+  }
+
+  @override
+  Future<void> updateRevisionList(List<Revision> revision) async {
+    final database = await getInstance();
+    return await database.revisionDao.updateRevisionList(revision);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    final database = await getInstance();
+    return await database.revisionDao.isRegistration(id);
+  }
+
+  @override
+  Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme) async {
+    final database = await getInstance();
+    return await database.revisionDao.findRevisioByIdRevisionTheme(idRevisionTheme);
   }
 }

@@ -6,8 +6,14 @@ abstract class QuestionDao {
   @Query('SELECT * FROM question')
   Future<List<Question>?> getAllQuestion();
 
+  @Query('SELECT * FROM question where sync = 0')
+  Future<List<Question>?> findAllQuestionSync();
+
   @insert
   Future<int> insertQuestion(Question question);
+
+  @insert
+  Future<List<int>> insertQuestionList(List<Question> question);
 
   @Query('SELECT * FROM question WHERE id = :id')
   Future<Question?> getQuestionById(int id);
@@ -21,6 +27,12 @@ abstract class QuestionDao {
   @Query('delete FROM question WHERE id_quiz = :idQuiz')
   Future<void> deleteQuestionByIdQuiz(int idQuiz);
 
+  @Query('select count(*) from question where id  = :id')
+  Future<int?> isRegistration(int id);
+
   @update
   Future<int> updateQuestion(Question question);
+
+  @update
+  Future<void> updateQuestionList(List<Question> question);
 }

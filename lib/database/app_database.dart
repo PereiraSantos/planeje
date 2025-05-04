@@ -10,6 +10,8 @@ import 'package:planeje/quiz_revision/datasource/dao/revision_quiz_dao.dart';
 import 'package:planeje/quiz_revision/entities/revision_quiz.dart';
 import 'package:planeje/revision/datasource/dao/date_revision_dao.dart';
 import 'package:planeje/revision/datasource/dao/revision_dao.dart';
+import 'package:planeje/revision_theme/datasource/dao/revision_theme_dao.dart';
+import 'package:planeje/revision_theme/entities/revision_theme.dart';
 import 'package:planeje/settings/datasource/dao/setting_dao.dart';
 
 // ignore: depend_on_referenced_packages
@@ -33,6 +35,14 @@ final migration1to2 = Migration(1, 2, (database) async {
 final migration2to3 = Migration(2, 3, (database) async {
   await database.execute(
       'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER)');
+  await database.execute('ALTER annotation ADD COLUMN sync INTEGER');
+  await database.execute('ALTER question ADD COLUMN sync INTEGER');
+  await database.execute('ALTER revision_quiz ADD COLUMN sync INTEGER');
+  await database.execute('ALTER revision ADD COLUMN sync INTEGER');
+  await database.execute('ALTER date_revision ADD COLUMN sync INTEGER');
+  await database.execute('ALTER quiz ADD COLUMN sync INTEGER');
+  await database.execute('CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `sync` INTEGER)');
+  await database.execute('ALTER revision ADD COLUMN id_revision_theme INTEGER');
 });
 
 @Database(version: 3, entities: [
@@ -44,6 +54,7 @@ final migration2to3 = Migration(2, 3, (database) async {
   Settings,
   User,
   RevisionQuiz,
+  RevisionTheme,
 ])
 abstract class AppDatabase extends FloorDatabase {
   RevisionDao get revisionDao;
@@ -54,6 +65,7 @@ abstract class AppDatabase extends FloorDatabase {
   SettingDao get settingDao;
   UserDao get userDao;
   RevisionQuizDao get revisionQuizDao;
+  RevisionThemeDao get revisionThemeDao;
 }
 
 Future<AppDatabase> migrationDatabase() async {

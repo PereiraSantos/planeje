@@ -5,9 +5,13 @@ import '../../../database/app_database.dart';
 abstract class QuizDatabaseFactory {
   Future<List<Quiz>?> getAllQuiz(String text);
   Future<int> insertQuiz(Quiz quiz);
+  Future<List<int>> insertQuizList(List<Quiz> quizs);
   Future<Quiz?> getQuizById(int id);
   Future<Quiz?> deleteQuiz(int id);
   Future<int> updateQuiz(Quiz quiz);
+  Future<List<Quiz>?> findAllQuizSync();
+  Future<void> updateQuizList(List<Quiz> quiz);
+  Future<int?> isRegistration(int id);
 }
 
 class QuizDatabase implements QuizDatabaseFactory {
@@ -20,9 +24,7 @@ class QuizDatabase implements QuizDatabaseFactory {
   @override
   Future<List<Quiz>?> getAllQuiz(String text) async {
     final database = await getInstance();
-    return text != ''
-        ? await database.quizDao.getAllQuizSearch('%$text%')
-        : await database.quizDao.getAllQuiz();
+    return text != '' ? await database.quizDao.getAllQuizSearch('%$text%') : await database.quizDao.getAllQuiz();
   }
 
   @override
@@ -41,5 +43,29 @@ class QuizDatabase implements QuizDatabaseFactory {
   Future<int> updateQuiz(Quiz quiz) async {
     final database = await getInstance();
     return await database.quizDao.updateQuiz(quiz);
+  }
+
+  @override
+  Future<List<int>> insertQuizList(List<Quiz> quizs) async {
+    final database = await getInstance();
+    return await database.quizDao.insertQuizList(quizs);
+  }
+
+  @override
+  Future<List<Quiz>?> findAllQuizSync() async {
+    final database = await getInstance();
+    return await database.quizDao.findAllQuizSync();
+  }
+
+  @override
+  Future<void> updateQuizList(List<Quiz> quiz) async {
+    final database = await getInstance();
+    return await database.quizDao.updateQuizList(quiz);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    final database = await getInstance();
+    return await database.quizDao.isRegistration(id);
   }
 }

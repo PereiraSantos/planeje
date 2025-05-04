@@ -3,9 +3,12 @@ import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 
 abstract class FindRevisionFactory {
-  Future<List<RevisionTime>> findRevisionByDescription(String text, bool isBefore, {int? limit});
+  Future<List<RevisionTime>> findRevisionByDescription(String text, int id, bool isBefore, {int? limit});
   Future<int> getQuantiyRevision(String date, bool isBefore);
   Future<List<Revision>> findAllRevisions();
+  Future<List<Revision>?> findAllRevisionsSync();
+  Future<int?> isRegistration(int id);
+  Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
 }
 
 class GetRevision implements FindRevisionFactory {
@@ -13,8 +16,8 @@ class GetRevision implements FindRevisionFactory {
 
   GetRevision(this.revisionDatabase);
   @override
-  Future<List<RevisionTime>> findRevisionByDescription(String text, bool isBefore, {int? limit}) async {
-    return await revisionDatabase.findRevisionByDescription(text, isBefore, limit: limit);
+  Future<List<RevisionTime>> findRevisionByDescription(String text, int id, bool isBefore, {int? limit}) async {
+    return await revisionDatabase.findRevisionByDescription(text, id, isBefore, limit: limit);
   }
 
   @override
@@ -25,5 +28,20 @@ class GetRevision implements FindRevisionFactory {
   @override
   Future<List<Revision>> findAllRevisions() async {
     return await revisionDatabase.findAllRevisions();
+  }
+
+  @override
+  Future<List<Revision>?> findAllRevisionsSync() async {
+    return await revisionDatabase.findAllRevisionsSync();
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    return await revisionDatabase.isRegistration(id);
+  }
+
+  @override
+  Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme) async {
+    return await revisionDatabase.findRevisioByIdRevisionTheme(idRevisionTheme);
   }
 }

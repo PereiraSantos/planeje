@@ -5,6 +5,9 @@ import 'package:planeje/annotation/entities/annotation_revision.dart';
 abstract class FindAnnotationFactory {
   Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text);
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
+  Future<List<Annotation>?> getAnnotationAll();
+  Future<List<Annotation>?> findAnnotationSync();
+  Future<int?> isRegistration(int id);
 }
 
 class GetAnnotation implements FindAnnotationFactory {
@@ -20,5 +23,20 @@ class GetAnnotation implements FindAnnotationFactory {
   @override
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision) async {
     return await annotationDatabase.getAnnotationWidthIdRevision(idRevision);
+  }
+
+  @override
+  Future<List<Annotation>?> getAnnotationAll() async {
+    return await annotationDatabase.getAnnotationAll();
+  }
+
+  @override
+  Future<List<Annotation>?> findAnnotationSync() async {
+    return await annotationDatabase.findAnnotationSync();
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    return await annotationDatabase.isRegistration(id);
   }
 }

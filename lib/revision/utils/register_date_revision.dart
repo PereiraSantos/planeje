@@ -4,33 +4,55 @@ import 'package:planeje/revision/entities/date_revision.dart';
 
 abstract class DateFactory {
   Future<int?> writeDateRevision();
-  late DateRevision date;
+  Future<void> writeDateRevisionList();
+  DateRevision? dateRevision;
+  List<DateRevision>? dateRevisions;
 }
 
 class RegisterDateRevision implements DateFactory {
   DateRevisionDatabaseFactory dateRevisionDatabase;
 
-  RegisterDateRevision(this.dateRevisionDatabase, this.date);
+  RegisterDateRevision(this.dateRevisionDatabase, {this.dateRevision, this.dateRevisions});
 
   @override
   Future<int?> writeDateRevision() async {
-    return await dateRevisionDatabase.insertDateRevision(date);
+    if (dateRevision == null) throw ('Teve passar um objeto dateRevision');
+    return await dateRevisionDatabase.insertDateRevision(dateRevision!);
   }
 
   @override
-  DateRevision date;
+  DateRevision? dateRevision;
+
+  @override
+  Future<List<int>> writeDateRevisionList() async {
+    if (dateRevisions == null) throw ('Teve passar a uma lista de dateRevisions');
+    return await dateRevisionDatabase.insertDateRevisionList(dateRevisions!);
+  }
+
+  @override
+  List<DateRevision>? dateRevisions;
 }
 
 class UpdateDateRevision implements DateFactory {
   DateRevisionDatabaseFactory dateRevisionDatabase;
 
-  UpdateDateRevision(this.dateRevisionDatabase, this.date);
+  UpdateDateRevision(this.dateRevisionDatabase, {this.dateRevision, this.dateRevisions});
 
   @override
   Future<int?> writeDateRevision() async {
-    return await dateRevisionDatabase.updateDateRevision(date);
+    if (dateRevision == null) throw ('Teve passar um objeto dateRevision');
+    return await dateRevisionDatabase.updateDateRevision(dateRevision!);
   }
 
   @override
-  DateRevision date;
+  DateRevision? dateRevision;
+
+  @override
+  Future<void> writeDateRevisionList() async {
+    if (dateRevisions == null) throw ('Teve passar a uma lista de dateRevisions');
+    return await dateRevisionDatabase.updateDateRevisionList(dateRevisions!);
+  }
+
+  @override
+  List<DateRevision>? dateRevisions;
 }

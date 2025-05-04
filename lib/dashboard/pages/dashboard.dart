@@ -44,6 +44,7 @@ class _DashboardState extends State<Dashboard> {
             FutureBuilderComponent<DateRevision>(
               future: DateRevisionDatabaseDataSource().findAllDateRevisions(),
               children: (value) => ChartWidget(data: BuildDataGraphic().buildRevisionYear(value), title: 'Revisões realizadas.'),
+              message: 'Bem vindo...',
             ),
             FutureBuilderComponent<RevisionQuiz>(
               future: GetRevisionQuiz(RevisionQuizDatabase()).getAllRevisionQuiz(''),

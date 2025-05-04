@@ -6,11 +6,20 @@ abstract class QuizDao {
   @Query('SELECT * FROM quiz')
   Future<List<Quiz>?> getAllQuiz();
 
+  @Query('SELECT * FROM quiz where sync = 0')
+  Future<List<Quiz>?> findAllQuizSync();
+
   @Query('SELECT * FROM quiz where topic LIKE :text')
   Future<List<Quiz>?> getAllQuizSearch(String text);
 
+  @Query('select count(*) from quiz where id = :id')
+  Future<int?> isRegistration(int id);
+
   @insert
   Future<int> insertQuiz(Quiz quiz);
+
+  @insert
+  Future<List<int>> insertQuizList(List<Quiz> quiz);
 
   @Query('SELECT * FROM quiz WHERE id = :id')
   Future<Quiz?> getQuizById(int id);
@@ -20,4 +29,7 @@ abstract class QuizDao {
 
   @update
   Future<int> updateQuiz(Quiz quiz);
+
+  @update
+  Future<void> updateQuizList(List<Quiz> quiz);
 }

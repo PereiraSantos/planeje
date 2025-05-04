@@ -39,7 +39,7 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
   Widget build(BuildContext context) {
     return ExpansionTile(
       initiallyExpanded: false,
-      title: Text(widget.revision.title ?? '', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500, color: const Color.fromARGB(130, 0, 0, 0))),
+      title: Text(widget.revision.title ?? '', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: const Color.fromARGB(130, 0, 0, 0))),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -72,9 +72,11 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                     child: IconButton(
                       onPressed: () async {
                         await RegisterDateRevision(DateRevisionDatabaseDataSource(),
-                                DateRevision(dateRevision: FormatDate.formatDateStringNotification(DateTime.now()), idRevision: widget.revision.id))
-                            .writeDateRevision()
-                            .whenComplete(() => widget.onClick());
+                            dateRevision: DateRevision(
+                              dateRevision: FormatDate.formatDateStringNotification(DateTime.now()),
+                              idRevision: widget.revision.id,
+                              sync: false,
+                            )).writeDateRevision().whenComplete(() => widget.onClick());
                       },
                       icon: const Icon(
                         Icons.replay_circle_filled_rounded,

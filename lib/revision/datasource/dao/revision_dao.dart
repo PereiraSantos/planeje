@@ -6,6 +6,9 @@ abstract class RevisionDao {
   @Query('SELECT * FROM revision')
   Future<List<Revision>> findAllRevisions();
 
+  @Query('SELECT * FROM revision where sync = 0')
+  Future<List<Revision>?> findAllRevisionsSync();
+
   @Query('SELECT * FROM revision WHERE id = :id')
   Future<Revision?> findRevisionById(int id);
 
@@ -15,9 +18,21 @@ abstract class RevisionDao {
   @Query('SELECT * FROM revision WHERE text LIKE :text')
   Future<List<Revision>> findRevisionByDescription(String text);
 
+  @Query('SELECT * FROM revision where id_revision_theme = :idRevisionTheme')
+  Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
+
+  @Query('select count(*) from revision where id  = :id')
+  Future<int?> isRegistration(int id);
+
   @insert
   Future<int> insertRevision(Revision revision);
 
+  @insert
+  Future<List<int>> insertRevisionList(List<Revision> revision);
+
   @update
   Future<int?> updateRevision(Revision revision);
+
+  @update
+  Future<void> updateRevisionList(List<Revision> revision);
 }

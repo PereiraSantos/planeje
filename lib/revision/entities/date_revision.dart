@@ -13,13 +13,29 @@ class DateRevision {
   @ColumnInfo(name: 'id_revision')
   int? idRevision;
 
+  @ColumnInfo(name: 'sync')
+  bool? sync;
+
   DateRevision({
     this.id,
     this.dateRevision,
     this.idRevision,
+    this.sync = true,
   });
 
   void setId(int? value) => id = value;
   void setDate(String? value) => dateRevision = value ?? FormatDate.formatDate(DateTime.now());
   void setIdRevision(int? value) => idRevision = value;
+  void setSync(bool? value) => sync = value ?? false;
+
+  static DateRevision fromMapToObject(Map<String, dynamic> json) => DateRevision(
+        id: json['id'],
+        dateRevision: json['dateRevision'],
+        idRevision: json['idRevision'],
+      );
+
+  static Map<String, dynamic> fromObjectToMap(DateRevision dateRevision) => {
+        "dateRevision": dateRevision.dateRevision,
+        "idRevision": dateRevision.idRevision,
+      };
 }

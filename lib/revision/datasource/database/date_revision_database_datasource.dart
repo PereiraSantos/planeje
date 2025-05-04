@@ -10,11 +10,15 @@ abstract class DateRevisionDatabaseFactory {
   Future<DateRevision?> deleteDateRevisionById(int id);
   Future<void> deleteDateRevisionByIdRevision(int idRevision);
   Future<int?> insertDateRevision(DateRevision dateRevision);
+  Future<List<int>> insertDateRevisionList(List<DateRevision> dateRevisions);
   Future<int?> updateDateRevision(DateRevision dateRevision);
   Future<void> updateHourInit(String hourInit, int id);
   Future<void> updateHourEnd(String hourEnd, String dateRevision, String nextDateRevision, int id);
   Future<List<RevisionTime>?> findDateRevisionByIdDate(int id);
   Future<void> updateStatus(bool status, int id);
+  Future<List<DateRevision>?> findAllDateRevisionSync();
+  Future<void> updateDateRevisionList(List<DateRevision> dateRevision);
+  Future<int?> isRegistration(int id);
 }
 
 class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
@@ -76,5 +80,29 @@ class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
   Future<void> deleteDateRevisionByIdRevision(int idRevision) async {
     final database = await getInstance();
     await database.dateRevisionDao.deleteDateRevisionByIdRevision(idRevision);
+  }
+
+  @override
+  Future<List<int>> insertDateRevisionList(List<DateRevision> dateRevisions) async {
+    final database = await getInstance();
+    return await database.dateRevisionDao.insertDateRevisionList(dateRevisions);
+  }
+
+  @override
+  Future<List<DateRevision>?> findAllDateRevisionSync() async {
+    final database = await getInstance();
+    return await database.dateRevisionDao.findAllDateRevisionSync();
+  }
+
+  @override
+  Future<void> updateDateRevisionList(List<DateRevision> dateRevision) async {
+    final database = await getInstance();
+    return await database.dateRevisionDao.updateDateRevisionList(dateRevision);
+  }
+
+  @override
+  Future<int?> isRegistration(int id) async {
+    final database = await getInstance();
+    return await database.dateRevisionDao.isRegistration(id);
   }
 }
