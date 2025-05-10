@@ -12,8 +12,8 @@ abstract class AnnotationDao {
   @update
   Future<int?> updateAnnotation(Annotation annotationEntity);
 
-  @Query('select count(*) from annotation where id = :id')
-  Future<int?> isRegistration(int id);
+  @Query('select count(*) from annotation where id_external = :idExternal')
+  Future<int?> isRegistration(int idExternal);
 
   @Query('delete from annotation where id = :id')
   Future<void> delete(int id);

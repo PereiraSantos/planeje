@@ -7,6 +7,9 @@ class DateRevision {
   @ColumnInfo(name: 'id_date')
   int? id;
 
+  @ColumnInfo(name: 'id_external')
+  int? idExternal;
+
   @ColumnInfo(name: 'date_revision')
   String? dateRevision;
 
@@ -18,23 +21,26 @@ class DateRevision {
 
   DateRevision({
     this.id,
+    this.idExternal,
     this.dateRevision,
     this.idRevision,
     this.sync = true,
   });
 
   void setId(int? value) => id = value;
+  void setIdExternal(int? value) => idExternal = value;
   void setDate(String? value) => dateRevision = value ?? FormatDate.formatDate(DateTime.now());
   void setIdRevision(int? value) => idRevision = value;
   void setSync(bool? value) => sync = value ?? false;
 
   static DateRevision fromMapToObject(Map<String, dynamic> json) => DateRevision(
-        id: json['id'],
+        idExternal: json['id'],
         dateRevision: json['dateRevision'],
         idRevision: json['idRevision'],
       );
 
   static Map<String, dynamic> fromObjectToMap(DateRevision dateRevision) => {
+        "idExternal": dateRevision.idExternal,
         "dateRevision": dateRevision.dateRevision,
         "idRevision": dateRevision.idRevision,
       };

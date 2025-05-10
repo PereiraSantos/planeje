@@ -20,7 +20,7 @@ class RevisionQuizSync {
     if (response.data != null) {
       for (dynamic item in response.data) {
         RevisionQuiz revisionQuiz = RevisionQuiz.fromMapToObject(item);
-        int? id = await revisionQuizController.isRegistration(revisionQuiz.id!);
+        int? id = await revisionQuizController.isRegistration(revisionQuiz.idExternal!);
 
         revisionQuizController.revisionQuizInfos.add(ListInfo(lists: revisionQuiz, update: (id == 1)));
       }

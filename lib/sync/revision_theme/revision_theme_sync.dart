@@ -18,7 +18,7 @@ class RevisionThemeSync {
     if (response.data != null) {
       for (dynamic item in response.data) {
         RevisionTheme revisionTheme = RevisionTheme.fromMapToObject(item);
-        int? id = await revisionThemeController.isRegistration(revisionTheme.id!);
+        int? id = await revisionThemeController.isRegistration(revisionTheme.idExternal!);
 
         revisionThemeController.revisionThemeInfos.add(ListInfo(lists: revisionTheme, update: (id == 1)));
       }

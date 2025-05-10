@@ -21,8 +21,8 @@ abstract class RevisionDao {
   @Query('SELECT * FROM revision where id_revision_theme = :idRevisionTheme')
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
 
-  @Query('select count(*) from revision where id  = :id')
-  Future<int?> isRegistration(int id);
+  @Query('select count(*) from revision where id_external  = :idExternal')
+  Future<int?> isRegistration(int idExternal);
 
   @insert
   Future<int> insertRevision(Revision revision);

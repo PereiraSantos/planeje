@@ -135,8 +135,8 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
                                 children: [
                                   Text(snapshot.data![index].description ?? '',
                                       style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: const Color.fromARGB(130, 0, 0, 0))),
-                                  Text(_validTitleDescriptuionIsNull(snapshot.data![index].title, snapshot.data![index].description),
-                                      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300)),
+                                  Text(_validTitleDescriptuionIsNull(snapshot.data![index].title, snapshot.data![index].revisionDescription),
+                                      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300), overflow: TextOverflow.ellipsis, maxLines: 2),
                                   Visibility(
                                       visible: snapshot.data![index].dateRevision != null,
                                       child: Text(_validDateIsNull(snapshot.data![index].dateRevision),
@@ -154,9 +154,9 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
                                 },
                                 child: Stack(
                                   children: [
-                                    Positioned(child: Icon(Icons.content_paste_outlined, size: 25, color: Colors.black26)),
-                                    Positioned(top: 4, left: 2, child: Icon(Icons.view_headline_rounded, size: 20, color: Colors.black12)),
-                                    Positioned(bottom: 02.7, left: 09.9, child: Icon(Icons.check_circle_outline, size: 11, color: Colors.black54)),
+                                    Positioned(child: Icon(Icons.content_paste_outlined, size: 22, color: Colors.black26)),
+                                    Positioned(top: 4, left: 2, child: Icon(Icons.view_headline_rounded, size: 18, color: Colors.black12)),
+                                    Positioned(bottom: 02.7, left: 09.9, child: Icon(Icons.check_circle_outline, size: 09, color: Colors.black54)),
                                   ],
                                 ),
                               ),

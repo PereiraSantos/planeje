@@ -12,8 +12,8 @@ abstract class QuizDao {
   @Query('SELECT * FROM quiz where topic LIKE :text')
   Future<List<Quiz>?> getAllQuizSearch(String text);
 
-  @Query('select count(*) from quiz where id = :id')
-  Future<int?> isRegistration(int id);
+  @Query('select count(*) from quiz where id_external = :idExternal')
+  Future<int?> isRegistration(int idExternal);
 
   @insert
   Future<int> insertQuiz(Quiz quiz);

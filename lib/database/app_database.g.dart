@@ -96,7 +96,7 @@ class _$AppDatabase extends AppDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 3,
+      version: 1,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -112,23 +112,23 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `description` TEXT, `date_creational` TEXT, `id_revision_theme` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `title` TEXT, `description` TEXT, `date_creational` TEXT, `id_revision_theme` INTEGER, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `id_revision` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `id_revision` INTEGER, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `topic` TEXT, `description` TEXT, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER, `sync` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `user` (`id` INTEGER NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER, `sync` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `description` TEXT, `sync` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -195,6 +195,7 @@ class _$RevisionDao extends RevisionDao {
             'revision',
             (Revision item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'title': item.title,
                   'description': item.description,
                   'date_creational': item.dateCreational,
@@ -207,6 +208,7 @@ class _$RevisionDao extends RevisionDao {
             ['id'],
             (Revision item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'title': item.title,
                   'description': item.description,
                   'date_creational': item.dateCreational,
@@ -229,6 +231,7 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.queryList('SELECT * FROM revision',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
@@ -241,6 +244,7 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.queryList('SELECT * FROM revision where sync = 0',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
@@ -253,6 +257,7 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.query('SELECT * FROM revision WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
@@ -266,6 +271,7 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.query('delete FROM revision WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
@@ -279,6 +285,7 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.queryList('SELECT * FROM revision WHERE text LIKE ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
@@ -294,6 +301,7 @@ class _$RevisionDao extends RevisionDao {
         'SELECT * FROM revision where id_revision_theme = ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
@@ -303,10 +311,11 @@ class _$RevisionDao extends RevisionDao {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return _queryAdapter.query('select count(*) from revision where id  = ?1',
+  Future<int?> isRegistration(int idExternal) async {
+    return _queryAdapter.query(
+        'select count(*) from revision where id_external  = ?1',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id]);
+        arguments: [idExternal]);
   }
 
   @override
@@ -343,6 +352,7 @@ class _$DateRevisionDao extends DateRevisionDao {
             'date_revision',
             (DateRevision item) => <String, Object?>{
                   'id_date': item.id,
+                  'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'id_revision': item.idRevision,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
@@ -353,6 +363,7 @@ class _$DateRevisionDao extends DateRevisionDao {
             ['id_date'],
             (DateRevision item) => <String, Object?>{
                   'id_date': item.id,
+                  'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'id_revision': item.idRevision,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
@@ -373,6 +384,7 @@ class _$DateRevisionDao extends DateRevisionDao {
     return _queryAdapter.queryList('SELECT * FROM date_revision',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
@@ -383,6 +395,7 @@ class _$DateRevisionDao extends DateRevisionDao {
     return _queryAdapter.queryList('SELECT * FROM date_revision where sync = 0',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
@@ -393,6 +406,7 @@ class _$DateRevisionDao extends DateRevisionDao {
     return _queryAdapter.query('delete FROM date_revision WHERE id = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
@@ -405,6 +419,7 @@ class _$DateRevisionDao extends DateRevisionDao {
         'delete FROM date_revision WHERE id_revision = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
@@ -449,6 +464,7 @@ class _$DateRevisionDao extends DateRevisionDao {
         'select * from date_revision  where id_date = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
@@ -456,11 +472,11 @@ class _$DateRevisionDao extends DateRevisionDao {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
+  Future<int?> isRegistration(int idExternal) async {
     return _queryAdapter.query(
-        'select count(*) from date_revision where id_date = ?1',
+        'select count(*) from date_revision where id_external = ?1',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id]);
+        arguments: [idExternal]);
   }
 
   @override
@@ -498,6 +514,7 @@ class _$AnnotationDao extends AnnotationDao {
             'annotation',
             (Annotation item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
@@ -510,6 +527,7 @@ class _$AnnotationDao extends AnnotationDao {
             ['id'],
             (Annotation item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
@@ -528,10 +546,11 @@ class _$AnnotationDao extends AnnotationDao {
   final UpdateAdapter<Annotation> _annotationUpdateAdapter;
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return _queryAdapter.query('select count(*) from annotation where id = ?1',
+  Future<int?> isRegistration(int idExternal) async {
+    return _queryAdapter.query(
+        'select count(*) from annotation where id_external = ?1',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id]);
+        arguments: [idExternal]);
   }
 
   @override
@@ -553,6 +572,7 @@ class _$AnnotationDao extends AnnotationDao {
         'select * from  annotation where id_revision = ?1',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
@@ -566,6 +586,7 @@ class _$AnnotationDao extends AnnotationDao {
     return _queryAdapter.queryList('select * from  annotation',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
@@ -578,6 +599,7 @@ class _$AnnotationDao extends AnnotationDao {
     return _queryAdapter.queryList('select * from annotation where sync = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
@@ -620,6 +642,7 @@ class _$QuizDao extends QuizDao {
             'quiz',
             (Quiz item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'topic': item.topic,
                   'description': item.description,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
@@ -630,6 +653,7 @@ class _$QuizDao extends QuizDao {
             ['id'],
             (Quiz item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'topic': item.topic,
                   'description': item.description,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
@@ -650,6 +674,7 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.queryList('SELECT * FROM quiz',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
@@ -660,6 +685,7 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.queryList('SELECT * FROM quiz where sync = 0',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
@@ -670,6 +696,7 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.queryList('SELECT * FROM quiz where topic LIKE ?1',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
@@ -677,10 +704,11 @@ class _$QuizDao extends QuizDao {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return _queryAdapter.query('select count(*) from quiz where id = ?1',
+  Future<int?> isRegistration(int idExternal) async {
+    return _queryAdapter.query(
+        'select count(*) from quiz where id_external = ?1',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id]);
+        arguments: [idExternal]);
   }
 
   @override
@@ -688,6 +716,7 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.query('SELECT * FROM quiz WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
@@ -699,6 +728,7 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.query('delete FROM quiz WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
@@ -739,6 +769,7 @@ class _$QuestionDao extends QuestionDao {
             'question',
             (Question item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'id_quiz': item.idQuiz,
                   'description': item.description,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
@@ -750,6 +781,7 @@ class _$QuestionDao extends QuestionDao {
             ['id'],
             (Question item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'id_quiz': item.idQuiz,
                   'description': item.description,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
@@ -771,6 +803,7 @@ class _$QuestionDao extends QuestionDao {
     return _queryAdapter.queryList('SELECT * FROM question',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
@@ -782,6 +815,7 @@ class _$QuestionDao extends QuestionDao {
     return _queryAdapter.queryList('SELECT * FROM question where sync = 0',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
@@ -793,6 +827,7 @@ class _$QuestionDao extends QuestionDao {
     return _queryAdapter.query('SELECT * FROM question WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
@@ -805,6 +840,7 @@ class _$QuestionDao extends QuestionDao {
     return _queryAdapter.queryList('SELECT * FROM question WHERE id_quiz = ?1',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
@@ -825,10 +861,11 @@ class _$QuestionDao extends QuestionDao {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return _queryAdapter.query('select count(*) from question where id  = ?1',
+  Future<int?> isRegistration(int idExternal) async {
+    return _queryAdapter.query(
+        'select count(*) from question where id_external  = ?1',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id]);
+        arguments: [idExternal]);
   }
 
   @override
@@ -976,6 +1013,7 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             'revision_quiz',
             (RevisionQuiz item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
                   'id_quiz': item.idQuiz,
@@ -987,6 +1025,7 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             ['id'],
             (RevisionQuiz item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
                   'id_quiz': item.idQuiz,
@@ -1008,6 +1047,7 @@ class _$RevisionQuizDao extends RevisionQuizDao {
     return _queryAdapter.queryList('SELECT * FROM revision_quiz',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
@@ -1019,6 +1059,7 @@ class _$RevisionQuizDao extends RevisionQuizDao {
     return _queryAdapter.queryList('SELECT * FROM revision_quiz where sync = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
@@ -1030,6 +1071,7 @@ class _$RevisionQuizDao extends RevisionQuizDao {
     return _queryAdapter.query('SELECT * FROM revision_quiz WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
@@ -1043,6 +1085,7 @@ class _$RevisionQuizDao extends RevisionQuizDao {
         'SELECT * FROM revision_quiz WHERE id_quiz = ?1',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
@@ -1055,6 +1098,7 @@ class _$RevisionQuizDao extends RevisionQuizDao {
     return _queryAdapter.query('delete FROM revision_quiz WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
@@ -1070,11 +1114,11 @@ class _$RevisionQuizDao extends RevisionQuizDao {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
+  Future<int?> isRegistration(int idExternal) async {
     return _queryAdapter.query(
-        'select count(*) from revision_quiz where id = ?1',
+        'select count(*) from revision_quiz where id_external = ?1',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id]);
+        arguments: [idExternal]);
   }
 
   @override
@@ -1112,6 +1156,7 @@ class _$RevisionThemeDao extends RevisionThemeDao {
             'revision_theme',
             (RevisionTheme item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'description': item.description,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 }),
@@ -1121,6 +1166,7 @@ class _$RevisionThemeDao extends RevisionThemeDao {
             ['id'],
             (RevisionTheme item) => <String, Object?>{
                   'id': item.id,
+                  'id_external': item.idExternal,
                   'description': item.description,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
                 });
@@ -1140,6 +1186,7 @@ class _$RevisionThemeDao extends RevisionThemeDao {
     return _queryAdapter.queryList('SELECT * FROM revision_theme',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             description: row['description'] as String?));
   }
@@ -1150,6 +1197,7 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         'SELECT * FROM revision_theme where sync = 0',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             description: row['description'] as String?));
   }
@@ -1159,6 +1207,7 @@ class _$RevisionThemeDao extends RevisionThemeDao {
     return _queryAdapter.query('SELECT * FROM revision_theme WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             description: row['description'] as String?),
         arguments: [id]);
@@ -1169,6 +1218,7 @@ class _$RevisionThemeDao extends RevisionThemeDao {
     return _queryAdapter.query('delete FROM revision_theme WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             description: row['description'] as String?),
         arguments: [id]);
@@ -1181,17 +1231,18 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         'SELECT * FROM revision_theme WHERE description LIKE ?1',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             description: row['description'] as String?),
         arguments: [text]);
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
+  Future<int?> isRegistration(int idExternal) async {
     return _queryAdapter.query(
-        'select count(*) from revision_theme where id  = ?1',
+        'select count(*) from revision_theme where id_external  = ?1',
         mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id]);
+        arguments: [idExternal]);
   }
 
   @override

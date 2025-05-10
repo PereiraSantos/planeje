@@ -38,6 +38,10 @@ class _ListRevisionState extends State<ListRevision> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xffffffff),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(Icons.arrow_back_rounded, color: Colors.black54, size: 22),
+        ),
         elevation: 0,
         toolbarHeight: 46,
         title: Text('Revisões ${widget.revisionTheme.description}', style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold)),

@@ -27,6 +27,7 @@ import '../settings/entities/settings.dart';
 
 part 'app_database.g.dart';
 
+/*
 final migration1to2 = Migration(1, 2, (database) async {
   await database.execute(
       'CREATE TABLE IF NOT EXISTS `user` (`id` INTEGER NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
@@ -35,17 +36,20 @@ final migration1to2 = Migration(1, 2, (database) async {
 final migration2to3 = Migration(2, 3, (database) async {
   await database.execute(
       'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER)');
+  await database.execute(
+      'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER, `sync` INTEGER)');
   await database.execute('ALTER annotation ADD COLUMN sync INTEGER');
   await database.execute('ALTER question ADD COLUMN sync INTEGER');
   await database.execute('ALTER revision_quiz ADD COLUMN sync INTEGER');
   await database.execute('ALTER revision ADD COLUMN sync INTEGER');
   await database.execute('ALTER date_revision ADD COLUMN sync INTEGER');
   await database.execute('ALTER quiz ADD COLUMN sync INTEGER');
-  await database.execute('CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `sync` INTEGER)');
+  await database.execute(
+      'CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `description` TEXT, `sync` INTEGER)');
   await database.execute('ALTER revision ADD COLUMN id_revision_theme INTEGER');
-});
+});*/
 
-@Database(version: 3, entities: [
+@Database(version: 1, entities: [
   Revision,
   DateRevision,
   Annotation,
@@ -67,10 +71,10 @@ abstract class AppDatabase extends FloorDatabase {
   RevisionQuizDao get revisionQuizDao;
   RevisionThemeDao get revisionThemeDao;
 }
-
+/*
 Future<AppDatabase> migrationDatabase() async {
   return await $FloorAppDatabase.databaseBuilder('app_database.db').addMigrations([migration1to2, migration2to3]).build();
-}
+}*/
 
 Future<AppDatabase> getInstance() async {
   return await $FloorAppDatabase.databaseBuilder('app_database.db').build();

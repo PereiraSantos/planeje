@@ -53,7 +53,7 @@ class _ListQuestionState extends State<ListQuestion> {
                     flex: 12,
                     child: Text(
                       '${widget.listQuestion[index].description}',
-                      style: const TextStyle(fontSize: 16, color: Colors.black45),
+                      style: const TextStyle(fontSize: 15, color: Colors.black87, fontWeight: FontWeight.w300),
                     ),
                   ),
                 ],

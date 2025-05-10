@@ -27,8 +27,8 @@ abstract class QuestionDao {
   @Query('delete FROM question WHERE id_quiz = :idQuiz')
   Future<void> deleteQuestionByIdQuiz(int idQuiz);
 
-  @Query('select count(*) from question where id  = :id')
-  Future<int?> isRegistration(int id);
+  @Query('select count(*) from question where id_external  = :idExternal')
+  Future<int?> isRegistration(int idExternal);
 
   @update
   Future<int> updateQuestion(Question question);

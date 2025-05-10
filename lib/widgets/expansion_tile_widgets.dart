@@ -43,7 +43,7 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Conteúdo: ${widget.revision.description ?? ''}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300)),
+          Text('Descrição: ${widget.revision.description ?? ''}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300)),
           Text(
               widget.dateRevision.dateRevision == null
                   ? 'Não revisada'

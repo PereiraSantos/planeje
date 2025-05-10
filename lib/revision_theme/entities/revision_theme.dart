@@ -6,19 +6,29 @@ class RevisionTheme {
   @ColumnInfo(name: 'id')
   int? id;
 
+  @ColumnInfo(name: 'id_external')
+  int? idExternal;
+
   @ColumnInfo(name: 'description')
   String? description;
 
   @ColumnInfo(name: 'sync')
   bool? sync;
 
-  RevisionTheme({this.id, this.sync, this.description});
+  RevisionTheme({this.id, this.idExternal, this.sync, this.description});
 
   void setId(int? value) => id = value;
+  void setIdExternal(int? value) => idExternal = value;
   void setDescription(String value) => description = value;
   void setSync({bool? value}) => sync = value ?? false;
 
-  static RevisionTheme fromMapToObject(Map<String, dynamic> json) => RevisionTheme(id: json['id'], description: json['description']);
+  static RevisionTheme fromMapToObject(Map<String, dynamic> json) => RevisionTheme(
+        idExternal: json['id'],
+        description: json['description'],
+      );
 
-  static Map<String, dynamic> fromObjectToMap(RevisionTheme revisionTheme) => {"description": revisionTheme.description};
+  static Map<String, dynamic> fromObjectToMap(RevisionTheme revisionTheme) => {
+        "idExternal": revisionTheme.idExternal,
+        "description": revisionTheme.description,
+      };
 }

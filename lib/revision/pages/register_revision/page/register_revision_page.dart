@@ -70,7 +70,7 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                 TextFormFieldWidget(
                   controller: description,
                   maxLine: 5,
-                  hintText: 'Conteúdo',
+                  hintText: 'Descrição',
                   keyboardType: TextInputType.multiline,
                   textArea: true,
                 ),
