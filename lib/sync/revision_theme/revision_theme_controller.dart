@@ -29,7 +29,7 @@ class RevisionThemeController {
     return true;
   }
 
-  Future<int?> isRegistration(int id) async {
-    return await FindRevisionTheme(RevisionThemeDatabaseDataSource()).isRegistration(id);
+  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal) async {
+    return await FindRevisionTheme(RevisionThemeDatabaseDataSource()).findRevisionThemeByIdExternal(idExternal);
   }
 }

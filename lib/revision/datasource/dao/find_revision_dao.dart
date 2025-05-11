@@ -15,7 +15,8 @@ class FindRevisionDao {
     String filter =
         text != '' ? 'where r.id_revision_theme = $id and (r.title like \'%$text%\' or r.description like \'%$text%\')' : 'where r.id_revision_theme = $id ';
 
-    String sqlBase = 'SELECT * FROM revision as r left join date_revision as d on r.id = d.id_revision $filter group by id order by date_revision desc';
+    String sqlBase =
+        'SELECT r.*, d.*, r.id_external as idExternal  FROM revision as r left join date_revision as d on r.id = d.id_revision $filter group by id order by date_revision desc';
 
     List<Map> list = await database.database.rawQuery(sqlBase);
 
@@ -27,11 +28,14 @@ class FindRevisionDao {
             description: element['description'],
             id: element['id'],
             title: element['title'],
+            idExternal: element['idExternal'],
+            idRevisionTheme: element['id_revision_theme'],
           ),
           DateRevision(
             dateRevision: element['date_revision'],
             idRevision: element['id_revision'],
             id: element['id_date'],
+            idExternal: element['id_external'],
           ),
         ),
       );

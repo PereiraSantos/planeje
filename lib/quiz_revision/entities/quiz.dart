@@ -39,7 +39,7 @@ class Quiz {
       );
 
   static Map<String, dynamic> fromObjectToMap(Quiz quiz) => {
-        "idExternal": quiz.idExternal,
+        "id": quiz.idExternal,
         "topic": quiz.topic,
         "description": quiz.description,
       };

@@ -8,7 +8,7 @@ abstract class FindRevisionThemeFactory {
   Future<RevisionTheme?> findRevisionThemeById(int id);
   Future<RevisionTheme?> deleteRevisionThemeById(int id);
   Future<List<RevisionThemeComplement>> findRevisionThemeByDescription(String text);
-  Future<int?> isRegistration(int id);
+  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal);
 }
 
 class FindRevisionTheme implements FindRevisionThemeFactory {
@@ -42,7 +42,7 @@ class FindRevisionTheme implements FindRevisionThemeFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return await revisionThemeDatabase.isRegistration(id);
+  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal) async {
+    return await revisionThemeDatabase.findRevisionThemeByIdExternal(idExternal);
   }
 }

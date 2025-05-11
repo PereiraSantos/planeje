@@ -4,7 +4,7 @@ import 'package:planeje/revision/entities/date_revision.dart';
 abstract class FindDateRevisionFactory {
   Future<List<DateRevision>> findAllDateRevisions();
   Future<List<DateRevision>?> findAllDateRevisionSync();
-  Future<int?> isRegistration(int id);
+  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal);
 }
 
 class GetDateRevision implements FindDateRevisionFactory {
@@ -23,7 +23,7 @@ class GetDateRevision implements FindDateRevisionFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return await dateRevisionDatabase.isRegistration(id);
+  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal) async {
+    return await dateRevisionDatabase.findDateRevisionByIdExternal(idExternal);
   }
 }

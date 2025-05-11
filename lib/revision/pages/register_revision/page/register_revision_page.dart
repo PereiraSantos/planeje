@@ -173,6 +173,7 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                 if (!formKey.currentState!.validate()) return;
 
                 widget.revision.revision?.setId(widget.revision.revision?.id);
+                widget.revision.revision?.setIdExternal(widget.revision.revision?.idExternal);
                 widget.revision.revision?.setTitle(title.text);
                 widget.revision.revision?.setDescription(description.text);
                 widget.revision.revision?.setDateCreational(widget.revision.revision?.dateCreational);
@@ -191,6 +192,7 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
 
                   registerAnnotation.annotation?.setTitle(annotation.title ?? '');
                   registerAnnotation.annotation?.setText(annotation.text ?? '');
+                  registerAnnotation.annotation?.setIdExternal(registerAnnotation.annotation?.idExternal);
                   registerAnnotation.annotation?.setIdRevision(widget.revision.revision?.id ?? idRevision);
                   registerAnnotation.annotation?.setDateText(null);
                   registerAnnotation.annotation?.setSync();
@@ -200,10 +202,12 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                       : await UpdateAnnotation(AnnotationDatabase(),
                               annotation: Annotation(
                                 id: annotation.id,
+                                idExternal: annotation.idExternal,
                                 idRevision: annotation.idRevision,
                                 title: annotation.title,
                                 text: annotation.text,
-                              ),
+                                dateText: annotation.dateText,
+                              )..setSync(),
                               message: StatusNotification())
                           .write();
                 }

@@ -75,7 +75,7 @@ class RegisterQuizPage extends StatelessWidget {
                   onClick: () async {
                     question.text.trim() == ''
                         ? await MessageUser.message(context, 'Obrigatório ter uma questão.')
-                        : _tableQuestionNotifier.addQuestion(Question(description: question.text, sync: false));
+                        : _tableQuestionNotifier.addQuestion(Question(description: question.text)..setSync());
 
                     question.text = '';
                   },
@@ -111,6 +111,7 @@ class RegisterQuizPage extends StatelessWidget {
 
                 registerQuiz.quiz?.setId(registerQuiz.quiz?.id);
                 registerQuiz.quiz?.setTopic(topic.text);
+                registerQuiz.quiz?.setIdExternal(registerQuiz.quiz?.idExternal);
                 registerQuiz.quiz?.setDescription(description.text);
                 registerQuiz.quiz?.setSync();
 

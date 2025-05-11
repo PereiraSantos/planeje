@@ -15,7 +15,7 @@ abstract class RevisionDatabaseFactory {
   Future<int> getQuantiyRevision(String date, bool isBefore);
   Future<List<Revision>?> findAllRevisionsSync();
   Future<void> updateRevisionList(List<Revision> revision);
-  Future<int?> isRegistration(int id);
+  Future<Revision?> findRevisionByIdExternal(int idExternal);
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
 }
 
@@ -82,9 +82,9 @@ class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
+  Future<Revision?> findRevisionByIdExternal(int idExternal) async {
     final database = await getInstance();
-    return await database.revisionDao.isRegistration(id);
+    return await database.revisionDao.findRevisionByIdExternal(idExternal);
   }
 
   @override

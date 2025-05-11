@@ -4,7 +4,7 @@ import 'package:planeje/quiz_revision/entities/quiz.dart';
 abstract class FindListQuizFactory {
   Future<List<Quiz>?> getAllQuiz(String text);
   Future<List<Quiz>?> findAllQuizSync();
-  Future<int?> isRegistration(int id);
+  Future<Quiz?> findQuizByIdExternal(int idExternal);
 }
 
 class GetQuiz implements FindListQuizFactory {
@@ -23,7 +23,7 @@ class GetQuiz implements FindListQuizFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return await quizDatabase.isRegistration(id);
+  Future<Quiz?> findQuizByIdExternal(int idExternal) async {
+    return await quizDatabase.findQuizByIdExternal(idExternal);
   }
 }

@@ -29,7 +29,7 @@ class RevisionController {
     return true;
   }
 
-  Future<int?> isRegistration(int id) async {
-    return await GetRevision(RevisionDatabaseDataSource()).isRegistration(id);
+  Future<Revision?> findRevisionByIdExternal(int idExternal) async {
+    return await GetRevision(RevisionDatabaseDataSource()).findRevisionByIdExternal(idExternal);
   }
 }

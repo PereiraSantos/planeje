@@ -7,7 +7,7 @@ abstract class FindAnnotationFactory {
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
   Future<List<Annotation>?> getAnnotationAll();
   Future<List<Annotation>?> findAnnotationSync();
-  Future<int?> isRegistration(int id);
+  Future<Annotation?> findAnnotationByIdExternal(int idExternal);
 }
 
 class GetAnnotation implements FindAnnotationFactory {
@@ -36,7 +36,7 @@ class GetAnnotation implements FindAnnotationFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return await annotationDatabase.isRegistration(id);
+  Future<Annotation?> findAnnotationByIdExternal(int idExternal) async {
+    return await annotationDatabase.findAnnotationByIdExternal(idExternal);
   }
 }

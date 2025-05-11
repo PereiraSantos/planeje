@@ -13,7 +13,7 @@ abstract class FindQuestion {
   Future<Question?> getQuestionById(int id);
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
   Future<List<Question>?> findAllQuestionSync();
-  Future<int?> isRegistration(int id);
+  Future<Question?> findQuestionByIdExternal(int idExternal);
 }
 
 class SaveQuestion implements RegisterQuestionFactory {
@@ -87,7 +87,7 @@ class GetQuestion implements FindQuestion {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return await questionDatabase.isRegistration(id);
+  Future<Question?> findQuestionByIdExternal(int idExternal) async {
+    return await questionDatabase.findQuestionByIdExternal(idExternal);
   }
 }

@@ -29,7 +29,7 @@ class AnnotationController {
     return true;
   }
 
-  Future<int?> isRegistration(int id) async {
-    return await GetAnnotation(AnnotationDatabase()).isRegistration(id);
+  Future<Annotation?> findAnnotationByIdExternal(int idExternal) async {
+    return await GetAnnotation(AnnotationDatabase()).findAnnotationByIdExternal(idExternal);
   }
 }

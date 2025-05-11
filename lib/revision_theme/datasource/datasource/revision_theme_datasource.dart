@@ -9,7 +9,7 @@ abstract class RevisionThemeDatabaseFactory {
   Future<RevisionTheme?> findRevisionThemeById(int id);
   Future<RevisionTheme?> deleteRevisionThemeById(int id);
   Future<List<RevisionThemeComplement>> findRevisionThemeByDescription(String text);
-  Future<int?> isRegistration(int id);
+  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal);
   Future<int> insertRevisionTheme(RevisionTheme revisionTheme);
   Future<List<int>> insertRevisionThemeList(List<RevisionTheme> revisionThemes);
   Future<int?> updateRevisionTheme(RevisionTheme revisionTheme);
@@ -60,9 +60,9 @@ class RevisionThemeDatabaseDataSource implements RevisionThemeDatabaseFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
+  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal) async {
     final database = await getInstance();
-    return await database.revisionThemeDao.isRegistration(id);
+    return await database.revisionThemeDao.findRevisionThemeByIdExternal(idExternal);
   }
 
   @override

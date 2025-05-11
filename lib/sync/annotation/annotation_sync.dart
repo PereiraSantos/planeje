@@ -19,9 +19,11 @@ class AnnotationSync {
       for (dynamic item in response.data) {
         Annotation annotation = Annotation.fromMapToObject(item);
 
-        int? id = await annotationController.isRegistration(annotation.idExternal!);
+        Annotation? annotationDatabase = await annotationController.findAnnotationByIdExternal(annotation.idExternal!);
 
-        annotationController.annotationInfos.add(ListInfo(lists: annotation, update: (id == 1)));
+        if (annotationDatabase != null) annotation.id = annotationDatabase.id;
+
+        annotationController.annotationInfos.add(ListInfo(lists: annotation, update: (annotation.id != null)));
       }
 
       await annotationController.writeRevision();

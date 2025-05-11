@@ -22,7 +22,7 @@ class QuestionController {
     return true;
   }
 
-  Future<int?> isRegistration(int id) async {
-    return await GetQuestion(QuestionDatabase()).isRegistration(id);
+  Future<Question?> findQuestionByIdExternal(int idExternal) async {
+    return await GetQuestion(QuestionDatabase()).findQuestionByIdExternal(idExternal);
   }
 }

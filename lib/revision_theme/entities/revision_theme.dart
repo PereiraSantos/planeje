@@ -28,7 +28,7 @@ class RevisionTheme {
       );
 
   static Map<String, dynamic> fromObjectToMap(RevisionTheme revisionTheme) => {
-        "idExternal": revisionTheme.idExternal,
+        "id": revisionTheme.idExternal,
         "description": revisionTheme.description,
       };
 }

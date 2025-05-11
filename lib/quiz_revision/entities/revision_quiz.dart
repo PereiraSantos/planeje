@@ -46,7 +46,7 @@ class RevisionQuiz {
       );
 
   static Map<String, dynamic> fromObjectToMap(RevisionQuiz revisionQuiz) => {
-        "idExternal": revisionQuiz.idExternal,
+        "id": revisionQuiz.idExternal,
         "answer": (revisionQuiz.answer ?? false) ? 1 : 0,
         "dateRevision": revisionQuiz.dateRevision,
         "idQuiz": revisionQuiz.idQuiz,

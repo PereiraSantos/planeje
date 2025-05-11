@@ -30,6 +30,7 @@ class TableQuestionNotifier with ChangeNotifier {
   void updateAnwser(int index, value) {
     questions.map((e) => e.question!.answer = false).toList();
     questions[index].question!.answer = value;
+    questions[index].question!.sync = false;
     notifyListeners();
   }
 

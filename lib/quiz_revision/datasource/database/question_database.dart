@@ -13,7 +13,7 @@ abstract class QuestionDatabaseFactory {
   Future<int> updateQuestion(Question question);
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
   Future<void> updateQuestionList(List<Question> question);
-  Future<int?> isRegistration(int id);
+  Future<Question?> findQuestionByIdExternal(int idExternal);
 }
 
 class QuestionDatabase implements QuestionDatabaseFactory {
@@ -78,8 +78,8 @@ class QuestionDatabase implements QuestionDatabaseFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
+  Future<Question?> findQuestionByIdExternal(int idExternal) async {
     final database = await getInstance();
-    return await database.questionDao.isRegistration(id);
+    return await database.questionDao.findQuestionByIdExternal(idExternal);
   }
 }

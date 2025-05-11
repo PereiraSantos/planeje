@@ -7,7 +7,7 @@ abstract class FindRevisionFactory {
   Future<int> getQuantiyRevision(String date, bool isBefore);
   Future<List<Revision>> findAllRevisions();
   Future<List<Revision>?> findAllRevisionsSync();
-  Future<int?> isRegistration(int id);
+  Future<Revision?> findRevisionByIdExternal(int idExternal);
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
 }
 
@@ -36,8 +36,8 @@ class GetRevision implements FindRevisionFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
-    return await revisionDatabase.isRegistration(id);
+  Future<Revision?> findRevisionByIdExternal(int idExternal) async {
+    return await revisionDatabase.findRevisionByIdExternal(idExternal);
   }
 
   @override

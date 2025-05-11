@@ -19,9 +19,11 @@ class RevisionDateSync {
       for (dynamic item in response.data) {
         DateRevision dateRevision = DateRevision.fromMapToObject(item);
 
-        int? id = await revisionDateController.isRegistration(dateRevision.idExternal!);
+        DateRevision? dateRevisionDatabase = await revisionDateController.findDateRevisionByIdExternal(dateRevision.idExternal!);
 
-        revisionDateController.revisionDateInfos.add(ListInfo(lists: dateRevision, update: (id == 1)));
+        if (dateRevisionDatabase != null) dateRevision.id = dateRevisionDatabase.id;
+
+        revisionDateController.revisionDateInfos.add(ListInfo(lists: dateRevision, update: (dateRevision.id != null)));
       }
 
       await revisionDateController.writeRevision();

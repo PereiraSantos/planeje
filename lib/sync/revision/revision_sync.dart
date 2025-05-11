@@ -19,9 +19,11 @@ class RevisionSync {
       for (dynamic item in response.data) {
         Revision revision = Revision.fromMapToObject(item);
 
-        int? id = await revisionController.isRegistration(revision.idExternal!);
+        Revision? revisionDatabase = await revisionController.findRevisionByIdExternal(revision.idExternal!);
 
-        revisionController.revisionInfos.add(ListInfo(lists: revision, update: (id == 1)));
+        if (revisionDatabase != null) revision.id = revisionDatabase.id;
+
+        revisionController.revisionInfos.add(ListInfo(lists: revision, update: (revision.id != null)));
       }
 
       await revisionController.writeRevision();

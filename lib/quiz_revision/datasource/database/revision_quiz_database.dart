@@ -11,7 +11,7 @@ abstract class RevisionQuizDatabaseFactory {
   Future<int> updateRevisionQuiz(RevisionQuiz revisionQuiz);
   Future<List<RevisionQuiz>?> findAllRevisionQuizSync();
   Future<void> updateRevisionQuizList(List<RevisionQuiz> revisionQuiz);
-  Future<int?> isRegistration(int id);
+  Future<RevisionQuiz?> findRevisionQuizByIdExternal(int idExternal);
 }
 
 class RevisionQuizDatabase implements RevisionQuizDatabaseFactory {
@@ -64,8 +64,8 @@ class RevisionQuizDatabase implements RevisionQuizDatabaseFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
+  Future<RevisionQuiz?> findRevisionQuizByIdExternal(int idExternal) async {
     final database = await getInstance();
-    return await database.revisionQuizDao.isRegistration(id);
+    return await database.revisionQuizDao.findRevisionQuizByIdExternal(idExternal);
   }
 }

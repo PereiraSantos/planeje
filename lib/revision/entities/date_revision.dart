@@ -40,7 +40,7 @@ class DateRevision {
       );
 
   static Map<String, dynamic> fromObjectToMap(DateRevision dateRevision) => {
-        "idExternal": dateRevision.idExternal,
+        "id": dateRevision.idExternal,
         "dateRevision": dateRevision.dateRevision,
         "idRevision": dateRevision.idRevision,
       };

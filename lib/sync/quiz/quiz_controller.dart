@@ -23,7 +23,7 @@ class QuizController {
     return true;
   }
 
-  Future<int?> isRegistration(int id) async {
-    return await GetQuiz(QuizDatabase()).isRegistration(id);
+  Future<Quiz?> findQuizByIdExternal(int idExternal) async {
+    return await GetQuiz(QuizDatabase()).findQuizByIdExternal(idExternal);
   }
 }

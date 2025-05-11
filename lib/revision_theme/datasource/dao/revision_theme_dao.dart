@@ -18,8 +18,8 @@ abstract class RevisionThemeDao {
   @Query('SELECT * FROM revision_theme WHERE description LIKE :text')
   Future<List<RevisionTheme>> findRevisionThemeByDescription(String text);
 
-  @Query('select count(*) from revision_theme where id_external  = :idExternal')
-  Future<int?> isRegistration(int idExternal);
+  @Query('select * from revision_theme where id_external  = :idExternal')
+  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal);
 
   @insert
   Future<int> insertRevisionTheme(RevisionTheme revisionTheme);

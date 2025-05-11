@@ -29,7 +29,7 @@ class RevisionQuizController {
     return true;
   }
 
-  Future<int?> isRegistration(int id) async {
-    return await GetRevisionQuiz(RevisionQuizDatabase()).isRegistration(id);
+  Future<RevisionQuiz?> findRevisionQuizByIdExternal(int idExternal) async {
+    return await GetRevisionQuiz(RevisionQuizDatabase()).findRevisionQuizByIdExternal(idExternal);
   }
 }

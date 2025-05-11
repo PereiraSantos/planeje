@@ -18,9 +18,11 @@ class QuestionSync {
       for (dynamic item in response.data) {
         Question question = Question.fromMapToObject(item);
 
-        int? id = await questionController.isRegistration(question.idExternal!);
+        Question? questionDatabase = await questionController.findQuestionByIdExternal(question.idExternal!);
 
-        questionController.annotationInfos.add(ListInfo(lists: question, update: (id == 1)));
+        if (questionDatabase != null) question.id = questionDatabase.id;
+
+        questionController.annotationInfos.add(ListInfo(lists: question, update: (question.id != null)));
       }
 
       await questionController.writeRevision();

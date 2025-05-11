@@ -19,9 +19,11 @@ class QuizAync {
       for (dynamic item in response.data) {
         Quiz quiz = Quiz.fromMapToObject(item);
 
-        int? id = await quizController.isRegistration(quiz.idExternal!);
+        Quiz? quizDatabase = await quizController.findQuizByIdExternal(quiz.idExternal!);
 
-        quizController.quizInfos.add(ListInfo(lists: quiz, update: (id == 1)));
+        if (quizDatabase != null) quiz.id = quizDatabase.id;
+
+        quizController.quizInfos.add(ListInfo(lists: quiz, update: (quiz.id != null)));
       }
 
       await quizController.writeRevision();

@@ -36,8 +36,8 @@ abstract class DateRevisionDao {
   @Query(' select * from date_revision  where id_date = :id')
   Future<DateRevision?> findDateRevisionById(int id);
 
-  @Query('select count(*) from date_revision where id_external = :idExternal')
-  Future<int?> isRegistration(int idExternal);
+  @Query('select * from date_revision where id_external = :idExternal')
+  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal);
 
   @update
   Future<void> updateDateRevisionList(List<DateRevision> dateRevision);

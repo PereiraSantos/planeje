@@ -51,7 +51,7 @@ class Annotation {
       );
 
   static Map<String, dynamic> fromObjectToMap(Annotation annotation) => {
-        "idExternal": annotation.idExternal,
+        "id": annotation.idExternal,
         "title": annotation.title,
         "text": annotation.text,
         "dateText": annotation.dateText,

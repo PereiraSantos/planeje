@@ -18,9 +18,11 @@ class RevisionThemeSync {
     if (response.data != null) {
       for (dynamic item in response.data) {
         RevisionTheme revisionTheme = RevisionTheme.fromMapToObject(item);
-        int? id = await revisionThemeController.isRegistration(revisionTheme.idExternal!);
+        RevisionTheme? revisionThemeDatabase = await revisionThemeController.findRevisionThemeByIdExternal(revisionTheme.idExternal!);
 
-        revisionThemeController.revisionThemeInfos.add(ListInfo(lists: revisionTheme, update: (id == 1)));
+        if (revisionThemeDatabase != null) revisionTheme.id = revisionThemeDatabase.id;
+
+        revisionThemeController.revisionThemeInfos.add(ListInfo(lists: revisionTheme, update: (revisionTheme.id != null)));
       }
 
       await revisionThemeController.writeRevision();
@@ -33,7 +35,7 @@ class RevisionThemeSync {
 
     if (lists.isNotEmpty) {
       for (RevisionTheme item in lists) {
-        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.quiz]).post(RevisionTheme.fromObjectToMap(item));
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.theme]).post(RevisionTheme.fromObjectToMap(item));
 
         if (response.data != null) {
           item.sync = true;

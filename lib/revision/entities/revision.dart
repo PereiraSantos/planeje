@@ -52,7 +52,7 @@ class Revision {
       );
 
   static Map<String, dynamic> fromObjectToMap(Revision revision) => {
-        "idExternal": revision.idExternal,
+        "id": revision.idExternal,
         "title": revision.title,
         "description": revision.description,
         "dateCreational": revision.dateCreational,

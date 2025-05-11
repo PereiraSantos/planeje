@@ -18,7 +18,7 @@ abstract class DateRevisionDatabaseFactory {
   Future<void> updateStatus(bool status, int id);
   Future<List<DateRevision>?> findAllDateRevisionSync();
   Future<void> updateDateRevisionList(List<DateRevision> dateRevision);
-  Future<int?> isRegistration(int id);
+  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal);
 }
 
 class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
@@ -101,8 +101,8 @@ class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
   }
 
   @override
-  Future<int?> isRegistration(int id) async {
+  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal) async {
     final database = await getInstance();
-    return await database.dateRevisionDao.isRegistration(id);
+    return await database.dateRevisionDao.findDateRevisionByIdExternal(idExternal);
   }
 }

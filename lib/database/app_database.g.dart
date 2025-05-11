@@ -311,10 +311,16 @@ class _$RevisionDao extends RevisionDao {
   }
 
   @override
-  Future<int?> isRegistration(int idExternal) async {
-    return _queryAdapter.query(
-        'select count(*) from revision where id_external  = ?1',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+  Future<Revision?> findRevisionByIdExternal(int idExternal) async {
+    return _queryAdapter.query('select * from revision where id_external  = ?1',
+        mapper: (Map<String, Object?> row) => Revision(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            title: row['title'] as String?,
+            description: row['description'] as String?,
+            dateCreational: row['date_creational'] as String?,
+            idRevisionTheme: row['id_revision_theme'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -472,10 +478,15 @@ class _$DateRevisionDao extends DateRevisionDao {
   }
 
   @override
-  Future<int?> isRegistration(int idExternal) async {
+  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal) async {
     return _queryAdapter.query(
-        'select count(*) from date_revision where id_external = ?1',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+        'select * from date_revision where id_external = ?1',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            idExternal: row['id_external'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -546,10 +557,17 @@ class _$AnnotationDao extends AnnotationDao {
   final UpdateAdapter<Annotation> _annotationUpdateAdapter;
 
   @override
-  Future<int?> isRegistration(int idExternal) async {
+  Future<Annotation?> findAnnotationByIdExternal(int idExternal) async {
     return _queryAdapter.query(
-        'select count(*) from annotation where id_external = ?1',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+        'select * from annotation where id_external = ?1',
+        mapper: (Map<String, Object?> row) => Annotation(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            title: row['title'] as String?,
+            text: row['text'] as String?,
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -704,10 +722,14 @@ class _$QuizDao extends QuizDao {
   }
 
   @override
-  Future<int?> isRegistration(int idExternal) async {
-    return _queryAdapter.query(
-        'select count(*) from quiz where id_external = ?1',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+  Future<Quiz?> findQuizByIdExternal(int idExternal) async {
+    return _queryAdapter.query('select * from quiz where id_external = ?1',
+        mapper: (Map<String, Object?> row) => Quiz(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            topic: row['topic'] as String?,
+            description: row['description'] as String?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -861,10 +883,15 @@ class _$QuestionDao extends QuestionDao {
   }
 
   @override
-  Future<int?> isRegistration(int idExternal) async {
-    return _queryAdapter.query(
-        'select count(*) from question where id_external  = ?1',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+  Future<Question?> findQuestionByIdExternal(int idExternal) async {
+    return _queryAdapter.query('select * from question where id_external  = ?1',
+        mapper: (Map<String, Object?> row) => Question(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            idQuiz: row['id_quiz'] as int?,
+            description: row['description'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -1114,10 +1141,16 @@ class _$RevisionQuizDao extends RevisionQuizDao {
   }
 
   @override
-  Future<int?> isRegistration(int idExternal) async {
+  Future<RevisionQuiz?> findRevisionQuizByIdExternal(int idExternal) async {
     return _queryAdapter.query(
-        'select count(*) from revision_quiz where id_external = ?1',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+        'select * from revision_quiz where id_external = ?1',
+        mapper: (Map<String, Object?> row) => RevisionQuiz(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            idQuiz: row['id_quiz'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -1238,10 +1271,14 @@ class _$RevisionThemeDao extends RevisionThemeDao {
   }
 
   @override
-  Future<int?> isRegistration(int idExternal) async {
+  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal) async {
     return _queryAdapter.query(
-        'select count(*) from revision_theme where id_external  = ?1',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+        'select * from revision_theme where id_external  = ?1',
+        mapper: (Map<String, Object?> row) => RevisionTheme(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            description: row['description'] as String?),
         arguments: [idExternal]);
   }
 
