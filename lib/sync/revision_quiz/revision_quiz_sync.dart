@@ -27,7 +27,7 @@ class RevisionQuizSync {
         revisionQuizController.revisionQuizInfos.add(ListInfo(lists: revisionQuiz, update: (revisionQuiz.id != null)));
       }
 
-      await revisionQuizController.writeRevision();
+      await revisionQuizController.writeRevisionQuiz();
     }
     return true;
   }

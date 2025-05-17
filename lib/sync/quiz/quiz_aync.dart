@@ -26,7 +26,7 @@ class QuizAync {
         quizController.quizInfos.add(ListInfo(lists: quiz, update: (quiz.id != null)));
       }
 
-      await quizController.writeRevision();
+      await quizController.writeQuiz();
     }
     return true;
   }

@@ -26,7 +26,7 @@ class RevisionDateSync {
         revisionDateController.revisionDateInfos.add(ListInfo(lists: dateRevision, update: (dateRevision.id != null)));
       }
 
-      await revisionDateController.writeRevision();
+      await revisionDateController.writeRevisionData();
     }
     return true;
   }

@@ -25,7 +25,7 @@ class RevisionThemeSync {
         revisionThemeController.revisionThemeInfos.add(ListInfo(lists: revisionTheme, update: (revisionTheme.id != null)));
       }
 
-      await revisionThemeController.writeRevision();
+      await revisionThemeController.writeRevisionTheme();
     }
     return true;
   }

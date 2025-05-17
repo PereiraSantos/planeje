@@ -26,7 +26,7 @@ class AnnotationSync {
         annotationController.annotationInfos.add(ListInfo(lists: annotation, update: (annotation.id != null)));
       }
 
-      await annotationController.writeRevision();
+      await annotationController.writeAnnotation();
     }
     return true;
   }

@@ -7,7 +7,7 @@ import 'package:planeje/sync/list_info.dart';
 class AnnotationController {
   List<ListInfo> annotationInfos = [];
 
-  Future<bool> writeRevision() async {
+  Future<bool> writeAnnotation() async {
     List<ListInfo> listInfoUpdate = [...annotationInfos.where((item) => item.update)];
 
     annotationInfos.removeWhere((item) => item.update);

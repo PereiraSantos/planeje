@@ -7,7 +7,7 @@ import 'package:planeje/sync/list_info.dart';
 class QuizController {
   List<ListInfo> quizInfos = [];
 
-  Future<bool> writeRevision() async {
+  Future<bool> writeQuiz() async {
     List<ListInfo> listInfoUpdate = [...quizInfos.where((item) => item.update)];
 
     quizInfos.removeWhere((item) => item.update);

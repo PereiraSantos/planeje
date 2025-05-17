@@ -22,10 +22,10 @@ class QuestionSync {
 
         if (questionDatabase != null) question.id = questionDatabase.id;
 
-        questionController.annotationInfos.add(ListInfo(lists: question, update: (question.id != null)));
+        questionController.questionInfos.add(ListInfo(lists: question, update: (question.id != null)));
       }
 
-      await questionController.writeRevision();
+      await questionController.writeQuestion();
     }
     return true;
   }

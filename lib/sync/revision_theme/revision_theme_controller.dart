@@ -7,7 +7,7 @@ import 'package:planeje/sync/list_info.dart';
 class RevisionThemeController {
   List<ListInfo> revisionThemeInfos = [];
 
-  Future<bool> writeRevision() async {
+  Future<bool> writeRevisionTheme() async {
     List<ListInfo> listInfoUpdate = [...revisionThemeInfos.where((item) => item.update)];
 
     revisionThemeInfos.removeWhere((item) => item.update);

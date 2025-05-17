@@ -4,19 +4,19 @@ import 'package:planeje/quiz_revision/utils/register_question/register_question.
 import 'package:planeje/sync/list_info.dart';
 
 class QuestionController {
-  List<ListInfo> annotationInfos = [];
+  List<ListInfo> questionInfos = [];
 
-  Future<bool> writeRevision() async {
-    List<ListInfo> listInfoUpdate = [...annotationInfos.where((item) => item.update)];
+  Future<bool> writeQuestion() async {
+    List<ListInfo> listInfoUpdate = [...questionInfos.where((item) => item.update)];
 
-    annotationInfos.removeWhere((item) => item.update);
+    questionInfos.removeWhere((item) => item.update);
 
     if (listInfoUpdate.isNotEmpty) {
       await UpdateQuestion(QuestionDatabase(), questions: listInfoUpdate.map<Question>((e) => e.lists).toList()).writeQuestionList();
     }
 
-    if (annotationInfos.isNotEmpty) {
-      await SaveQuestion(QuestionDatabase(), questions: annotationInfos.map<Question>((e) => e.lists).toList()).writeQuestionList();
+    if (questionInfos.isNotEmpty) {
+      await SaveQuestion(QuestionDatabase(), questions: questionInfos.map<Question>((e) => e.lists).toList()).writeQuestionList();
     }
 
     return true;

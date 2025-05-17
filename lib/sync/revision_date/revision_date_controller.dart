@@ -7,7 +7,7 @@ import 'package:planeje/sync/list_info.dart';
 class RevisionDateController {
   List<ListInfo> revisionDateInfos = [];
 
-  Future<bool> writeRevision() async {
+  Future<bool> writeRevisionData() async {
     List<ListInfo> listInfoUpdate = [...revisionDateInfos.where((item) => item.update)];
 
     revisionDateInfos.removeWhere((item) => item.update);
