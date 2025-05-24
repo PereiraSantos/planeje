@@ -8,12 +8,12 @@ class DeleteQuiz implements RemoveQuizFactory {
 
   DeleteQuiz(this.quizDatabase);
   @override
-  Future<void> deleteById(int id) async {
-    await quizDatabase.deleteQuiz(id);
+  Future<void> disableById(int id) async {
+    await quizDatabase.disableQuiz(id);
   }
 
   @override
-  Future<void> deleteByIdRevision(int id) {
+  Future<void> disableByIdRevision(int id) {
     throw UnimplementedError();
   }
 }

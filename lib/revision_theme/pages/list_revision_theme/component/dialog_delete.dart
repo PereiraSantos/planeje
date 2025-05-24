@@ -40,7 +40,7 @@ class DialogDelete {
                         return;
                       }
 
-                      var result = await DeleteRevisionTheme(RevisionThemeDatabaseDataSource()).deleteById(revisionTheme.id!);
+                      var result = await DeleteRevisionTheme(RevisionThemeDatabaseDataSource()).disableById(revisionTheme.id!);
 
                       if (result != null && context.mounted) {
                         await MessageUser.message(context, 'Removido com sucesso');

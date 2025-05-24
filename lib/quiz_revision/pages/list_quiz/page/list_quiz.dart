@@ -85,7 +85,7 @@ class _ListQuizState extends State<ListQuiz> {
 
                               await RemoveQuestion(QuestionDatabase()).delete(tableQuestionNotifier.questions);
 
-                              await DeleteQuiz(QuizDatabase()).deleteById(snapshot.data![index].id!);
+                              await DeleteQuiz(QuizDatabase()).disableById(snapshot.data![index].id!);
                               tableQuestionNotifier.clearList();
 
                               if (!context.mounted) return;

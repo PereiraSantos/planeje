@@ -9,11 +9,13 @@ class RevisionThemeInfoDao {
           '(select date_revision from revision as r left join date_revision as dt on dt.id_revision = r.id  where r.id_revision_theme = rt.id order by date_revision desc limit 1) as dateRevision, ' +
           '(select r.title from revision as r left join date_revision as dt on dt.id_revision = r.id  where r.id_revision_theme = rt.id order by date_revision desc limit 1) as title, ' +
           '(select r.description from revision as r left join date_revision as dt on dt.id_revision = r.id  where r.id_revision_theme = rt.id order by date_revision desc limit 1) as revisionDescription ' +
-          'FROM revision_theme as rt  order by dateRevision desc';
+          'FROM revision_theme as rt ';
 
-      if (text != "") sql += 'where WHERE rt.description LIKE order by dateRevision desc';
+      String order = 'order by dateRevision desc';
 
-      List<Map<String, dynamic>> list = await database.database.rawQuery(sql);
+      sql += text != "" ? 'where rt.description LIKE \'%$text%\' and rt.disable = 0' : 'where rt.disable = 0 ';
+
+      List<Map<String, dynamic>> list = await database.database.rawQuery('$sql$order');
 
       return list.map((e) => RevisionThemeComplement.mapFromObject(e)).toList();
     } catch (e) {

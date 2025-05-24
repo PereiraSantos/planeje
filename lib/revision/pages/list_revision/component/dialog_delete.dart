@@ -28,10 +28,10 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var result = await DeleteRevision(RevisionDatabaseDataSource()).deleteById(revision.id!);
+                      var result = await DeleteRevision(RevisionDatabaseDataSource()).disableById(revision.id!);
 
                       if (result != null) {
-                        await DeleteAnnotation(AnnotationDatabase()).deleteByIdRevision(revision.id!);
+                        await DeleteAnnotation(AnnotationDatabase()).disableByIdRevision(revision.id!);
                       }
 
                       if (result != null && context.mounted) {

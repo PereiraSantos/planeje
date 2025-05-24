@@ -15,17 +15,17 @@ abstract class QuestionDao {
   @insert
   Future<List<int>> insertQuestionList(List<Question> question);
 
-  @Query('SELECT * FROM question WHERE id = :id')
+  @Query('SELECT * FROM question WHERE id = :id and disable = 0')
   Future<Question?> getQuestionById(int id);
 
-  @Query('SELECT * FROM question WHERE id_quiz = :idQuiz')
+  @Query('SELECT * FROM question WHERE id_quiz = :idQuiz and disable = 0')
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
 
-  @Query('delete FROM question WHERE id = :id')
-  Future<void> deleteQuestion(int id);
+  @Query('update question set disable = 1 WHERE id = :id')
+  Future<void> disableQuestion(int id);
 
-  @Query('delete FROM question WHERE id_quiz = :idQuiz')
-  Future<void> deleteQuestionByIdQuiz(int idQuiz);
+  @Query('update question set disable = 1 WHERE id_quiz = :idQuiz')
+  Future<void> disableQuestionByIdQuiz(int idQuiz);
 
   @Query('select * from question where id_external  = :idExternal')
   Future<Question?> findQuestionByIdExternal(int idExternal);

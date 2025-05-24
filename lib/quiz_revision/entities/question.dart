@@ -21,6 +21,9 @@ class Question {
   @ColumnInfo(name: 'sync')
   bool? sync;
 
+  @ColumnInfo(name: 'disable')
+  bool? disable;
+
   @ignore
   bool? uniqueAnswer;
 
@@ -32,6 +35,7 @@ class Question {
     this.answer = false,
     this.uniqueAnswer,
     this.sync = true,
+    this.disable = false,
   });
 
   void setIdQuiz(int? value) => idQuiz = id;
@@ -40,6 +44,7 @@ class Question {
   void setAnswer(bool? value) => answer = value;
   void setUniqueAnswer(bool? value) => uniqueAnswer = value;
   void setSync({bool? value}) => sync = value ?? false;
+  void setDisable(bool value) => disable = value;
 
   static Question fromMapToObject(Map<String, dynamic> json) => Question(
         idExternal: json['id'],

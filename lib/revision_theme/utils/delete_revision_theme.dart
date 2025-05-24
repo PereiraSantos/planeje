@@ -10,12 +10,12 @@ class DeleteRevisionTheme implements DeleteRevisionThemeFactory {
   DeleteRevisionTheme(this.revisionThemeDatabase);
 
   @override
-  Future<RevisionTheme?> deleteById(int id) async {
-    return await revisionThemeDatabase.deleteRevisionThemeById(id);
+  Future<RevisionTheme?> disableById(int id) async {
+    return await revisionThemeDatabase.disableRevisionThemeById(id);
   }
 
   @override
-  Future<void> deleteByIdRevision(int id) {
+  Future<void> disableByIdRevision(int id) {
     throw UnimplementedError();
   }
 }

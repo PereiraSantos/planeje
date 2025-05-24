@@ -6,7 +6,7 @@ abstract class FindRevisionThemeFactory {
   Future<List<RevisionTheme>> findAllRevisionTheme();
   Future<List<RevisionTheme>?> findAllRevisionThemeSync();
   Future<RevisionTheme?> findRevisionThemeById(int id);
-  Future<RevisionTheme?> deleteRevisionThemeById(int id);
+  Future<RevisionTheme?> disableRevisionThemeById(int id);
   Future<List<RevisionThemeComplement>> findRevisionThemeByDescription(String text);
   Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal);
 }
@@ -17,8 +17,8 @@ class FindRevisionTheme implements FindRevisionThemeFactory {
   FindRevisionTheme(this.revisionThemeDatabase);
 
   @override
-  Future<RevisionTheme?> deleteRevisionThemeById(int id) async {
-    return await revisionThemeDatabase.deleteRevisionThemeById(id);
+  Future<RevisionTheme?> disableRevisionThemeById(int id) async {
+    return await revisionThemeDatabase.disableRevisionThemeById(id);
   }
 
   @override

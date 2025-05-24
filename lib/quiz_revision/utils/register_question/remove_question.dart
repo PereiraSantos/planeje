@@ -15,8 +15,8 @@ class RemoveQuestion implements DeleteQuestionFactory {
     for (var item in questionList) {
       if (item.delete) {
         item.question?.id != null
-            ? await questionDatabase.deleteQuestion(item.question!.id!)
-            : await questionDatabase.deleteQuestionByIdQuiz(item.question!.idQuiz!);
+            ? await questionDatabase.disableQuestion(item.question!.id!)
+            : await questionDatabase.disableQuestionByIdQuiz(item.question!.idQuiz!);
       }
     }
     return true;

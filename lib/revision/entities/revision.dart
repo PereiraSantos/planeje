@@ -25,6 +25,9 @@ class Revision {
   @ColumnInfo(name: 'sync')
   bool? sync;
 
+  @ColumnInfo(name: 'disable')
+  bool? disable;
+
   Revision({
     this.id,
     this.idExternal,
@@ -33,6 +36,7 @@ class Revision {
     this.dateCreational,
     this.idRevisionTheme,
     this.sync = true,
+    this.disable = false,
   });
 
   void setId(int? value) => id = value;
@@ -42,6 +46,7 @@ class Revision {
   void setDateCreational(String? value) => dateCreational = value ?? FormatDate.formatDate(FormatDate.newDate());
   void setIdTevisionTheme(int value) => idRevisionTheme = value;
   void setSync({bool? value}) => sync = value ?? false;
+  void setDisable(bool value) => disable = value;
 
   static Revision fromMapToObject(Map<String, dynamic> json) => Revision(
         idExternal: json['id'],

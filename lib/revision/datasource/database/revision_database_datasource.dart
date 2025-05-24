@@ -7,7 +7,7 @@ import '../../entities/revision_time.dart';
 abstract class RevisionDatabaseFactory {
   Future<List<Revision>> findAllRevisions();
   Future<Revision?> findRevisionById(int id);
-  Future<Revision?> deleteRevisionById(int id);
+  Future<Revision?> disableRevisionById(int id);
   Future<List<RevisionTime>> findRevisionByDescription(String text, int id, bool isBefore, {int? limit});
   Future<int?> updateRevision(Revision revision);
   Future<int?> insertRevision(Revision revision);
@@ -21,9 +21,9 @@ abstract class RevisionDatabaseFactory {
 
 class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
   @override
-  Future<Revision?> deleteRevisionById(int id) async {
+  Future<Revision?> disableRevisionById(int id) async {
     final database = await getInstance();
-    return await database.revisionDao.deleteRevisionById(id);
+    return await database.revisionDao.disableRevisionById(id);
   }
 
   @override

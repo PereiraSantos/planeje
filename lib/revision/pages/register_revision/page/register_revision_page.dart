@@ -142,7 +142,7 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                             child: IconButton(
                                 onPressed: () async {
                                   if (widget.annotations![index].id != null) {
-                                    await DeleteAnnotation(AnnotationDatabase()).deleteById(widget.annotations![index].id!);
+                                    await DeleteAnnotation(AnnotationDatabase()).disableById(widget.annotations![index].id!);
                                   }
 
                                   setState(() {

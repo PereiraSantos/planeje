@@ -10,12 +10,12 @@ class DeleteRevision implements DeleteRevisionFactory {
   DeleteRevision(this.revisionDatabase);
 
   @override
-  Future<Revision?> deleteById(int id) async {
-    return await revisionDatabase.deleteRevisionById(id);
+  Future<Revision?> disableById(int id) async {
+    return await revisionDatabase.disableRevisionById(id);
   }
 
   @override
-  Future<void> deleteByIdRevision(int id) {
+  Future<void> disableByIdRevision(int id) {
     throw UnimplementedError();
   }
 }

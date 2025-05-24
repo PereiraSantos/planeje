@@ -12,8 +12,8 @@ abstract class RevisionThemeDao {
   @Query('SELECT * FROM revision_theme WHERE id = :id')
   Future<RevisionTheme?> findRevisionThemeById(int id);
 
-  @Query('delete FROM revision_theme WHERE id = :id')
-  Future<RevisionTheme?> deleteRevisionThemeById(int id);
+  @Query('update revision_theme set disable = 1 WHERE id = :id')
+  Future<RevisionTheme?> disableRevisionThemeById(int id);
 
   @Query('SELECT * FROM revision_theme WHERE description LIKE :text')
   Future<List<RevisionTheme>> findRevisionThemeByDescription(String text);

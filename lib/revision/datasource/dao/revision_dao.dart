@@ -12,13 +12,13 @@ abstract class RevisionDao {
   @Query('SELECT * FROM revision WHERE id = :id')
   Future<Revision?> findRevisionById(int id);
 
-  @Query('delete FROM revision WHERE id = :id')
-  Future<Revision?> deleteRevisionById(int id);
+  @Query('update revision set disable = 1 WHERE id = :id')
+  Future<Revision?> disableRevisionById(int id);
 
   @Query('SELECT * FROM revision WHERE text LIKE :text')
   Future<List<Revision>> findRevisionByDescription(String text);
 
-  @Query('SELECT * FROM revision where id_revision_theme = :idRevisionTheme')
+  @Query('SELECT * FROM revision where id_revision_theme = :idRevisionTheme and disable = 0')
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
 
   @Query('select * from revision where id_external  = :idExternal')

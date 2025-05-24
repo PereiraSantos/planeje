@@ -8,8 +8,8 @@ abstract class QuestionDatabaseFactory {
   Future<int> insertQuestion(Question question);
   Future<List<int>> insertQuestionList(List<Question> questions);
   Future<Question?> getQuestionById(int id);
-  Future<void> deleteQuestion(int id);
-  Future<void> deleteQuestionByIdQuiz(int idQuiz);
+  Future<void> disableQuestion(int id);
+  Future<void> disableQuestionByIdQuiz(int idQuiz);
   Future<int> updateQuestion(Question question);
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
   Future<void> updateQuestionList(List<Question> question);
@@ -18,9 +18,9 @@ abstract class QuestionDatabaseFactory {
 
 class QuestionDatabase implements QuestionDatabaseFactory {
   @override
-  Future<void> deleteQuestion(int id) async {
+  Future<void> disableQuestion(int id) async {
     final database = await getInstance();
-    return await database.questionDao.deleteQuestion(id);
+    return await database.questionDao.disableQuestion(id);
   }
 
   @override
@@ -54,9 +54,9 @@ class QuestionDatabase implements QuestionDatabaseFactory {
   }
 
   @override
-  Future<void> deleteQuestionByIdQuiz(int idQuiz) async {
+  Future<void> disableQuestionByIdQuiz(int idQuiz) async {
     final database = await getInstance();
-    return await database.questionDao.deleteQuestionByIdQuiz(idQuiz);
+    return await database.questionDao.disableQuestionByIdQuiz(idQuiz);
   }
 
   @override

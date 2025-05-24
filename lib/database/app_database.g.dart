@@ -112,23 +112,23 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `title` TEXT, `description` TEXT, `date_creational` TEXT, `id_revision_theme` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `title` TEXT, `description` TEXT, `date_creational` TEXT, `id_revision_theme` INTEGER, `sync` INTEGER, `disable` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `id_revision` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `id_revision` INTEGER, `sync` INTEGER, `disable` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `sync` INTEGER, `disable` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `topic` TEXT, `description` TEXT, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `topic` TEXT, `description` TEXT, `sync` INTEGER, `disable` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER, `sync` INTEGER, `disable` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `user` (`id` INTEGER NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER, `sync` INTEGER, `disable` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `description` TEXT, `sync` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `description` TEXT, `sync` INTEGER, `disable` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -200,7 +200,9 @@ class _$RevisionDao extends RevisionDao {
                   'description': item.description,
                   'date_creational': item.dateCreational,
                   'id_revision_theme': item.idRevisionTheme,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 }),
         _revisionUpdateAdapter = UpdateAdapter(
             database,
@@ -213,7 +215,9 @@ class _$RevisionDao extends RevisionDao {
                   'description': item.description,
                   'date_creational': item.dateCreational,
                   'id_revision_theme': item.idRevisionTheme,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -236,7 +240,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -249,7 +255,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -262,13 +270,15 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
   @override
-  Future<Revision?> deleteRevisionById(int id) async {
-    return _queryAdapter.query('delete FROM revision WHERE id = ?1',
+  Future<Revision?> disableRevisionById(int id) async {
+    return _queryAdapter.query('update revision set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -276,7 +286,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
@@ -290,7 +302,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [text]);
   }
 
@@ -298,7 +312,7 @@ class _$RevisionDao extends RevisionDao {
   Future<List<Revision>?> findRevisioByIdRevisionTheme(
       int idRevisionTheme) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM revision where id_revision_theme = ?1',
+        'SELECT * FROM revision where id_revision_theme = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -306,7 +320,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idRevisionTheme]);
   }
 
@@ -320,7 +336,9 @@ class _$RevisionDao extends RevisionDao {
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -361,7 +379,9 @@ class _$DateRevisionDao extends DateRevisionDao {
                   'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'id_revision': item.idRevision,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 }),
         _dateRevisionUpdateAdapter = UpdateAdapter(
             database,
@@ -372,7 +392,9 @@ class _$DateRevisionDao extends DateRevisionDao {
                   'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'id_revision': item.idRevision,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -393,7 +415,9 @@ class _$DateRevisionDao extends DateRevisionDao {
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -404,31 +428,38 @@ class _$DateRevisionDao extends DateRevisionDao {
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
-  Future<DateRevision?> deleteDateRevisionById(int id) async {
-    return _queryAdapter.query('delete FROM date_revision WHERE id = ?1',
+  Future<DateRevision?> disableDateRevisionById(int id) async {
+    return _queryAdapter.query(
+        'update date_revision set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
   @override
-  Future<DateRevision?> deleteDateRevisionByIdRevision(int idRevision) async {
+  Future<DateRevision?> disableDateRevisionByIdRevision(int idRevision) async {
     return _queryAdapter.query(
-        'delete FROM date_revision WHERE id_revision = ?1',
+        'update date_revision set disable = 1 WHERE id_revision = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idRevision]);
   }
 
@@ -473,7 +504,9 @@ class _$DateRevisionDao extends DateRevisionDao {
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
@@ -486,7 +519,9 @@ class _$DateRevisionDao extends DateRevisionDao {
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -530,7 +565,9 @@ class _$AnnotationDao extends AnnotationDao {
                   'text': item.text,
                   'date_text': item.dateText,
                   'id_revision': item.idRevision,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 }),
         _annotationUpdateAdapter = UpdateAdapter(
             database,
@@ -543,7 +580,9 @@ class _$AnnotationDao extends AnnotationDao {
                   'text': item.text,
                   'date_text': item.dateText,
                   'id_revision': item.idRevision,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -567,27 +606,30 @@ class _$AnnotationDao extends AnnotationDao {
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
   }
 
   @override
-  Future<void> delete(int id) async {
-    await _queryAdapter
-        .queryNoReturn('delete from annotation where id = ?1', arguments: [id]);
+  Future<void> disable(int id) async {
+    await _queryAdapter.queryNoReturn(
+        'update annotation set disable = 1 where id = ?1',
+        arguments: [id]);
   }
 
   @override
-  Future<void> deleteByIdRevision(int idRevision) async {
+  Future<void> disableByIdRevision(int idRevision) async {
     await _queryAdapter.queryNoReturn(
-        'delete from annotation where id_revision = ?1',
+        'update annotation set disable = 1 where id_revision = ?1',
         arguments: [idRevision]);
   }
 
   @override
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision) async {
     return _queryAdapter.queryList(
-        'select * from  annotation where id_revision = ?1',
+        'select * from  annotation where id_revision = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -595,13 +637,16 @@ class _$AnnotationDao extends AnnotationDao {
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idRevision]);
   }
 
   @override
   Future<List<Annotation>?> getAnnotationAll() async {
-    return _queryAdapter.queryList('select * from  annotation',
+    return _queryAdapter.queryList(
+        'select * from  annotation where and disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -609,12 +654,15 @@ class _$AnnotationDao extends AnnotationDao {
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
   Future<List<Annotation>?> findAnnotationSync() async {
-    return _queryAdapter.queryList('select * from annotation where sync = 0',
+    return _queryAdapter.queryList(
+        'select * from annotation where sync = 0 where disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -622,7 +670,9 @@ class _$AnnotationDao extends AnnotationDao {
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -663,7 +713,9 @@ class _$QuizDao extends QuizDao {
                   'id_external': item.idExternal,
                   'topic': item.topic,
                   'description': item.description,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 }),
         _quizUpdateAdapter = UpdateAdapter(
             database,
@@ -674,7 +726,9 @@ class _$QuizDao extends QuizDao {
                   'id_external': item.idExternal,
                   'topic': item.topic,
                   'description': item.description,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -689,13 +743,15 @@ class _$QuizDao extends QuizDao {
 
   @override
   Future<List<Quiz>?> getAllQuiz() async {
-    return _queryAdapter.queryList('SELECT * FROM quiz',
+    return _queryAdapter.queryList('SELECT * FROM quiz where disable = 0',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -706,18 +762,23 @@ class _$QuizDao extends QuizDao {
             idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
   Future<List<Quiz>?> getAllQuizSearch(String text) async {
-    return _queryAdapter.queryList('SELECT * FROM quiz where topic LIKE ?1',
+    return _queryAdapter.queryList(
+        'SELECT * FROM quiz where topic LIKE ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [text]);
   }
 
@@ -729,7 +790,9 @@ class _$QuizDao extends QuizDao {
             idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -741,19 +804,23 @@ class _$QuizDao extends QuizDao {
             idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
   @override
-  Future<Quiz?> deleteQuiz(int id) async {
-    return _queryAdapter.query('delete FROM quiz WHERE id = ?1',
+  Future<Quiz?> disableQuiz(int id) async {
+    return _queryAdapter.query('update quiz set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
@@ -795,7 +862,9 @@ class _$QuestionDao extends QuestionDao {
                   'id_quiz': item.idQuiz,
                   'description': item.description,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 }),
         _questionUpdateAdapter = UpdateAdapter(
             database,
@@ -807,7 +876,9 @@ class _$QuestionDao extends QuestionDao {
                   'id_quiz': item.idQuiz,
                   'description': item.description,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -829,7 +900,9 @@ class _$QuestionDao extends QuestionDao {
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -841,44 +914,54 @@ class _$QuestionDao extends QuestionDao {
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
   Future<Question?> getQuestionById(int id) async {
-    return _queryAdapter.query('SELECT * FROM question WHERE id = ?1',
+    return _queryAdapter.query(
+        'SELECT * FROM question WHERE id = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
   @override
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz) async {
-    return _queryAdapter.queryList('SELECT * FROM question WHERE id_quiz = ?1',
+    return _queryAdapter.queryList(
+        'SELECT * FROM question WHERE id_quiz = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idQuiz]);
   }
 
   @override
-  Future<void> deleteQuestion(int id) async {
-    await _queryAdapter
-        .queryNoReturn('delete FROM question WHERE id = ?1', arguments: [id]);
+  Future<void> disableQuestion(int id) async {
+    await _queryAdapter.queryNoReturn(
+        'update question set disable = 1 WHERE id = ?1',
+        arguments: [id]);
   }
 
   @override
-  Future<void> deleteQuestionByIdQuiz(int idQuiz) async {
-    await _queryAdapter.queryNoReturn('delete FROM question WHERE id_quiz = ?1',
+  Future<void> disableQuestionByIdQuiz(int idQuiz) async {
+    await _queryAdapter.queryNoReturn(
+        'update question set disable = 1 WHERE id_quiz = ?1',
         arguments: [idQuiz]);
   }
 
@@ -891,7 +974,9 @@ class _$QuestionDao extends QuestionDao {
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -1044,7 +1129,9 @@ class _$RevisionQuizDao extends RevisionQuizDao {
                   'date_revision': item.dateRevision,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
                   'id_quiz': item.idQuiz,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 }),
         _revisionQuizUpdateAdapter = UpdateAdapter(
             database,
@@ -1056,7 +1143,9 @@ class _$RevisionQuizDao extends RevisionQuizDao {
                   'date_revision': item.dateRevision,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
                   'id_quiz': item.idQuiz,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -1071,14 +1160,17 @@ class _$RevisionQuizDao extends RevisionQuizDao {
 
   @override
   Future<List<RevisionQuiz>?> getAllRevisionQuiz() async {
-    return _queryAdapter.queryList('SELECT * FROM revision_quiz',
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision_quiz where disable = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -1090,53 +1182,63 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0));
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
   Future<RevisionQuiz?> getRevisionQuizById(int id) async {
-    return _queryAdapter.query('SELECT * FROM revision_quiz WHERE id = ?1',
+    return _queryAdapter.query(
+        'SELECT * FROM revision_quiz WHERE id = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
   @override
   Future<List<RevisionQuiz>?> getRevisionQuizByIdQuiz(int idQuiz) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM revision_quiz WHERE id_quiz = ?1',
+        'SELECT * FROM revision_quiz WHERE id_quiz = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idQuiz]);
   }
 
   @override
-  Future<RevisionQuiz?> deleteRevisionQuiz(int id) async {
-    return _queryAdapter.query('delete FROM revision_quiz WHERE id = ?1',
+  Future<RevisionQuiz?> disableRevisionQuiz(int id) async {
+    return _queryAdapter.query(
+        'update revision_quiz set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
   @override
-  Future<void> deleteRevisionQuizByIdQuiz(int idQuiz) async {
+  Future<void> disableRevisionQuizByIdQuiz(int idQuiz) async {
     await _queryAdapter.queryNoReturn(
-        'delete FROM revision_quiz WHERE id_quiz = ?1',
+        'update revision_quiz set disable = 1 WHERE id_quiz = ?1',
         arguments: [idQuiz]);
   }
 
@@ -1150,7 +1252,9 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0),
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
   }
 
@@ -1191,7 +1295,9 @@ class _$RevisionThemeDao extends RevisionThemeDao {
                   'id': item.id,
                   'id_external': item.idExternal,
                   'description': item.description,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 }),
         _revisionThemeUpdateAdapter = UpdateAdapter(
             database,
@@ -1201,7 +1307,9 @@ class _$RevisionThemeDao extends RevisionThemeDao {
                   'id': item.id,
                   'id_external': item.idExternal,
                   'description': item.description,
-                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0)
+                  'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
+                  'disable':
+                      item.disable == null ? null : (item.disable! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -1220,8 +1328,10 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
+            description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            description: row['description'] as String?));
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -1231,8 +1341,10 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
+            description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            description: row['description'] as String?));
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -1241,19 +1353,24 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
+            description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            description: row['description'] as String?),
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
   @override
-  Future<RevisionTheme?> deleteRevisionThemeById(int id) async {
-    return _queryAdapter.query('delete FROM revision_theme WHERE id = ?1',
+  Future<RevisionTheme?> disableRevisionThemeById(int id) async {
+    return _queryAdapter.query(
+        'update revision_theme set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
+            description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            description: row['description'] as String?),
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
   }
 
@@ -1265,8 +1382,10 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
+            description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            description: row['description'] as String?),
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [text]);
   }
 
@@ -1277,8 +1396,10 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
+            description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            description: row['description'] as String?),
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
   }
 

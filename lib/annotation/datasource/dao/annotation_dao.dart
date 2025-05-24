@@ -15,19 +15,19 @@ abstract class AnnotationDao {
   @Query('select * from annotation where id_external = :idExternal')
   Future<Annotation?> findAnnotationByIdExternal(int idExternal);
 
-  @Query('delete from annotation where id = :id')
-  Future<void> delete(int id);
+  @Query('update annotation set disable = 1 where id = :id')
+  Future<void> disable(int id);
 
-  @Query('delete from annotation where id_revision = :idRevision')
-  Future<void> deleteByIdRevision(int idRevision);
+  @Query('update annotation set disable = 1 where id_revision = :idRevision')
+  Future<void> disableByIdRevision(int idRevision);
 
-  @Query('select * from  annotation where id_revision = :idRevision')
+  @Query('select * from  annotation where id_revision = :idRevision and disable = 0')
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
 
-  @Query('select * from  annotation')
+  @Query('select * from  annotation where and disable = 0')
   Future<List<Annotation>?> getAnnotationAll();
 
-  @Query('select * from annotation where sync = 0')
+  @Query('select * from annotation where sync = 0 where disable = 0')
   Future<List<Annotation>?> findAnnotationSync();
 
   @update

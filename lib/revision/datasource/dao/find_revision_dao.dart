@@ -12,8 +12,9 @@ class FindRevisionDao {
     int? limit,
   }) async {
     List<RevisionTime> listRevisionTime = [];
-    String filter =
-        text != '' ? 'where r.id_revision_theme = $id and (r.title like \'%$text%\' or r.description like \'%$text%\')' : 'where r.id_revision_theme = $id ';
+    String filter = text != ''
+        ? 'where r.id_revision_theme = $id and r.disable = 0 and (r.title like \'%$text%\' or r.description like \'%$text%\')'
+        : 'where r.id_revision_theme = $id and r.disable = 0';
 
     String sqlBase =
         'SELECT r.*, d.*, r.id_external as idExternal  FROM revision as r left join date_revision as d on r.id = d.id_revision $filter group by id order by date_revision desc';

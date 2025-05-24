@@ -24,6 +24,9 @@ class Annotation {
   @ColumnInfo(name: 'sync')
   bool? sync;
 
+  @ColumnInfo(name: 'disable')
+  bool? disable;
+
   Annotation({
     this.id,
     this.idExternal,
@@ -32,6 +35,7 @@ class Annotation {
     this.dateText,
     this.idRevision,
     this.sync = true,
+    this.disable = false,
   });
 
   void setId(int? value) => id = value;
@@ -41,6 +45,7 @@ class Annotation {
   void setDateText(String? date) => dateText = date ?? FormatDate.formatDate(FormatDate.newDate());
   void setIdRevision(int? value) => idRevision = value;
   void setSync({bool? value}) => sync = value ?? false;
+  void setDisable(bool value) => disable = value;
 
   static Annotation fromMapToObject(Map<String, dynamic> json) => Annotation(
         idExternal: json['id'],

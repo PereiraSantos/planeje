@@ -7,8 +7,8 @@ import '../../../database/app_database.dart';
 abstract class DateRevisionDatabaseFactory {
   Future<List<DateRevision>> findAllDateRevisions();
   Future<DateRevision?> findDateRevisionById(int id);
-  Future<DateRevision?> deleteDateRevisionById(int id);
-  Future<void> deleteDateRevisionByIdRevision(int idRevision);
+  Future<DateRevision?> disableDateRevisionById(int id);
+  Future<void> disableDateRevisionByIdRevision(int idRevision);
   Future<int?> insertDateRevision(DateRevision dateRevision);
   Future<List<int>> insertDateRevisionList(List<DateRevision> dateRevisions);
   Future<int?> updateDateRevision(DateRevision dateRevision);
@@ -23,9 +23,9 @@ abstract class DateRevisionDatabaseFactory {
 
 class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
   @override
-  Future<DateRevision?> deleteDateRevisionById(int id) async {
+  Future<DateRevision?> disableDateRevisionById(int id) async {
     final database = await getInstance();
-    return await database.dateRevisionDao.deleteDateRevisionById(id);
+    return await database.dateRevisionDao.disableDateRevisionById(id);
   }
 
   @override
@@ -77,9 +77,9 @@ class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
   }
 
   @override
-  Future<void> deleteDateRevisionByIdRevision(int idRevision) async {
+  Future<void> disableDateRevisionByIdRevision(int idRevision) async {
     final database = await getInstance();
-    await database.dateRevisionDao.deleteDateRevisionByIdRevision(idRevision);
+    await database.dateRevisionDao.disableDateRevisionByIdRevision(idRevision);
   }
 
   @override

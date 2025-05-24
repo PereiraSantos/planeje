@@ -15,12 +15,16 @@ class RevisionTheme {
   @ColumnInfo(name: 'sync')
   bool? sync;
 
-  RevisionTheme({this.id, this.idExternal, this.sync, this.description});
+  @ColumnInfo(name: 'disable')
+  bool? disable;
+
+  RevisionTheme({this.id, this.idExternal, this.description, this.sync = true, this.disable = false});
 
   void setId(int? value) => id = value;
   void setIdExternal(int? value) => idExternal = value;
   void setDescription(String value) => description = value;
   void setSync({bool? value}) => sync = value ?? false;
+  void setDisable(bool value) => disable = value;
 
   static RevisionTheme fromMapToObject(Map<String, dynamic> json) => RevisionTheme(
         idExternal: json['id'],

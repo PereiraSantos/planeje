@@ -42,23 +42,18 @@ class SettingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextButtonWidget(
-                  label: 'Deslogar',
-                  onClick: () async {
-                    User? user = await Credentials(UserDatabase()).findUserById();
-
-                    // ignore: use_build_context_synchronously
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => LoginPage(
-                          login: user?.login,
-                          password: user?.password,
-                          keepMeLoggedIn: user?.keepLogged,
-                        ),
-                      ),
-                    );
-                  },
-                  padding: const EdgeInsets.only(left: 0.0, right: 20.0, top: 5.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25.0, right: 20.0, top: 5.0),
+                      child: Text('Enviar dados'),
+                    ),
+                    ListenableBuilder(
+                      listenable: sync.syncNotifierPost,
+                      builder: (context, child) => sync.syncNotifierPost.status.build(context),
+                    ),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,19 +68,6 @@ class SettingPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25.0, right: 20.0, top: 5.0),
-                      child: Text('Enviar dados'),
-                    ),
-                    ListenableBuilder(
-                      listenable: sync.syncNotifierPost,
-                      builder: (context, child) => sync.syncNotifierPost.status.build(context),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -95,15 +77,32 @@ class SettingPage extends StatelessWidget {
         children: [
           TextButtonWidget.sync(() async {
             try {
-              await sync.receiveData();
-
               await sync.postData();
+
+              await sync.receiveData();
 
               if (context.mounted) await MessageUser.message(context, 'Sincronização finalizada!!!');
             } catch (e) {
               if (context.mounted) await MessageUser.message(context, 'Erro ao sincronização!!!');
             }
           }),
+          TextButtonWidget(
+            label: 'DESLOGAR',
+            onClick: () async {
+              User? user = await Credentials(UserDatabase()).findUserById();
+
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => LoginPage(
+                    login: user?.login,
+                    password: user?.password,
+                    keepMeLoggedIn: user?.keepLogged,
+                  ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

@@ -8,10 +8,10 @@ abstract class AnnotationDatabaseFactory {
   Future<int?> insertAnnotation(Annotation annotationEntity);
   Future<List<int>> insertAnnotationList(List<Annotation> annotations);
   Future<int?> updateAnnotation(Annotation annotationEntity);
-  Future<void> delete(int id);
+  Future<void> disable(int id);
   Future<List<AnnotationRevision>?> getAnnotationWidthRevision(String text);
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
-  Future<void> deleteByIdRevision(int id);
+  Future<void> disableByIdRevision(int id);
   Future<List<Annotation>?> getAnnotationAll();
   Future<List<Annotation>?> findAnnotationSync();
   Future<void> updateAnnotationList(List<Annotation> annotation);
@@ -20,9 +20,9 @@ abstract class AnnotationDatabaseFactory {
 
 class AnnotationDatabase implements AnnotationDatabaseFactory {
   @override
-  Future<void> delete(int id) async {
+  Future<void> disable(int id) async {
     final database = await getInstance();
-    return await database.annotationDao.delete(id);
+    return await database.annotationDao.disable(id);
   }
 
   @override
@@ -50,9 +50,9 @@ class AnnotationDatabase implements AnnotationDatabaseFactory {
   }
 
   @override
-  Future<void> deleteByIdRevision(int id) async {
+  Future<void> disableByIdRevision(int id) async {
     final database = await getInstance();
-    return await database.annotationDao.deleteByIdRevision(id);
+    return await database.annotationDao.disableByIdRevision(id);
   }
 
   @override

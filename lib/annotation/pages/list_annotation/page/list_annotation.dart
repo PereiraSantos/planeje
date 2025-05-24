@@ -52,7 +52,7 @@ class ListAnnotation extends StatelessWidget {
                                     context,
                                     snapshot.data![index].text!,
                                     <AnnotationRevision>() async {
-                                      return await DeleteAnnotation(AnnotationDatabase()).deleteById(snapshot.data![index].id!);
+                                      return await DeleteAnnotation(AnnotationDatabase()).disableById(snapshot.data![index].id!);
                                     },
                                   );
                                 } catch (e) {

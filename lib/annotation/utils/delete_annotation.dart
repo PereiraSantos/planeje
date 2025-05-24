@@ -8,12 +8,12 @@ class DeleteAnnotation implements DeleteAnnotationFactory {
 
   DeleteAnnotation(this.annotationDatabase);
   @override
-  Future<void> deleteById(int id) async {
-    return await annotationDatabase.delete(id);
+  Future<void> disableById(int id) async {
+    return await annotationDatabase.disable(id);
   }
 
   @override
-  Future<void> deleteByIdRevision(int id) async {
-    return await annotationDatabase.deleteByIdRevision(id);
+  Future<void> disableByIdRevision(int id) async {
+    return await annotationDatabase.disableByIdRevision(id);
   }
 }

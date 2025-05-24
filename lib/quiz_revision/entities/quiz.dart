@@ -18,12 +18,16 @@ class Quiz {
   @ColumnInfo(name: 'sync')
   bool? sync;
 
+  @ColumnInfo(name: 'disable')
+  bool? disable;
+
   Quiz({
     this.id,
     this.idExternal,
     this.topic,
     this.description,
     this.sync = true,
+    this.disable = false,
   });
 
   void setId(int? value) => id = value;
@@ -31,6 +35,7 @@ class Quiz {
   void setTopic(String? value) => topic = value;
   void setDescription(String? value) => description = value;
   void setSync({bool? value}) => sync = value ?? false;
+  void setDisable(bool value) => disable = value;
 
   static Quiz fromMapToObject(Map<String, dynamic> json) => Quiz(
         idExternal: json['id'],

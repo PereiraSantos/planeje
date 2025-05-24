@@ -22,6 +22,9 @@ class RevisionQuiz {
   @ColumnInfo(name: 'sync')
   bool? sync;
 
+  @ColumnInfo(name: 'disable')
+  bool? disable;
+
   RevisionQuiz({
     this.id,
     this.idExternal,
@@ -29,6 +32,7 @@ class RevisionQuiz {
     this.answer,
     this.idQuiz,
     this.sync = true,
+    this.disable = false,
   });
 
   void setId(int? value) => id = value;
@@ -37,6 +41,7 @@ class RevisionQuiz {
   void setAnswer(bool? value) => answer = value;
   void setIdQuiz(int? value) => idQuiz = value;
   void setSync({bool? value}) => sync = value ?? false;
+  void setDisable(bool value) => disable = value;
 
   static RevisionQuiz fromMapToObject(Map<String, dynamic> json) => RevisionQuiz(
         idExternal: json['id'],

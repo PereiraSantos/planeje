@@ -7,7 +7,7 @@ abstract class QuizDatabaseFactory {
   Future<int> insertQuiz(Quiz quiz);
   Future<List<int>> insertQuizList(List<Quiz> quizs);
   Future<Quiz?> getQuizById(int id);
-  Future<Quiz?> deleteQuiz(int id);
+  Future<Quiz?> disableQuiz(int id);
   Future<int> updateQuiz(Quiz quiz);
   Future<List<Quiz>?> findAllQuizSync();
   Future<void> updateQuizList(List<Quiz> quiz);
@@ -16,9 +16,9 @@ abstract class QuizDatabaseFactory {
 
 class QuizDatabase implements QuizDatabaseFactory {
   @override
-  Future<Quiz?> deleteQuiz(int id) async {
+  Future<Quiz?> disableQuiz(int id) async {
     final database = await getInstance();
-    return await database.quizDao.deleteQuiz(id);
+    return await database.quizDao.disableQuiz(id);
   }
 
   @override

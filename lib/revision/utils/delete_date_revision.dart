@@ -1,7 +1,7 @@
 import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
 
 abstract class DeleteDateRevisionFactory {
-  Future<void> deleteDateRevisionByIdRevision(int idRevision);
+  Future<void> disableDateRevisionByIdRevision(int idRevision);
 }
 
 class DeleteDateRevision implements DeleteDateRevisionFactory {
@@ -10,7 +10,7 @@ class DeleteDateRevision implements DeleteDateRevisionFactory {
   DeleteDateRevision(this.dateRevisionDatabaseFactory);
 
   @override
-  Future<void> deleteDateRevisionByIdRevision(int idRevision) async {
-    return await dateRevisionDatabaseFactory.deleteDateRevisionByIdRevision(idRevision);
+  Future<void> disableDateRevisionByIdRevision(int idRevision) async {
+    return await dateRevisionDatabaseFactory.disableDateRevisionByIdRevision(idRevision);
   }
 }

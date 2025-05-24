@@ -19,12 +19,16 @@ class DateRevision {
   @ColumnInfo(name: 'sync')
   bool? sync;
 
+  @ColumnInfo(name: 'disable')
+  bool? disable;
+
   DateRevision({
     this.id,
     this.idExternal,
     this.dateRevision,
     this.idRevision,
     this.sync = true,
+    this.disable = false,
   });
 
   void setId(int? value) => id = value;
@@ -32,6 +36,7 @@ class DateRevision {
   void setDate(String? value) => dateRevision = value ?? FormatDate.formatDate(DateTime.now());
   void setIdRevision(int? value) => idRevision = value;
   void setSync(bool? value) => sync = value ?? false;
+  void setDisable(bool value) => disable = value;
 
   static DateRevision fromMapToObject(Map<String, dynamic> json) => DateRevision(
         idExternal: json['id'],
