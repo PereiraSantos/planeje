@@ -48,4 +48,22 @@ class RevisionSync {
 
     return true;
   }
+
+  Future<bool> postRevisionDisable() async {
+    List<Revision>? lists = await GetRevision(RevisionDatabaseDataSource()).findRevisionDisable() ?? [];
+
+    if (lists.isNotEmpty) {
+      for (Revision item in lists) {
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.update]).post(Revision.fromObjectToMap(item));
+
+        if (response.data != null) {
+          item.sync = true;
+
+          await Update(RevisionDatabaseDataSource(), revision: item).write();
+        }
+      }
+    }
+
+    return true;
+  }
 }

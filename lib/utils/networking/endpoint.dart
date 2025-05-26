@@ -1,1 +1,1 @@
-enum Endpoint { revision, annotation, quiz, question, date, theme }
+enum Endpoint { revision, annotation, quiz, question, date, theme, update }

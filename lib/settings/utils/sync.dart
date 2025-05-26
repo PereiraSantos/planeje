@@ -10,6 +10,7 @@ import 'package:planeje/sync/revision_theme/revision_theme_sync.dart';
 class Sync {
   final SyncNotifier syncNotifierPost = SyncNotifier();
   final SyncNotifier syncNotifierGet = SyncNotifier();
+  final SyncNotifier syncNotifierPostDisable = SyncNotifier();
 
   Sync() {
     syncNotifierPost.start();
@@ -56,6 +57,28 @@ class Sync {
       return true;
     } catch (e) {
       syncNotifierPost.erro();
+      rethrow;
+    }
+  }
+
+  Future<bool> postDataDisable() async {
+    try {
+      syncNotifierPostDisable.loading();
+
+      await Future.wait([
+        RevisionSync().postRevisionDisable(),
+        AnnotationSync().postAnnotationDisable(),
+        QuizAync().posQuizDisable(),
+        QuestionSync().postQuestionDisable(),
+        RevisionDateSync().postRevisionDateDisable(),
+        RevisionQuizSync().postRevisionQuizDisable(),
+        RevisionThemeSync().postRevisionThemeDisable(),
+      ]);
+      syncNotifierPostDisable.concluded();
+
+      return true;
+    } catch (e) {
+      syncNotifierPostDisable.erro();
       rethrow;
     }
   }

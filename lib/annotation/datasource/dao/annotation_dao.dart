@@ -21,14 +21,20 @@ abstract class AnnotationDao {
   @Query('update annotation set disable = 1 where id_revision = :idRevision')
   Future<void> disableByIdRevision(int idRevision);
 
-  @Query('select * from  annotation where id_revision = :idRevision and disable = 0')
+  @Query('select * from annotation where id_revision = :idRevision and disable = 0')
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
 
-  @Query('select * from  annotation where and disable = 0')
+  @Query('select * from annotation where and disable = 0')
   Future<List<Annotation>?> getAnnotationAll();
 
-  @Query('select * from annotation where sync = 0 where disable = 0')
+  @Query('select * from annotation where sync = 0 and disable = 0')
   Future<List<Annotation>?> findAnnotationSync();
+
+  @Query('SELECT * FROM annotation where disable = 1')
+  Future<List<Annotation>?> findAnnotationDisable();
+
+  @Query('delete from annotation')
+  Future<void> deleteTable();
 
   @update
   Future<void> updateAnnotationList(List<Annotation> annotation);

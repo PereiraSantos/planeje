@@ -47,4 +47,21 @@ class AnnotationSync {
     }
     return true;
   }
+
+  Future<bool> postAnnotationDisable() async {
+    List<Annotation> lists = await GetAnnotation(AnnotationDatabase()).findAnnotationDisable() ?? [];
+
+    if (lists.isNotEmpty) {
+      for (Annotation item in lists) {
+        Response response = await Network(ConfigApi(), [Endpoint.annotation, Endpoint.update]).post(Annotation.fromObjectToMap(item));
+
+        if (response.data != null) {
+          item.sync = true;
+
+          await UpdateAnnotation(AnnotationDatabase(), annotation: item).write();
+        }
+      }
+    }
+    return true;
+  }
 }

@@ -5,6 +5,7 @@ abstract class FindDateRevisionFactory {
   Future<List<DateRevision>> findAllDateRevisions();
   Future<List<DateRevision>?> findAllDateRevisionSync();
   Future<DateRevision?> findDateRevisionByIdExternal(int idExternal);
+  Future<List<DateRevision>?> findDateRevisionDisable();
 }
 
 class GetDateRevision implements FindDateRevisionFactory {
@@ -25,5 +26,10 @@ class GetDateRevision implements FindDateRevisionFactory {
   @override
   Future<DateRevision?> findDateRevisionByIdExternal(int idExternal) async {
     return await dateRevisionDatabase.findDateRevisionByIdExternal(idExternal);
+  }
+
+  @override
+  Future<List<DateRevision>?> findDateRevisionDisable() async {
+    return await dateRevisionDatabase.findDateRevisionDisable();
   }
 }

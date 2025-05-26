@@ -46,4 +46,21 @@ class RevisionThemeSync {
     }
     return true;
   }
+
+  Future<bool> postRevisionThemeDisable() async {
+    List<RevisionTheme> lists = await FindRevisionTheme(RevisionThemeDatabaseDataSource()).findRevisionThemeDisable() ?? [];
+
+    if (lists.isNotEmpty) {
+      for (RevisionTheme item in lists) {
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.theme, Endpoint.update]).post(RevisionTheme.fromObjectToMap(item));
+
+        if (response.data != null) {
+          item.sync = true;
+
+          await UpdateRevisionTheme(RevisionThemeDatabaseDataSource(), revisionTheme: item).write();
+        }
+      }
+    }
+    return true;
+  }
 }

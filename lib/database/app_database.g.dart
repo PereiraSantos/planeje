@@ -247,7 +247,8 @@ class _$RevisionDao extends RevisionDao {
 
   @override
   Future<List<Revision>?> findAllRevisionsSync() async {
-    return _queryAdapter.queryList('SELECT * FROM revision where sync = 0',
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -327,6 +328,21 @@ class _$RevisionDao extends RevisionDao {
   }
 
   @override
+  Future<List<Revision>?> findRevisionDisable() async {
+    return _queryAdapter.queryList('SELECT * FROM revision where  disable = 1',
+        mapper: (Map<String, Object?> row) => Revision(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            title: row['title'] as String?,
+            description: row['description'] as String?,
+            dateCreational: row['date_creational'] as String?,
+            idRevisionTheme: row['id_revision_theme'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
+  }
+
+  @override
   Future<Revision?> findRevisionByIdExternal(int idExternal) async {
     return _queryAdapter.query('select * from revision where id_external  = ?1',
         mapper: (Map<String, Object?> row) => Revision(
@@ -340,6 +356,11 @@ class _$RevisionDao extends RevisionDao {
             disable:
                 row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await _queryAdapter.queryNoReturn('delete from revision');
   }
 
   @override
@@ -422,7 +443,22 @@ class _$DateRevisionDao extends DateRevisionDao {
 
   @override
   Future<List<DateRevision>?> findAllDateRevisionSync() async {
-    return _queryAdapter.queryList('SELECT * FROM date_revision where sync = 0',
+    return _queryAdapter.queryList(
+        'SELECT * FROM date_revision where sync = 0 and disable = 0',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            idExternal: row['id_external'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
+  }
+
+  @override
+  Future<List<DateRevision>?> findDateRevisionDisable() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM date_revision where disable = 1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
             idExternal: row['id_external'] as int?,
@@ -523,6 +559,11 @@ class _$DateRevisionDao extends DateRevisionDao {
             disable:
                 row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await _queryAdapter.queryNoReturn('delete from date_revision');
   }
 
   @override
@@ -629,7 +670,7 @@ class _$AnnotationDao extends AnnotationDao {
   @override
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision) async {
     return _queryAdapter.queryList(
-        'select * from  annotation where id_revision = ?1 and disable = 0',
+        'select * from annotation where id_revision = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -646,7 +687,7 @@ class _$AnnotationDao extends AnnotationDao {
   @override
   Future<List<Annotation>?> getAnnotationAll() async {
     return _queryAdapter.queryList(
-        'select * from  annotation where and disable = 0',
+        'select * from annotation where and disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -662,7 +703,7 @@ class _$AnnotationDao extends AnnotationDao {
   @override
   Future<List<Annotation>?> findAnnotationSync() async {
     return _queryAdapter.queryList(
-        'select * from annotation where sync = 0 where disable = 0',
+        'select * from annotation where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -673,6 +714,26 @@ class _$AnnotationDao extends AnnotationDao {
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
                 row['disable'] == null ? null : (row['disable'] as int) != 0));
+  }
+
+  @override
+  Future<List<Annotation>?> findAnnotationDisable() async {
+    return _queryAdapter.queryList('SELECT * FROM annotation where disable = 1',
+        mapper: (Map<String, Object?> row) => Annotation(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            title: row['title'] as String?,
+            text: row['text'] as String?,
+            dateText: row['date_text'] as String?,
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await _queryAdapter.queryNoReturn('delete from annotation');
   }
 
   @override
@@ -756,7 +817,8 @@ class _$QuizDao extends QuizDao {
 
   @override
   Future<List<Quiz>?> findAllQuizSync() async {
-    return _queryAdapter.queryList('SELECT * FROM quiz where sync = 0',
+    return _queryAdapter.queryList(
+        'SELECT * FROM quiz where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -780,6 +842,19 @@ class _$QuizDao extends QuizDao {
             disable:
                 row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [text]);
+  }
+
+  @override
+  Future<List<Quiz>?> findQuizDisable() async {
+    return _queryAdapter.queryList('SELECT * FROM quiz where disable = 1',
+        mapper: (Map<String, Object?> row) => Quiz(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            topic: row['topic'] as String?,
+            description: row['description'] as String?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
   }
 
   @override
@@ -822,6 +897,11 @@ class _$QuizDao extends QuizDao {
             disable:
                 row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [id]);
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await _queryAdapter.queryNoReturn('delete from quiz');
   }
 
   @override
@@ -907,7 +987,8 @@ class _$QuestionDao extends QuestionDao {
 
   @override
   Future<List<Question>?> findAllQuestionSync() async {
-    return _queryAdapter.queryList('SELECT * FROM question where sync = 0',
+    return _queryAdapter.queryList(
+        'SELECT * FROM question where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -952,6 +1033,20 @@ class _$QuestionDao extends QuestionDao {
   }
 
   @override
+  Future<List<Question>?> findQuestionDisable() async {
+    return _queryAdapter.queryList('SELECT * FROM question where disable = 1',
+        mapper: (Map<String, Object?> row) => Question(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            idQuiz: row['id_quiz'] as int?,
+            description: row['description'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
+  }
+
+  @override
   Future<void> disableQuestion(int id) async {
     await _queryAdapter.queryNoReturn(
         'update question set disable = 1 WHERE id = ?1',
@@ -978,6 +1073,11 @@ class _$QuestionDao extends QuestionDao {
             disable:
                 row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await _queryAdapter.queryNoReturn('delete from question');
   }
 
   @override
@@ -1175,7 +1275,8 @@ class _$RevisionQuizDao extends RevisionQuizDao {
 
   @override
   Future<List<RevisionQuiz>?> findAllRevisionQuizSync() async {
-    return _queryAdapter.queryList('SELECT * FROM revision_quiz where sync = 0',
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision_quiz where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -1220,6 +1321,21 @@ class _$RevisionQuizDao extends RevisionQuizDao {
   }
 
   @override
+  Future<List<RevisionQuiz>?> findRevisionQuizDisable() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision_quiz where disable = 1',
+        mapper: (Map<String, Object?> row) => RevisionQuiz(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
+            idQuiz: row['id_quiz'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
+  }
+
+  @override
   Future<RevisionQuiz?> disableRevisionQuiz(int id) async {
     return _queryAdapter.query(
         'update revision_quiz set disable = 1 WHERE id = ?1',
@@ -1256,6 +1372,11 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             disable:
                 row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await _queryAdapter.queryNoReturn('delete from revision_quiz');
   }
 
   @override
@@ -1337,7 +1458,20 @@ class _$RevisionThemeDao extends RevisionThemeDao {
   @override
   Future<List<RevisionTheme>?> findAllRevisionThemeSync() async {
     return _queryAdapter.queryList(
-        'SELECT * FROM revision_theme where sync = 0',
+        'SELECT * FROM revision_theme where sync = 0 and disable = 0',
+        mapper: (Map<String, Object?> row) => RevisionTheme(
+            id: row['id'] as int?,
+            idExternal: row['id_external'] as int?,
+            description: row['description'] as String?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0));
+  }
+
+  @override
+  Future<List<RevisionTheme>?> findRevisionThemeDisable() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM revision_theme where disable = 11',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
             idExternal: row['id_external'] as int?,
@@ -1401,6 +1535,11 @@ class _$RevisionThemeDao extends RevisionThemeDao {
             disable:
                 row['disable'] == null ? null : (row['disable'] as int) != 0),
         arguments: [idExternal]);
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await _queryAdapter.queryNoReturn('delete from revision_theme');
   }
 
   @override

@@ -6,8 +6,11 @@ abstract class DateRevisionDao {
   @Query('SELECT * FROM date_revision')
   Future<List<DateRevision>> findAllRevisions();
 
-  @Query('SELECT * FROM date_revision where sync = 0')
+  @Query('SELECT * FROM date_revision where sync = 0 and disable = 0')
   Future<List<DateRevision>?> findAllDateRevisionSync();
+
+  @Query('SELECT * FROM date_revision where disable = 1')
+  Future<List<DateRevision>?> findDateRevisionDisable();
 
   @Query('update date_revision set disable = 1 WHERE id = :id')
   Future<DateRevision?> disableDateRevisionById(int id);
@@ -41,4 +44,7 @@ abstract class DateRevisionDao {
 
   @update
   Future<void> updateDateRevisionList(List<DateRevision> dateRevision);
+
+  @Query('delete from date_revision')
+  Future<void> deleteTable();
 }

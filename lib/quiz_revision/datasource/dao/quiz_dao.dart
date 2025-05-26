@@ -6,11 +6,14 @@ abstract class QuizDao {
   @Query('SELECT * FROM quiz where disable = 0')
   Future<List<Quiz>?> getAllQuiz();
 
-  @Query('SELECT * FROM quiz where sync = 0')
+  @Query('SELECT * FROM quiz where sync = 0 and disable = 0')
   Future<List<Quiz>?> findAllQuizSync();
 
   @Query('SELECT * FROM quiz where topic LIKE :text and disable = 0')
   Future<List<Quiz>?> getAllQuizSearch(String text);
+
+  @Query('SELECT * FROM quiz where disable = 1')
+  Future<List<Quiz>?> findQuizDisable();
 
   @Query('select * from quiz where id_external = :idExternal')
   Future<Quiz?> findQuizByIdExternal(int idExternal);
@@ -32,4 +35,7 @@ abstract class QuizDao {
 
   @update
   Future<void> updateQuizList(List<Quiz> quiz);
+
+  @Query('delete from quiz')
+  Future<void> deleteTable();
 }

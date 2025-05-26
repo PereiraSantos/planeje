@@ -46,4 +46,21 @@ class QuestionSync {
     }
     return true;
   }
+
+  Future<bool> postQuestionDisable() async {
+    List<Question> lists = await GetQuestion(QuestionDatabase()).findQuestionDisable() ?? [];
+
+    if (lists.isNotEmpty) {
+      for (Question item in lists) {
+        Response response = await Network(ConfigApi(), [Endpoint.question, Endpoint.update]).post(Question.fromObjectToMap(item));
+
+        if (response.data != null) {
+          item.sync = true;
+
+          await QuestionDatabase().updateQuestion(item);
+        }
+      }
+    }
+    return true;
+  }
 }

@@ -9,6 +9,7 @@ abstract class FindRevisionFactory {
   Future<List<Revision>?> findAllRevisionsSync();
   Future<Revision?> findRevisionByIdExternal(int idExternal);
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
+  Future<List<Revision>?> findRevisionDisable();
 }
 
 class GetRevision implements FindRevisionFactory {
@@ -43,5 +44,10 @@ class GetRevision implements FindRevisionFactory {
   @override
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme) async {
     return await revisionDatabase.findRevisioByIdRevisionTheme(idRevisionTheme);
+  }
+
+  @override
+  Future<List<Revision>?> findRevisionDisable() async {
+    return await revisionDatabase.findRevisionDisable();
   }
 }

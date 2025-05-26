@@ -47,4 +47,21 @@ class RevisionDateSync {
     }
     return true;
   }
+
+  Future<bool> postRevisionDateDisable() async {
+    List<DateRevision>? lists = await GetDateRevision(DateRevisionDatabaseDataSource()).findDateRevisionDisable() ?? [];
+
+    if (lists.isNotEmpty) {
+      for (DateRevision item in lists) {
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.date, Endpoint.update]).post(DateRevision.fromObjectToMap(item));
+
+        if (response.data != null) {
+          item.sync = true;
+
+          await UpdateDateRevision(DateRevisionDatabaseDataSource(), dateRevision: item).writeDateRevision();
+        }
+      }
+    }
+    return true;
+  }
 }

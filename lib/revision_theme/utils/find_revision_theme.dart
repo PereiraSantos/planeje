@@ -9,6 +9,7 @@ abstract class FindRevisionThemeFactory {
   Future<RevisionTheme?> disableRevisionThemeById(int id);
   Future<List<RevisionThemeComplement>> findRevisionThemeByDescription(String text);
   Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal);
+  Future<List<RevisionTheme>?> findRevisionThemeDisable();
 }
 
 class FindRevisionTheme implements FindRevisionThemeFactory {
@@ -44,5 +45,10 @@ class FindRevisionTheme implements FindRevisionThemeFactory {
   @override
   Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal) async {
     return await revisionThemeDatabase.findRevisionThemeByIdExternal(idExternal);
+  }
+
+  @override
+  Future<List<RevisionTheme>?> findRevisionThemeDisable() async {
+    return await revisionThemeDatabase.findRevisionThemeDisable();
   }
 }

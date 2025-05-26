@@ -47,4 +47,21 @@ class QuizAync {
     }
     return true;
   }
+
+  Future<bool> posQuizDisable() async {
+    List<Quiz> lists = await GetQuiz(QuizDatabase()).findQuizDisable() ?? [];
+
+    if (lists.isNotEmpty) {
+      for (Quiz item in lists) {
+        Response response = await Network(ConfigApi(), [Endpoint.quiz, Endpoint.update]).post(Quiz.fromObjectToMap(item));
+
+        if (response.data != null) {
+          item.sync = true;
+
+          await UpdateQuiz(QuizDatabase(), quiz: item).writeQuiz();
+        }
+      }
+    }
+    return true;
+  }
 }

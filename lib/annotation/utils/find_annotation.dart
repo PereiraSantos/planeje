@@ -8,6 +8,8 @@ abstract class FindAnnotationFactory {
   Future<List<Annotation>?> getAnnotationAll();
   Future<List<Annotation>?> findAnnotationSync();
   Future<Annotation?> findAnnotationByIdExternal(int idExternal);
+  Future<List<Annotation>?> findAnnotationDisable();
+  Future<void> deleteTable();
 }
 
 class GetAnnotation implements FindAnnotationFactory {
@@ -38,5 +40,15 @@ class GetAnnotation implements FindAnnotationFactory {
   @override
   Future<Annotation?> findAnnotationByIdExternal(int idExternal) async {
     return await annotationDatabase.findAnnotationByIdExternal(idExternal);
+  }
+
+  @override
+  Future<List<Annotation>?> findAnnotationDisable() async {
+    return await annotationDatabase.findAnnotationDisable();
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    return await annotationDatabase.deleteTable();
   }
 }

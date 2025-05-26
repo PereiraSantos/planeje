@@ -17,6 +17,8 @@ abstract class RevisionDatabaseFactory {
   Future<void> updateRevisionList(List<Revision> revision);
   Future<Revision?> findRevisionByIdExternal(int idExternal);
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
+  Future<List<Revision>?> findRevisionDisable();
+  Future<void> deleteTable();
 }
 
 class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
@@ -91,5 +93,17 @@ class RevisionDatabaseDataSource implements RevisionDatabaseFactory {
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme) async {
     final database = await getInstance();
     return await database.revisionDao.findRevisioByIdRevisionTheme(idRevisionTheme);
+  }
+
+  @override
+  Future<List<Revision>?> findRevisionDisable() async {
+    final database = await getInstance();
+    return await database.revisionDao.findRevisionDisable();
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    final database = await getInstance();
+    return await database.revisionDao.deleteTable();
   }
 }

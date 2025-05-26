@@ -5,6 +5,7 @@ abstract class FindListQuizFactory {
   Future<List<Quiz>?> getAllQuiz(String text);
   Future<List<Quiz>?> findAllQuizSync();
   Future<Quiz?> findQuizByIdExternal(int idExternal);
+  Future<List<Quiz>?> findQuizDisable();
 }
 
 class GetQuiz implements FindListQuizFactory {
@@ -25,5 +26,10 @@ class GetQuiz implements FindListQuizFactory {
   @override
   Future<Quiz?> findQuizByIdExternal(int idExternal) async {
     return await quizDatabase.findQuizByIdExternal(idExternal);
+  }
+
+  @override
+  Future<List<Quiz>?> findQuizDisable() async {
+    return await quizDatabase.findQuizDisable();
   }
 }

@@ -6,7 +6,7 @@ abstract class RevisionQuizDao {
   @Query('SELECT * FROM revision_quiz where disable = 0')
   Future<List<RevisionQuiz>?> getAllRevisionQuiz();
 
-  @Query('SELECT * FROM revision_quiz where sync = 0')
+  @Query('SELECT * FROM revision_quiz where sync = 0 and disable = 0')
   Future<List<RevisionQuiz>?> findAllRevisionQuizSync();
 
   @insert
@@ -20,6 +20,9 @@ abstract class RevisionQuizDao {
 
   @Query('SELECT * FROM revision_quiz WHERE id_quiz = :idQuiz and disable = 0')
   Future<List<RevisionQuiz>?> getRevisionQuizByIdQuiz(int idQuiz);
+
+  @Query('SELECT * FROM revision_quiz where disable = 1')
+  Future<List<RevisionQuiz>?> findRevisionQuizDisable();
 
   @Query('update revision_quiz set disable = 1 WHERE id = :id')
   Future<RevisionQuiz?> disableRevisionQuiz(int id);
@@ -35,4 +38,7 @@ abstract class RevisionQuizDao {
 
   @update
   Future<void> updateRevisionQuizList(List<RevisionQuiz> revisionQuiz);
+
+  @Query('delete from revision_quiz')
+  Future<void> deleteTable();
 }

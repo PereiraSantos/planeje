@@ -6,7 +6,7 @@ abstract class RevisionDao {
   @Query('SELECT * FROM revision')
   Future<List<Revision>> findAllRevisions();
 
-  @Query('SELECT * FROM revision where sync = 0')
+  @Query('SELECT * FROM revision where sync = 0 and disable = 0')
   Future<List<Revision>?> findAllRevisionsSync();
 
   @Query('SELECT * FROM revision WHERE id = :id')
@@ -20,6 +20,9 @@ abstract class RevisionDao {
 
   @Query('SELECT * FROM revision where id_revision_theme = :idRevisionTheme and disable = 0')
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
+
+  @Query('SELECT * FROM revision where  disable = 1')
+  Future<List<Revision>?> findRevisionDisable();
 
   @Query('select * from revision where id_external  = :idExternal')
   Future<Revision?> findRevisionByIdExternal(int idExternal);
@@ -35,4 +38,7 @@ abstract class RevisionDao {
 
   @update
   Future<void> updateRevisionList(List<Revision> revision);
+
+  @Query('delete from revision')
+  Future<void> deleteTable();
 }

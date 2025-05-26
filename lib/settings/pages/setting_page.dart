@@ -77,6 +77,8 @@ class SettingPage extends StatelessWidget {
         children: [
           TextButtonWidget.sync(() async {
             try {
+              await sync.postDataDisable();
+
               await sync.postData();
 
               await sync.receiveData();

@@ -48,4 +48,21 @@ class RevisionQuizSync {
     }
     return true;
   }
+
+  Future<bool> postRevisionQuizDisable() async {
+    List<RevisionQuiz> lists = await GetRevisionQuiz(RevisionQuizDatabase()).findRevisionQuizDisable() ?? [];
+
+    if (lists.isNotEmpty) {
+      for (RevisionQuiz item in lists) {
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.quiz, Endpoint.update]).post(RevisionQuiz.fromObjectToMap(item));
+
+        if (response.data != null) {
+          item.sync = true;
+
+          await UpdateRevisionQuiz(RevisionQuizDatabase(), revisionQuiz: item).writeRevisionQuiz();
+        }
+      }
+    }
+    return true;
+  }
 }
