@@ -1,4 +1,4 @@
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
 import 'package:planeje/utils/register.dart';
@@ -41,7 +41,7 @@ class Register implements RevisionFactory {
 }
 
 class Update implements RevisionFactory {
-  RevisionDatabaseDataSource revisionDatabase;
+  RevisionDatabase revisionDatabase;
 
   Update(this.revisionDatabase, {this.revision, this.message, this.registerDate, this.revisions});
 

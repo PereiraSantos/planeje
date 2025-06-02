@@ -1,9 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:planeje/quiz_revision/datasource/database/question_database.dart';
 import 'package:planeje/quiz_revision/datasource/database/quiz_database.dart';
+import 'package:planeje/quiz_revision/datasource/database/revision_quiz_database.dart';
+import 'package:planeje/quiz_revision/entities/question.dart';
 import 'package:planeje/quiz_revision/entities/quiz.dart';
+import 'package:planeje/quiz_revision/entities/revision_quiz.dart';
+import 'package:planeje/quiz_revision/utils/register_question/register_question.dart';
 import 'package:planeje/quiz_revision/utils/register_quiz/find_list_quiz.dart';
 import 'package:planeje/quiz_revision/utils/register_quiz/register_quiz.dart';
-import 'package:planeje/sync/list_info.dart';
+import 'package:planeje/quiz_revision/utils/revision_quiz/register_revision_quiz.dart';
+import 'package:planeje/quiz_revision/utils/revision_quiz/revision_quiz.dart';
 import 'package:planeje/sync/quiz/quiz_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
@@ -19,12 +25,10 @@ class QuizAync {
       for (dynamic item in response.data) {
         Quiz quiz = Quiz.fromMapToObject(item);
 
-        Quiz? quizDatabase = await quizController.findQuizByIdExternal(quiz.idExternal!);
-
-        if (quizDatabase != null) quiz.id = quizDatabase.id;
-
-        quizController.quizInfos.add(ListInfo(lists: quiz, update: (quiz.id != null)));
+        quizController.quizs.add(quiz);
       }
+
+      await quizController.deteleTable();
 
       await quizController.writeQuiz();
     }
@@ -36,16 +40,45 @@ class QuizAync {
 
     if (lists.isNotEmpty) {
       for (Quiz item in lists) {
+        if (item.insertApp!) item.id = null;
+
         Response response = await Network(ConfigApi(), [Endpoint.quiz]).post(Quiz.fromObjectToMap(item));
 
         if (response.data != null) {
           item.sync = true;
 
           await UpdateQuiz(QuizDatabase(), quiz: item).writeQuiz();
+
+          await updateIdQuizQuestion(response.data['id']);
+          await updateIdQuizRevisionQuiz(response.data['id']);
         }
       }
     }
     return true;
+  }
+
+  Future<void> updateIdQuizQuestion(int id) async {
+    List<Question> questions = await GetQuestion(QuestionDatabase()).getQuestionByIdQuiz(id) ?? [];
+
+    if (questions.isNotEmpty) {
+      for (Question question in questions) {
+        question.idQuiz = id;
+
+        await QuestionDatabase().updateQuestion(question);
+      }
+    }
+  }
+
+  Future<void> updateIdQuizRevisionQuiz(int id) async {
+    List<RevisionQuiz> dateRevisions = await GetRevisionQuiz(RevisionQuizDatabase()).getRevisionQuizByIdQuiz(id) ?? [];
+
+    if (dateRevisions.isNotEmpty) {
+      for (RevisionQuiz dateRevision in dateRevisions) {
+        dateRevision.idQuiz = id;
+
+        await UpdateRevisionQuiz(RevisionQuizDatabase(), revisionQuiz: dateRevision).writeRevisionQuiz();
+      }
+    }
   }
 
   Future<bool> posQuizDisable() async {

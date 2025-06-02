@@ -12,9 +12,6 @@ abstract class AnnotationDao {
   @update
   Future<int?> updateAnnotation(Annotation annotationEntity);
 
-  @Query('select * from annotation where id_external = :idExternal')
-  Future<Annotation?> findAnnotationByIdExternal(int idExternal);
-
   @Query('update annotation set disable = 1 where id = :id')
   Future<void> disable(int id);
 

@@ -13,11 +13,11 @@ class FindRevisionDao {
   }) async {
     List<RevisionTime> listRevisionTime = [];
     String filter = text != ''
-        ? 'where r.id_revision_theme = $id and r.disable = 0 and (r.title like \'%$text%\' or r.description like \'%$text%\')'
-        : 'where r.id_revision_theme = $id and r.disable = 0';
+        ? 'where r.id = $id and r.disable = 0 and (r.title like \'%$text%\' or r.description like \'%$text%\')'
+        : 'where r.id = $id and r.disable = 0';
 
     String sqlBase =
-        'SELECT r.*, d.*, r.id_external as idExternal  FROM revision as r left join date_revision as d on r.id = d.id_revision $filter group by id order by date_revision desc';
+        'SELECT r.*, d.* FROM revision as r left join date_revision as d on r.id = d.id_revision $filter group by r.id order by d.date_revision desc';
 
     List<Map> list = await database.database.rawQuery(sqlBase);
 
@@ -29,14 +29,12 @@ class FindRevisionDao {
             description: element['description'],
             id: element['id'],
             title: element['title'],
-            idExternal: element['idExternal'],
             idRevisionTheme: element['id_revision_theme'],
           ),
           DateRevision(
             dateRevision: element['date_revision'],
             idRevision: element['id_revision'],
             id: element['id_date'],
-            idExternal: element['id_external'],
           ),
         ),
       );

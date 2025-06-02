@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/datasource/database/annotation_database.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
-import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database.dart';
 import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/utils/register_date_revision.dart';
@@ -71,11 +71,12 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                     height: 25,
                     child: IconButton(
                       onPressed: () async {
-                        await RegisterDateRevision(DateRevisionDatabaseDataSource(),
+                        await RegisterDateRevision(DateRevisionDatabase(),
                             dateRevision: DateRevision(
                               dateRevision: FormatDate.formatDateStringNotification(DateTime.now()),
                               idRevision: widget.revision.id,
                               sync: false,
+                              insertApp: true,
                             )).writeDateRevision().whenComplete(() => widget.onClick());
                       },
                       icon: const Icon(

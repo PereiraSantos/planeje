@@ -7,9 +7,6 @@ class RevisionQuiz {
   @ColumnInfo(name: 'id')
   int? id;
 
-  @ColumnInfo(name: 'id_external')
-  int? idExternal;
-
   @ColumnInfo(name: 'date_revision')
   String? dateRevision;
 
@@ -25,33 +22,36 @@ class RevisionQuiz {
   @ColumnInfo(name: 'disable')
   bool? disable;
 
+  @ColumnInfo(name: 'insert_app')
+  bool? insertApp;
+
   RevisionQuiz({
     this.id,
-    this.idExternal,
     this.dateRevision,
     this.answer,
     this.idQuiz,
     this.sync = true,
     this.disable = false,
+    this.insertApp = false,
   });
 
   void setId(int? value) => id = value;
-  void setIdExternal(int? value) => idExternal = value;
   void setDate({String? value}) => dateRevision = value ?? FormatDate.formatDateTime(DateTime.now());
   void setAnswer(bool? value) => answer = value;
   void setIdQuiz(int? value) => idQuiz = value;
   void setSync({bool? value}) => sync = value ?? false;
   void setDisable(bool value) => disable = value;
+  void setInsertApp(bool value) => insertApp = value;
 
   static RevisionQuiz fromMapToObject(Map<String, dynamic> json) => RevisionQuiz(
-        idExternal: json['id'],
+        id: json['id'],
         dateRevision: json['dateRevision'],
         answer: json['answer'] == 1,
         idQuiz: json['idQuiz'],
       );
 
   static Map<String, dynamic> fromObjectToMap(RevisionQuiz revisionQuiz) => {
-        "id": revisionQuiz.idExternal,
+        "id": revisionQuiz.id,
         "answer": (revisionQuiz.answer ?? false) ? 1 : 0,
         "dateRevision": revisionQuiz.dateRevision,
         "idQuiz": revisionQuiz.idQuiz,

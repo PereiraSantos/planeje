@@ -12,6 +12,9 @@ abstract class DateRevisionDao {
   @Query('SELECT * FROM date_revision where disable = 1')
   Future<List<DateRevision>?> findDateRevisionDisable();
 
+  @Query('SELECT * FROM date_revision where id_revision = :idRevision and disable = 0')
+  Future<List<DateRevision>?> findDateRevisionByIdRevision(int idRevision);
+
   @Query('update date_revision set disable = 1 WHERE id = :id')
   Future<DateRevision?> disableDateRevisionById(int id);
 
@@ -38,9 +41,6 @@ abstract class DateRevisionDao {
 
   @Query(' select * from date_revision  where id_date = :id')
   Future<DateRevision?> findDateRevisionById(int id);
-
-  @Query('select * from date_revision where id_external = :idExternal')
-  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal);
 
   @update
   Future<void> updateDateRevisionList(List<DateRevision> dateRevision);

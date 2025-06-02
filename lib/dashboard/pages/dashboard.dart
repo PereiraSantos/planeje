@@ -5,7 +5,7 @@ import 'package:planeje/dashboard/controller/build_data_graphic.dart';
 import 'package:planeje/quiz_revision/datasource/database/revision_quiz_database.dart';
 import 'package:planeje/quiz_revision/entities/revision_quiz.dart';
 import 'package:planeje/quiz_revision/utils/revision_quiz/revision_quiz.dart';
-import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database.dart';
 import 'package:planeje/revision/entities/date_revision.dart';
 import 'package:planeje/widgets/chart_widget.dart';
 
@@ -42,7 +42,7 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           children: [
             FutureBuilderComponent<DateRevision>(
-              future: DateRevisionDatabaseDataSource().findAllDateRevisions(),
+              future: DateRevisionDatabase().findAllDateRevisions(),
               children: (value) => ChartWidget(data: BuildDataGraphic().buildRevisionYear(value), title: 'Revisões realizadas.'),
               message: 'Bem vindo...',
             ),

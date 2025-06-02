@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/datasource/database/annotation_database.dart';
 
 import 'package:planeje/annotation/pages/register_annotation/pages/register_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';

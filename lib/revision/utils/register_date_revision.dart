@@ -1,4 +1,4 @@
-import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database.dart';
 
 import 'package:planeje/revision/entities/date_revision.dart';
 

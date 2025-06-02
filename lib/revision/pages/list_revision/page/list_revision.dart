@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/datasource/database/annotation_database.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
-import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 import 'package:planeje/revision/pages/list_revision/component/dialog_delete.dart';
@@ -56,7 +56,7 @@ class _ListRevisionState extends State<ListRevision> {
               var result = await Navigator.of(context).push(
                 TransitionsBuilder.createRoute(
                   RegisterRevisionPage(
-                    revision: Register(RevisionDatabaseDataSource(), revision: Revision(), message: StatusNotification()),
+                    revision: Register(RevisionDatabase(), revision: Revision(), message: StatusNotification()),
                     id: widget.revisionTheme.id!,
                   ),
                 ),
@@ -69,7 +69,7 @@ class _ListRevisionState extends State<ListRevision> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: GetRevision(RevisionDatabaseDataSource()).findRevisionByDescription(search, widget.revisionTheme.id!, false),
+          future: GetRevision(RevisionDatabase()).findRevisionByDescription(search, widget.revisionTheme.id!, false),
           builder: (BuildContext context, AsyncSnapshot<List<RevisionTime>> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
@@ -100,10 +100,10 @@ class _ListRevisionState extends State<ListRevision> {
                               TransitionsBuilder.createRoute(
                                 RegisterRevisionPage(
                                   revision: Update(
-                                    RevisionDatabaseDataSource(),
+                                    RevisionDatabase(),
                                     revision: snapshot.data![index].revision,
                                     message: StatusNotification(TypeMessage.Atualizar),
-                                    registerDate: UpdateDateRevision(DateRevisionDatabaseDataSource(), dateRevision: snapshot.data![index].dateRevision),
+                                    registerDate: UpdateDateRevision(DateRevisionDatabase(), dateRevision: snapshot.data![index].dateRevision),
                                   ),
                                   id: widget.revisionTheme.id!,
                                   annotations: list,

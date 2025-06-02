@@ -9,6 +9,7 @@ abstract class DateRevisionDatabaseFactory {
   Future<DateRevision?> findDateRevisionById(int id);
   Future<DateRevision?> disableDateRevisionById(int id);
   Future<void> disableDateRevisionByIdRevision(int idRevision);
+  Future<List<DateRevision>?> findDateRevisionByIdRevision(int idRevision);
   Future<int?> insertDateRevision(DateRevision dateRevision);
   Future<List<int>> insertDateRevisionList(List<DateRevision> dateRevisions);
   Future<int?> updateDateRevision(DateRevision dateRevision);
@@ -18,12 +19,11 @@ abstract class DateRevisionDatabaseFactory {
   Future<void> updateStatus(bool status, int id);
   Future<List<DateRevision>?> findAllDateRevisionSync();
   Future<void> updateDateRevisionList(List<DateRevision> dateRevision);
-  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal);
   Future<List<DateRevision>?> findDateRevisionDisable();
   Future<void> deleteTable();
 }
 
-class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
+class DateRevisionDatabase implements DateRevisionDatabaseFactory {
   @override
   Future<DateRevision?> disableDateRevisionById(int id) async {
     final database = await getInstance();
@@ -103,12 +103,6 @@ class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
   }
 
   @override
-  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal) async {
-    final database = await getInstance();
-    return await database.dateRevisionDao.findDateRevisionByIdExternal(idExternal);
-  }
-
-  @override
   Future<List<DateRevision>?> findDateRevisionDisable() async {
     final database = await getInstance();
     return await database.dateRevisionDao.findDateRevisionDisable();
@@ -118,5 +112,11 @@ class DateRevisionDatabaseDataSource implements DateRevisionDatabaseFactory {
   Future<void> deleteTable() async {
     final database = await getInstance();
     return await database.dateRevisionDao.deleteTable();
+  }
+
+  @override
+  Future<List<DateRevision>?> findDateRevisionByIdRevision(int idRevision) async {
+    final database = await getInstance();
+    return await database.dateRevisionDao.findDateRevisionByIdRevision(idRevision);
   }
 }

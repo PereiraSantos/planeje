@@ -4,7 +4,6 @@ import 'package:planeje/quiz_revision/datasource/database/revision_quiz_database
 import 'package:planeje/quiz_revision/entities/revision_quiz.dart';
 import 'package:planeje/quiz_revision/utils/revision_quiz/register_revision_quiz.dart';
 import 'package:planeje/quiz_revision/utils/revision_quiz/revision_quiz.dart';
-import 'package:planeje/sync/list_info.dart';
 import 'package:planeje/sync/revision_quiz/revision_quiz_controller.dart';
 
 import 'package:planeje/utils/networking/config_api.dart';
@@ -20,12 +19,10 @@ class RevisionQuizSync {
     if (response.data != null) {
       for (dynamic item in response.data) {
         RevisionQuiz revisionQuiz = RevisionQuiz.fromMapToObject(item);
-        RevisionQuiz? revisionQuizDatabase = await revisionQuizController.findRevisionQuizByIdExternal(revisionQuiz.idExternal!);
 
-        if (revisionQuizDatabase != null) revisionQuiz.id = revisionQuizDatabase.id;
-
-        revisionQuizController.revisionQuizInfos.add(ListInfo(lists: revisionQuiz, update: (revisionQuiz.id != null)));
+        revisionQuizController.revisionQuizs.add(revisionQuiz);
       }
+      await revisionQuizController.deteleTable();
 
       await revisionQuizController.writeRevisionQuiz();
     }
@@ -37,6 +34,8 @@ class RevisionQuizSync {
 
     if (lists.isNotEmpty) {
       for (RevisionQuiz item in lists) {
+        if (item.insertApp!) item.id = null;
+
         Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.quiz]).post(RevisionQuiz.fromObjectToMap(item));
 
         if (response.data != null) {

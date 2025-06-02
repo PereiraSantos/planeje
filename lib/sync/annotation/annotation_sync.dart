@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/datasource/database/annotation_database.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/utils/find_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
 import 'package:planeje/sync/annotation/annotation_controller.dart';
-import 'package:planeje/sync/list_info.dart';
+
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
 import 'package:planeje/utils/networking/endpoint/network.dart';
@@ -19,12 +19,9 @@ class AnnotationSync {
       for (dynamic item in response.data) {
         Annotation annotation = Annotation.fromMapToObject(item);
 
-        Annotation? annotationDatabase = await annotationController.findAnnotationByIdExternal(annotation.idExternal!);
-
-        if (annotationDatabase != null) annotation.id = annotationDatabase.id;
-
-        annotationController.annotationInfos.add(ListInfo(lists: annotation, update: (annotation.id != null)));
+        annotationController.annotations.add(annotation);
       }
+      await annotationController.deleteTable();
 
       await annotationController.writeAnnotation();
     }
@@ -36,6 +33,8 @@ class AnnotationSync {
 
     if (lists.isNotEmpty) {
       for (Annotation item in lists) {
+        if (item.insertApp!) item.id = null;
+
         Response response = await Network(ConfigApi(), [Endpoint.annotation]).post(Annotation.fromObjectToMap(item));
 
         if (response.data != null) {

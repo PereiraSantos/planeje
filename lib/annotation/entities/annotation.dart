@@ -6,9 +6,6 @@ class Annotation {
   @PrimaryKey(autoGenerate: true)
   int? id;
 
-  @ColumnInfo(name: 'id_external')
-  int? idExternal;
-
   @ColumnInfo(name: 'title')
   String? title;
 
@@ -27,28 +24,31 @@ class Annotation {
   @ColumnInfo(name: 'disable')
   bool? disable;
 
+  @ColumnInfo(name: 'insert_app')
+  bool? insertApp;
+
   Annotation({
     this.id,
-    this.idExternal,
     this.title,
     this.text,
     this.dateText,
     this.idRevision,
     this.sync = true,
     this.disable = false,
+    this.insertApp = false,
   });
 
   void setId(int? value) => id = value;
-  void setIdExternal(int? value) => idExternal = value;
   void setTitle(String value) => title = value;
   void setText(String value) => text = value;
   void setDateText(String? date) => dateText = date ?? FormatDate.formatDate(FormatDate.newDate());
   void setIdRevision(int? value) => idRevision = value;
   void setSync({bool? value}) => sync = value ?? false;
   void setDisable(bool value) => disable = value;
+  void setInsertApp(bool value) => insertApp = value;
 
   static Annotation fromMapToObject(Map<String, dynamic> json) => Annotation(
-        idExternal: json['id'],
+        id: json['id'],
         title: json['title'],
         text: json['text'],
         dateText: json['dateText'],
@@ -56,7 +56,7 @@ class Annotation {
       );
 
   static Map<String, dynamic> fromObjectToMap(Annotation annotation) => {
-        "id": annotation.idExternal,
+        "id": annotation.id,
         "title": annotation.title,
         "text": annotation.text,
         "dateText": annotation.dateText,

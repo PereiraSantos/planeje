@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/datasource/database/annotation_database.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/utils/delete_annotation.dart';
 import 'package:planeje/annotation/utils/register_annotation.dart';
@@ -173,12 +173,13 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                 if (!formKey.currentState!.validate()) return;
 
                 widget.revision.revision?.setId(widget.revision.revision?.id);
-                widget.revision.revision?.setIdExternal(widget.revision.revision?.idExternal);
+
                 widget.revision.revision?.setTitle(title.text);
                 widget.revision.revision?.setDescription(description.text);
                 widget.revision.revision?.setDateCreational(widget.revision.revision?.dateCreational);
                 widget.revision.revision?.setSync();
                 widget.revision.revision?.setIdTevisionTheme(widget.id);
+                if (widget.revision.revision?.id == null) widget.revision.revision?.setInsertApp(true);
 
                 var idRevision = await widget.revision.write();
 
@@ -188,11 +189,12 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                   if (annotation.id != null && annotation.id! < 0) {
                     registerAnnotation.annotation?.setId(null);
                     annotation.id = null;
+                    registerAnnotation.annotation?.setInsertApp(true);
                   }
 
                   registerAnnotation.annotation?.setTitle(annotation.title ?? '');
                   registerAnnotation.annotation?.setText(annotation.text ?? '');
-                  registerAnnotation.annotation?.setIdExternal(registerAnnotation.annotation?.idExternal);
+
                   registerAnnotation.annotation?.setIdRevision(widget.revision.revision?.id ?? idRevision);
                   registerAnnotation.annotation?.setDateText(null);
                   registerAnnotation.annotation?.setSync();
@@ -202,7 +204,6 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                       : await UpdateAnnotation(AnnotationDatabase(),
                               annotation: Annotation(
                                 id: annotation.id,
-                                idExternal: annotation.idExternal,
                                 idRevision: annotation.idRevision,
                                 title: annotation.title,
                                 text: annotation.text,

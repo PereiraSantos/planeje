@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/quiz_revision/datasource/database/question_database.dart';
+import 'package:planeje/quiz_revision/datasource/database/revision_quiz_database.dart';
 import 'package:planeje/quiz_revision/entities/quiz.dart';
+import 'package:planeje/quiz_revision/utils/revision_quiz/delete_revision_quiz.dart';
 import 'package:planeje/quiz_revision/utils/register_question/register_question.dart';
 import 'package:planeje/quiz_revision/utils/register_question/remove_question.dart';
 import 'package:planeje/quiz_revision/utils/register_question/table_question.dart';
@@ -86,6 +88,7 @@ class _ListQuizState extends State<ListQuiz> {
                               await RemoveQuestion(QuestionDatabase()).delete(tableQuestionNotifier.questions);
 
                               await DeleteQuiz(QuizDatabase()).disableById(snapshot.data![index].id!);
+                              await DeleteRevisionQuiz(RevisionQuizDatabase()).disableRevisionQuizByIdQuiz(snapshot.data![index].id!);
                               tableQuestionNotifier.clearList();
 
                               if (!context.mounted) return;

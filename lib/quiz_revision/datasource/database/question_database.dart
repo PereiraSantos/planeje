@@ -13,7 +13,6 @@ abstract class QuestionDatabaseFactory {
   Future<int> updateQuestion(Question question);
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
   Future<void> updateQuestionList(List<Question> question);
-  Future<Question?> findQuestionByIdExternal(int idExternal);
   Future<List<Question>?> findQuestionDisable();
   Future<void> deleteTable();
 }
@@ -77,12 +76,6 @@ class QuestionDatabase implements QuestionDatabaseFactory {
   Future<void> updateQuestionList(List<Question> question) async {
     final database = await getInstance();
     return await database.questionDao.updateQuestionList(question);
-  }
-
-  @override
-  Future<Question?> findQuestionByIdExternal(int idExternal) async {
-    final database = await getInstance();
-    return await database.questionDao.findQuestionByIdExternal(idExternal);
   }
 
   @override

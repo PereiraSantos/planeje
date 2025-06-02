@@ -4,8 +4,8 @@ import 'package:planeje/quiz_revision/entities/revision_quiz.dart';
 abstract class FindRevisionQuizFactory {
   Future<List<RevisionQuiz>?> getAllRevisionQuiz(String text);
   Future<List<RevisionQuiz>?> findAllRevisionQuizSync();
-  Future<RevisionQuiz?> findRevisionQuizByIdExternal(int idExternal);
   Future<List<RevisionQuiz>?> findRevisionQuizDisable();
+  Future<List<RevisionQuiz>?> getRevisionQuizByIdQuiz(int idQuiz);
 }
 
 class GetRevisionQuiz implements FindRevisionQuizFactory {
@@ -24,12 +24,12 @@ class GetRevisionQuiz implements FindRevisionQuizFactory {
   }
 
   @override
-  Future<RevisionQuiz?> findRevisionQuizByIdExternal(int idExternal) async {
-    return await revisionQuizDatabaseFactory.findRevisionQuizByIdExternal(idExternal);
+  Future<List<RevisionQuiz>?> findRevisionQuizDisable() async {
+    return await revisionQuizDatabaseFactory.findRevisionQuizDisable();
   }
 
   @override
-  Future<List<RevisionQuiz>?> findRevisionQuizDisable() async {
-    return await revisionQuizDatabaseFactory.findRevisionQuizDisable();
+  Future<List<RevisionQuiz>?> getRevisionQuizByIdQuiz(int idQuiz) async {
+    return await revisionQuizDatabaseFactory.getRevisionQuizByIdQuiz(idQuiz);
   }
 }

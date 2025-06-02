@@ -6,9 +6,6 @@ class RevisionTheme {
   @ColumnInfo(name: 'id')
   int? id;
 
-  @ColumnInfo(name: 'id_external')
-  int? idExternal;
-
   @ColumnInfo(name: 'description')
   String? description;
 
@@ -18,21 +15,30 @@ class RevisionTheme {
   @ColumnInfo(name: 'disable')
   bool? disable;
 
-  RevisionTheme({this.id, this.idExternal, this.description, this.sync = true, this.disable = false});
+  @ColumnInfo(name: 'insert_app')
+  bool? insertApp;
+
+  RevisionTheme({
+    this.id,
+    this.description,
+    this.sync = true,
+    this.disable = false,
+    this.insertApp = false,
+  });
 
   void setId(int? value) => id = value;
-  void setIdExternal(int? value) => idExternal = value;
   void setDescription(String value) => description = value;
   void setSync({bool? value}) => sync = value ?? false;
   void setDisable(bool value) => disable = value;
+  void setInsertApp(bool value) => insertApp = value;
 
   static RevisionTheme fromMapToObject(Map<String, dynamic> json) => RevisionTheme(
-        idExternal: json['id'],
+        id: json['id'],
         description: json['description'],
       );
 
   static Map<String, dynamic> fromObjectToMap(RevisionTheme revisionTheme) => {
-        "id": revisionTheme.idExternal,
+        "id": revisionTheme.id,
         "description": revisionTheme.description,
       };
 }

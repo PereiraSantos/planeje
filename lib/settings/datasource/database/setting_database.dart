@@ -7,7 +7,7 @@ abstract class SettingDatabaseFactory {
   Future<Settings?> findSettingByKey(String key);
 }
 
-class SettingDatabaseDataSource implements SettingDatabaseFactory {
+class SettingDatabase implements SettingDatabaseFactory {
   @override
   Future<int?> insertSetting(Settings settings) async {
     final database = await getInstance();

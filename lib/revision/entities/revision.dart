@@ -7,9 +7,6 @@ class Revision {
   @ColumnInfo(name: 'id')
   int? id;
 
-  @ColumnInfo(name: 'id_external')
-  int? idExternal;
-
   @ColumnInfo(name: 'title')
   String? title;
 
@@ -28,28 +25,31 @@ class Revision {
   @ColumnInfo(name: 'disable')
   bool? disable;
 
+  @ColumnInfo(name: 'insert_app')
+  bool? insertApp;
+
   Revision({
     this.id,
-    this.idExternal,
     this.title,
     this.description,
     this.dateCreational,
     this.idRevisionTheme,
     this.sync = true,
     this.disable = false,
+    this.insertApp = false,
   });
 
   void setId(int? value) => id = value;
-  void setIdExternal(int? value) => idExternal = value;
   void setTitle(String value) => title = value;
   void setDescription(String value) => description = value;
   void setDateCreational(String? value) => dateCreational = value ?? FormatDate.formatDate(FormatDate.newDate());
   void setIdTevisionTheme(int value) => idRevisionTheme = value;
   void setSync({bool? value}) => sync = value ?? false;
   void setDisable(bool value) => disable = value;
+  void setInsertApp(bool value) => insertApp = value;
 
   static Revision fromMapToObject(Map<String, dynamic> json) => Revision(
-        idExternal: json['id'],
+        id: json['id'],
         title: json['title'],
         description: json['description'],
         dateCreational: json['dateCreational'],
@@ -57,7 +57,7 @@ class Revision {
       );
 
   static Map<String, dynamic> fromObjectToMap(Revision revision) => {
-        "id": revision.idExternal,
+        "id": revision.id,
         "title": revision.title,
         "description": revision.description,
         "dateCreational": revision.dateCreational,

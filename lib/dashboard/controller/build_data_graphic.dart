@@ -9,7 +9,7 @@ class BuildDataGraphic {
     Year year = Year()..buildMonths();
 
     for (DateRevision item in dateRevision) {
-      if (item.dateRevision != null) {
+      if (item.dateRevision != null && !item.disable!) {
         DateTime date = FormatDate.dateTimeParse(item.dateRevision!);
 
         if (FormatDate.newDate().day - date.day <= 360) year = _countValue(date.month, year);
@@ -23,7 +23,7 @@ class BuildDataGraphic {
     Year year = Year()..buildMonths();
 
     for (RevisionQuiz item in dateRevision) {
-      if (item.dateRevision != null) {
+      if (item.dateRevision != null && !item.disable!) {
         DateTime date = FormatDate.dateTimeParse(item.dateRevision!);
 
         if (FormatDate.newDate().day - date.day <= 360 && !item.answer!) year = _countValue(date.month, year);
@@ -37,7 +37,7 @@ class BuildDataGraphic {
     Year year = Year()..buildMonths();
 
     for (RevisionQuiz item in dateRevision) {
-      if (item.dateRevision != null) {
+      if (item.dateRevision != null && !item.disable!) {
         DateTime date = FormatDate.dateTimeParse(item.dateRevision!);
 
         if (FormatDate.newDate().day - date.day <= 360 && item.answer!) year = _countValue(date.month, year);

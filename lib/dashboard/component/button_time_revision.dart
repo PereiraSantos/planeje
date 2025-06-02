@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:planeje/dashboard/controller/under_review_notifier.dart';
-import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 import 'package:planeje/revision/utils/update_hour.dart';
 import 'package:planeje/utils/format_date.dart';
@@ -85,12 +85,12 @@ class ButtonTimeRevision extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 5),
                   child: IconButton(
                     onPressed: () async {
-                      /*  await UpdateHour(DateRevisionDatabaseDataSource()).updateHourEnd(
+                      /*  await UpdateHour(DateRevisionDatabase()).updateHourEnd(
                           getTime(),
                           revisionTime.dateRevision.nextDate!,
                           nextRevision(revisionTime.dateRevision.nextDate!, revisionTime.dateRevision.day!),
                           revisionTime.dateRevision.id!);
-                      await UpdateHour(DateRevisionDatabaseDataSource())
+                      await UpdateHour(DateRevisionDatabase())
                           .updateStatus(true, revisionTime.dateRevision.id!)
                           .whenComplete(() {
                         underReviewNotifier.resetIdDateRevision();
@@ -112,7 +112,7 @@ class ButtonTimeRevision extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 5),
                   child: IconButton(
                     onPressed: () async {
-                      await UpdateHour(DateRevisionDatabaseDataSource())
+                      await UpdateHour(DateRevisionDatabase())
                           .updateHourInit(getTime(), revisionTime.dateRevision.id!)
                           .whenComplete(() => underReviewNotifier.update());
                     },

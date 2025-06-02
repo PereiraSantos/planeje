@@ -9,15 +9,15 @@ abstract class RevisionThemeDatabaseFactory {
   Future<RevisionTheme?> findRevisionThemeById(int id);
   Future<RevisionTheme?> disableRevisionThemeById(int id);
   Future<List<RevisionThemeComplement>> findRevisionThemeByDescription(String text);
-  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal);
   Future<int> insertRevisionTheme(RevisionTheme revisionTheme);
   Future<List<int>> insertRevisionThemeList(List<RevisionTheme> revisionThemes);
   Future<int?> updateRevisionTheme(RevisionTheme revisionTheme);
   Future<void> updateRevisionThemeList(List<RevisionTheme> revisionThemes);
   Future<List<RevisionTheme>?> findRevisionThemeDisable();
+  Future<void> deleteTable();
 }
 
-class RevisionThemeDatabaseDataSource implements RevisionThemeDatabaseFactory {
+class RevisionThemeDatabase implements RevisionThemeDatabaseFactory {
   @override
   Future<RevisionTheme?> disableRevisionThemeById(int id) async {
     final database = await getInstance();
@@ -61,12 +61,6 @@ class RevisionThemeDatabaseDataSource implements RevisionThemeDatabaseFactory {
   }
 
   @override
-  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal) async {
-    final database = await getInstance();
-    return await database.revisionThemeDao.findRevisionThemeByIdExternal(idExternal);
-  }
-
-  @override
   Future<int?> updateRevisionTheme(RevisionTheme revisionTheme) async {
     final database = await getInstance();
     return await database.revisionThemeDao.updateRevisionTheme(revisionTheme);
@@ -82,5 +76,11 @@ class RevisionThemeDatabaseDataSource implements RevisionThemeDatabaseFactory {
   Future<List<RevisionTheme>?> findRevisionThemeDisable() async {
     final database = await getInstance();
     return await database.revisionThemeDao.findRevisionThemeDisable();
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    final database = await getInstance();
+    return await database.revisionThemeDao.deleteTable();
   }
 }

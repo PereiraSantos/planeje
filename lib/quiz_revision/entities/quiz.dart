@@ -6,9 +6,6 @@ class Quiz {
   @ColumnInfo(name: 'id')
   int? id;
 
-  @ColumnInfo(name: 'id_external')
-  int? idExternal;
-
   @ColumnInfo(name: 'topic')
   String? topic;
 
@@ -21,30 +18,33 @@ class Quiz {
   @ColumnInfo(name: 'disable')
   bool? disable;
 
+  @ColumnInfo(name: 'insert_app')
+  bool? insertApp;
+
   Quiz({
     this.id,
-    this.idExternal,
     this.topic,
     this.description,
     this.sync = true,
     this.disable = false,
+    this.insertApp = false,
   });
 
   void setId(int? value) => id = value;
-  void setIdExternal(int? value) => idExternal = value;
   void setTopic(String? value) => topic = value;
   void setDescription(String? value) => description = value;
   void setSync({bool? value}) => sync = value ?? false;
   void setDisable(bool value) => disable = value;
+  void setInsertApp(bool value) => insertApp = value;
 
   static Quiz fromMapToObject(Map<String, dynamic> json) => Quiz(
-        idExternal: json['id'],
+        id: json['id'],
         topic: json['topic'],
         description: json['description'],
       );
 
   static Map<String, dynamic> fromObjectToMap(Quiz quiz) => {
-        "id": quiz.idExternal,
+        "id": quiz.id,
         "topic": quiz.topic,
         "description": quiz.description,
       };

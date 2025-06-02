@@ -1,4 +1,4 @@
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/datasource/database/annotation_database.dart';
 import 'package:planeje/annotation/entities/annotation.dart';
 import 'package:planeje/annotation/entities/annotation_revision.dart';
 
@@ -7,7 +7,6 @@ abstract class FindAnnotationFactory {
   Future<List<Annotation>?> getAnnotationWidthIdRevision(int idRevision);
   Future<List<Annotation>?> getAnnotationAll();
   Future<List<Annotation>?> findAnnotationSync();
-  Future<Annotation?> findAnnotationByIdExternal(int idExternal);
   Future<List<Annotation>?> findAnnotationDisable();
   Future<void> deleteTable();
 }
@@ -35,11 +34,6 @@ class GetAnnotation implements FindAnnotationFactory {
   @override
   Future<List<Annotation>?> findAnnotationSync() async {
     return await annotationDatabase.findAnnotationSync();
-  }
-
-  @override
-  Future<Annotation?> findAnnotationByIdExternal(int idExternal) async {
-    return await annotationDatabase.findAnnotationByIdExternal(idExternal);
   }
 
   @override

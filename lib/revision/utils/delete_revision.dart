@@ -1,4 +1,4 @@
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/utils/delete.dart';
 
@@ -17,5 +17,10 @@ class DeleteRevision implements DeleteRevisionFactory {
   @override
   Future<void> disableByIdRevision(int id) {
     throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await revisionDatabase.deleteTable();
   }
 }

@@ -1,4 +1,4 @@
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/entities/revision_time.dart';
 
@@ -7,7 +7,6 @@ abstract class FindRevisionFactory {
   Future<int> getQuantiyRevision(String date, bool isBefore);
   Future<List<Revision>> findAllRevisions();
   Future<List<Revision>?> findAllRevisionsSync();
-  Future<Revision?> findRevisionByIdExternal(int idExternal);
   Future<List<Revision>?> findRevisioByIdRevisionTheme(int idRevisionTheme);
   Future<List<Revision>?> findRevisionDisable();
 }
@@ -34,11 +33,6 @@ class GetRevision implements FindRevisionFactory {
   @override
   Future<List<Revision>?> findAllRevisionsSync() async {
     return await revisionDatabase.findAllRevisionsSync();
-  }
-
-  @override
-  Future<Revision?> findRevisionByIdExternal(int idExternal) async {
-    return await revisionDatabase.findRevisionByIdExternal(idExternal);
   }
 
   @override

@@ -5,16 +5,16 @@ import 'package:planeje/settings/utils/register_setting.dart';
 
 class CheckSetting {
   void checkRealize() async {
-    Settings? setting = await FindSetting(SettingDatabaseDataSource()).findSettingByKey('realize');
+    Settings? setting = await FindSetting(SettingDatabase()).findSettingByKey('realize');
     if (setting == null) insertSettingRealizeIsNull();
   }
 
   void checkNext() async {
-    Settings? setting = await FindSetting(SettingDatabaseDataSource()).findSettingByKey('next');
+    Settings? setting = await FindSetting(SettingDatabase()).findSettingByKey('next');
     if (setting == null) insertSettingnextIsNull();
   }
 
-  void insertSettingRealizeIsNull() => InsertSetting(SettingDatabaseDataSource(), Settings(key: 'realize', value: '3')).write();
+  void insertSettingRealizeIsNull() => InsertSetting(SettingDatabase(), Settings(key: 'realize', value: '3')).write();
 
-  void insertSettingnextIsNull() => InsertSetting(SettingDatabaseDataSource(), Settings(key: 'next', value: '3')).write();
+  void insertSettingnextIsNull() => InsertSetting(SettingDatabase(), Settings(key: 'next', value: '3')).write();
 }

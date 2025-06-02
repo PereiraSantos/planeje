@@ -6,7 +6,7 @@ class MessageUser {
     await Flushbar(
       title: title,
       message: message,
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 1),
       flushbarPosition: FlushbarPosition.TOP,
       margin: EdgeInsets.all(8),
       borderRadius: BorderRadius.circular(8),

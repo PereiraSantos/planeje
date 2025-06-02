@@ -1,4 +1,4 @@
-import 'package:planeje/revision_theme/datasource/datasource/revision_theme_datasource.dart';
+import 'package:planeje/revision_theme/datasource/database/revision_theme_database.dart';
 import 'package:planeje/revision_theme/entities/revision_theme.dart';
 import 'package:planeje/utils/register.dart';
 import 'package:planeje/utils/type_message.dart';

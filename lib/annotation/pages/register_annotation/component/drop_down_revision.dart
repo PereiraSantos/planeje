@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/utils/find_revision.dart';
 
@@ -20,7 +20,7 @@ class DropDownButtonRevision extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GetRevision(RevisionDatabaseDataSource()).findAllRevisions(),
+      future: GetRevision(RevisionDatabase()).findAllRevisions(),
       builder: (BuildContext context, AsyncSnapshot<List<Revision>> snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data!.isNotEmpty) {

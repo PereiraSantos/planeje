@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
 
-import 'package:planeje/revision_theme/datasource/datasource/revision_theme_datasource.dart';
+import 'package:planeje/revision_theme/datasource/database/revision_theme_database.dart';
 import 'package:planeje/revision_theme/entities/revision_theme.dart';
 import 'package:planeje/revision_theme/entities/revision_theme_complement.dart';
 import 'package:planeje/revision_theme/pages/regsister_revision_theme/page/register_revision_theme_page.dart';
@@ -65,7 +65,7 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
               var result = await Navigator.of(context).push(
                 TransitionsBuilder.createRoute(
                   RegisterRevisionThemePage(
-                    revisionTheme: RegisterRevisioTheme(RevisionThemeDatabaseDataSource(), revisionTheme: RevisionTheme(), message: StatusNotification()),
+                    revisionTheme: RegisterRevisioTheme(RevisionThemeDatabase(), revisionTheme: RevisionTheme(), message: StatusNotification()),
                   ),
                 ),
               );
@@ -77,7 +77,7 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
       ),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: FindRevisionTheme(RevisionThemeDatabaseDataSource()).findRevisionThemeByDescription(search),
+          future: FindRevisionTheme(RevisionThemeDatabase()).findRevisionThemeByDescription(search),
           builder: (BuildContext context, AsyncSnapshot<List<RevisionThemeComplement>> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data!.isNotEmpty) {
@@ -103,7 +103,7 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
                           try {
                             // ignore: use_build_context_synchronously
                             var result = await Navigator.of(context).push(TransitionsBuilder.createRoute(RegisterRevisionThemePage(
-                              revisionTheme: UpdateRevisionTheme(RevisionThemeDatabaseDataSource(),
+                              revisionTheme: UpdateRevisionTheme(RevisionThemeDatabase(),
                                   revisionTheme: snapshot.data![index], message: StatusNotification(TypeMessage.Atualizar)),
                             )));
                             if (result) setState(() {});
@@ -124,41 +124,37 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.only(left: 18.0, right: 10.0, bottom: 5, top: 5),
-                        child: Row(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              flex: 14,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(snapshot.data![index].description ?? '',
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 10,
+                                  child: Text(snapshot.data![index].description ?? '',
                                       style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: const Color.fromARGB(130, 0, 0, 0))),
-                                  Text(_validTitleDescriptuionIsNull(snapshot.data![index].title, snapshot.data![index].revisionDescription),
-                                      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300), overflow: TextOverflow.ellipsis, maxLines: 2),
-                                  Visibility(
-                                      visible: snapshot.data![index].dateRevision != null,
-                                      child: Text(_validDateIsNull(snapshot.data![index].dateRevision),
-                                          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300))),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await Navigator.of(context).push(
-                                    TransitionsBuilder.createRoute(ListRevision(revisionTheme: snapshot.data![index])),
-                                  );
-                                },
-                                child: Stack(
-                                  children: [
-                                    Positioned(child: Icon(Icons.content_paste_outlined, size: 22, color: Colors.black26)),
-                                    Positioned(top: 4, left: 2, child: Icon(Icons.view_headline_rounded, size: 18, color: Colors.black12)),
-                                    Positioned(bottom: 02.7, left: 09.9, child: Icon(Icons.check_circle_outline, size: 09, color: Colors.black54)),
-                                  ],
                                 ),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.of(context).push(
+                                        TransitionsBuilder.createRoute(ListRevision(revisionTheme: snapshot.data![index])),
+                                      );
+                                    },
+                                    child: Icon(Icons.menu_book_rounded, size: 20, color: Colors.black45),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(_validTitleDescriptuionIsNull(snapshot.data![index].title, snapshot.data![index].revisionDescription),
+                                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300), overflow: TextOverflow.ellipsis, maxLines: 2),
+                            Visibility(
+                              visible: snapshot.data![index].dateRevision != null,
+                              child: Text(
+                                _validDateIsNull(snapshot.data![index].dateRevision),
+                                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300),
                               ),
                             ),
                           ],

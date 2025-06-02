@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/annotation/datasource/database/database_datasource.dart';
+import 'package:planeje/annotation/datasource/database/annotation_database.dart';
 import 'package:planeje/annotation/utils/delete_annotation.dart';
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
+import 'package:planeje/revision/utils/delete_date_revision.dart';
 import 'package:planeje/revision/utils/delete_revision.dart';
+import 'package:planeje/utils/message_user.dart';
 
 import '../../../entities/revision.dart';
 
@@ -28,14 +31,16 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      var result = await DeleteRevision(RevisionDatabaseDataSource()).disableById(revision.id!);
+                      var result = await DeleteRevision(RevisionDatabase()).disableById(revision.id!);
 
                       if (result != null) {
                         await DeleteAnnotation(AnnotationDatabase()).disableByIdRevision(revision.id!);
+                        await DeleteDateRevision(DateRevisionDatabase()).disableDateRevisionByIdRevision(revision.id!);
                       }
 
                       if (result != null && context.mounted) {
-                        message(context, 'Removido com sucesso');
+                        await MessageUser.message(context, 'Removido com sucesso');
+                        // ignore: use_build_context_synchronously
                         Navigator.pop(context, true);
                       }
                     },
@@ -70,13 +75,5 @@ class DialogDelete {
         );
       },
     );
-  }
-
-  static void message(BuildContext context, String message) {
-    var snackBar = SnackBar(
-      content: Text(message),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

@@ -17,14 +17,12 @@ class AnnotationRevision extends Annotation {
     super.id,
     super.text,
     super.dateText,
-    super.idRevision,
   });
 
   static AnnotationRevision fromJson(Map<String, dynamic> json) => AnnotationRevision(
         title: json['title'] != null ? json['title'] as String? : null,
         description: json['description'] != null ? json['description'] as String? : null,
-        descriptionCategory:
-            json['descriptionCategory'] != null ? json['descriptionCategory'] as String? : null,
+        descriptionCategory: json['descriptionCategory'] != null ? json['descriptionCategory'] as String? : null,
         status: json['status'] != null
             ? json['status'] == 0
                 ? true
@@ -35,6 +33,5 @@ class AnnotationRevision extends Annotation {
         id: json['id'] as int?,
         text: json['text'] as String?,
         dateText: json['date_text'] as String?,
-        idRevision: json['id_revision'] != null ? json['id_revision'] as int? : null,
       );
 }

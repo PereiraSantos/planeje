@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:planeje/revision_theme/datasource/datasource/revision_theme_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
+import 'package:planeje/revision/entities/revision.dart';
+import 'package:planeje/revision/utils/find_revision.dart';
+import 'package:planeje/revision/utils/register_revision.dart';
+import 'package:planeje/revision_theme/datasource/database/revision_theme_database.dart';
 import 'package:planeje/revision_theme/entities/revision_theme.dart';
 import 'package:planeje/revision_theme/utils/find_revision_theme.dart';
 import 'package:planeje/revision_theme/utils/register_revision_theme.dart';
-import 'package:planeje/sync/list_info.dart';
 import 'package:planeje/sync/revision_theme/revision_theme_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
@@ -18,12 +21,11 @@ class RevisionThemeSync {
     if (response.data != null) {
       for (dynamic item in response.data) {
         RevisionTheme revisionTheme = RevisionTheme.fromMapToObject(item);
-        RevisionTheme? revisionThemeDatabase = await revisionThemeController.findRevisionThemeByIdExternal(revisionTheme.idExternal!);
 
-        if (revisionThemeDatabase != null) revisionTheme.id = revisionThemeDatabase.id;
-
-        revisionThemeController.revisionThemeInfos.add(ListInfo(lists: revisionTheme, update: (revisionTheme.id != null)));
+        revisionThemeController.revisionThemes.add(revisionTheme);
       }
+
+      await revisionThemeController.deteleTable();
 
       await revisionThemeController.writeRevisionTheme();
     }
@@ -31,24 +33,40 @@ class RevisionThemeSync {
   }
 
   Future<bool> postRevisionTheme() async {
-    List<RevisionTheme> lists = await FindRevisionTheme(RevisionThemeDatabaseDataSource()).findAllRevisionThemeSync() ?? [];
+    List<RevisionTheme> lists = await FindRevisionTheme(RevisionThemeDatabase()).findAllRevisionThemeSync() ?? [];
 
     if (lists.isNotEmpty) {
       for (RevisionTheme item in lists) {
+        if (item.insertApp!) item.id = null;
+
         Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.theme]).post(RevisionTheme.fromObjectToMap(item));
 
         if (response.data != null) {
           item.sync = true;
 
-          await UpdateRevisionTheme(RevisionThemeDatabaseDataSource(), revisionTheme: item).write();
+          await UpdateRevisionTheme(RevisionThemeDatabase(), revisionTheme: item).write();
+
+          await updateIdRevisionTheme(response.data['id']);
         }
       }
     }
     return true;
   }
 
+  Future<void> updateIdRevisionTheme(int id) async {
+    List<Revision> revisions = await GetRevision(RevisionDatabase()).findRevisioByIdRevisionTheme(id) ?? [];
+
+    if (revisions.isNotEmpty) {
+      for (Revision revision in revisions) {
+        revision.idRevisionTheme = id;
+
+        await Update(RevisionDatabase(), revision: revision).write();
+      }
+    }
+  }
+
   Future<bool> postRevisionThemeDisable() async {
-    List<RevisionTheme> lists = await FindRevisionTheme(RevisionThemeDatabaseDataSource()).findRevisionThemeDisable() ?? [];
+    List<RevisionTheme> lists = await FindRevisionTheme(RevisionThemeDatabase()).findRevisionThemeDisable() ?? [];
 
     if (lists.isNotEmpty) {
       for (RevisionTheme item in lists) {
@@ -57,7 +75,7 @@ class RevisionThemeSync {
         if (response.data != null) {
           item.sync = true;
 
-          await UpdateRevisionTheme(RevisionThemeDatabaseDataSource(), revisionTheme: item).write();
+          await UpdateRevisionTheme(RevisionThemeDatabase(), revisionTheme: item).write();
         }
       }
     }

@@ -3,6 +3,7 @@ import 'package:planeje/quiz_revision/utils/register_question/question_list.dart
 
 abstract class DeleteQuestionFactory {
   Future<void> delete(List<QuestionList> questionList);
+  Future<void> deleteTable();
 }
 
 class RemoveQuestion implements DeleteQuestionFactory {
@@ -20,5 +21,10 @@ class RemoveQuestion implements DeleteQuestionFactory {
       }
     }
     return true;
+  }
+
+  @override
+  Future<void> deleteTable() async {
+    await questionDatabase.deleteTable();
   }
 }

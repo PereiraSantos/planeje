@@ -13,7 +13,6 @@ abstract class FindQuestion {
   Future<Question?> getQuestionById(int id);
   Future<List<Question>?> getQuestionByIdQuiz(int idQuiz);
   Future<List<Question>?> findAllQuestionSync();
-  Future<Question?> findQuestionByIdExternal(int idExternal);
   Future<List<Question>?> findQuestionDisable();
 }
 
@@ -85,11 +84,6 @@ class GetQuestion implements FindQuestion {
   @override
   Future<List<Question>?> findAllQuestionSync() async {
     return await questionDatabase.findAllQuestionSync();
-  }
-
-  @override
-  Future<Question?> findQuestionByIdExternal(int idExternal) async {
-    return await questionDatabase.findQuestionByIdExternal(idExternal);
   }
 
   @override

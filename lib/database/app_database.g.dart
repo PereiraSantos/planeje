@@ -112,23 +112,23 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `title` TEXT, `description` TEXT, `date_creational` TEXT, `id_revision_theme` INTEGER, `sync` INTEGER, `disable` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `description` TEXT, `date_creational` TEXT, `id_revision_theme` INTEGER, `sync` INTEGER, `disable` INTEGER, `insert_app` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `id_revision` INTEGER, `sync` INTEGER, `disable` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `date_revision` (`id_date` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `id_revision` INTEGER, `sync` INTEGER, `disable` INTEGER, `insert_app` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `sync` INTEGER, `disable` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `annotation` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT, `text` TEXT, `date_text` TEXT, `id_revision` INTEGER, `sync` INTEGER, `disable` INTEGER, `insert_app` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `topic` TEXT, `description` TEXT, `sync` INTEGER, `disable` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `topic` TEXT, `description` TEXT, `sync` INTEGER, `disable` INTEGER, `insert_app` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER, `sync` INTEGER, `disable` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `question` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_quiz` INTEGER, `description` TEXT, `answer` INTEGER, `sync` INTEGER, `disable` INTEGER, `insert_app` INTEGER)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `setting` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `keystone` TEXT, `value` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `user` (`id` INTEGER NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `keep_logged` INTEGER NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER, `sync` INTEGER, `disable` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision_quiz` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date_revision` TEXT, `answer` INTEGER, `id_quiz` INTEGER, `sync` INTEGER, `disable` INTEGER, `insert_app` INTEGER)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_external` INTEGER, `description` TEXT, `sync` INTEGER, `disable` INTEGER)');
+            'CREATE TABLE IF NOT EXISTS `revision_theme` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `description` TEXT, `sync` INTEGER, `disable` INTEGER, `insert_app` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -195,14 +195,15 @@ class _$RevisionDao extends RevisionDao {
             'revision',
             (Revision item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'title': item.title,
                   'description': item.description,
                   'date_creational': item.dateCreational,
                   'id_revision_theme': item.idRevisionTheme,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 }),
         _revisionUpdateAdapter = UpdateAdapter(
             database,
@@ -210,14 +211,15 @@ class _$RevisionDao extends RevisionDao {
             ['id'],
             (Revision item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'title': item.title,
                   'description': item.description,
                   'date_creational': item.dateCreational,
                   'id_revision_theme': item.idRevisionTheme,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -235,14 +237,16 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.queryList('SELECT * FROM revision',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -251,14 +255,16 @@ class _$RevisionDao extends RevisionDao {
         'SELECT * FROM revision where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -266,14 +272,16 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.query('SELECT * FROM revision WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -282,14 +290,16 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.query('update revision set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -298,14 +308,16 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.queryList('SELECT * FROM revision WHERE text LIKE ?1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [text]);
   }
 
@@ -316,14 +328,16 @@ class _$RevisionDao extends RevisionDao {
         'SELECT * FROM revision where id_revision_theme = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [idRevisionTheme]);
   }
 
@@ -332,30 +346,16 @@ class _$RevisionDao extends RevisionDao {
     return _queryAdapter.queryList('SELECT * FROM revision where  disable = 1',
         mapper: (Map<String, Object?> row) => Revision(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             description: row['description'] as String?,
             dateCreational: row['date_creational'] as String?,
             idRevisionTheme: row['id_revision_theme'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
-  }
-
-  @override
-  Future<Revision?> findRevisionByIdExternal(int idExternal) async {
-    return _queryAdapter.query('select * from revision where id_external  = ?1',
-        mapper: (Map<String, Object?> row) => Revision(
-            id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
-            title: row['title'] as String?,
-            description: row['description'] as String?,
-            dateCreational: row['date_creational'] as String?,
-            idRevisionTheme: row['id_revision_theme'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
-        arguments: [idExternal]);
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -397,12 +397,13 @@ class _$DateRevisionDao extends DateRevisionDao {
             'date_revision',
             (DateRevision item) => <String, Object?>{
                   'id_date': item.id,
-                  'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'id_revision': item.idRevision,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 }),
         _dateRevisionUpdateAdapter = UpdateAdapter(
             database,
@@ -410,12 +411,13 @@ class _$DateRevisionDao extends DateRevisionDao {
             ['id_date'],
             (DateRevision item) => <String, Object?>{
                   'id_date': item.id,
-                  'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'id_revision': item.idRevision,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -433,12 +435,14 @@ class _$DateRevisionDao extends DateRevisionDao {
     return _queryAdapter.queryList('SELECT * FROM date_revision',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -447,12 +451,14 @@ class _$DateRevisionDao extends DateRevisionDao {
         'SELECT * FROM date_revision where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -461,12 +467,32 @@ class _$DateRevisionDao extends DateRevisionDao {
         'SELECT * FROM date_revision where disable = 1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
+  }
+
+  @override
+  Future<List<DateRevision>?> findDateRevisionByIdRevision(
+      int idRevision) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM date_revision where id_revision = ?1 and disable = 0',
+        mapper: (Map<String, Object?> row) => DateRevision(
+            id: row['id_date'] as int?,
+            dateRevision: row['date_revision'] as String?,
+            idRevision: row['id_revision'] as int?,
+            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
+            disable:
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
+        arguments: [idRevision]);
   }
 
   @override
@@ -475,12 +501,14 @@ class _$DateRevisionDao extends DateRevisionDao {
         'update date_revision set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -490,12 +518,14 @@ class _$DateRevisionDao extends DateRevisionDao {
         'update date_revision set disable = 1 WHERE id_revision = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [idRevision]);
   }
 
@@ -537,28 +567,15 @@ class _$DateRevisionDao extends DateRevisionDao {
         'select * from date_revision  where id_date = ?1',
         mapper: (Map<String, Object?> row) => DateRevision(
             id: row['id_date'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
-  }
-
-  @override
-  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal) async {
-    return _queryAdapter.query(
-        'select * from date_revision where id_external = ?1',
-        mapper: (Map<String, Object?> row) => DateRevision(
-            id: row['id_date'] as int?,
-            idExternal: row['id_external'] as int?,
-            dateRevision: row['date_revision'] as String?,
-            idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
-        arguments: [idExternal]);
   }
 
   @override
@@ -601,14 +618,15 @@ class _$AnnotationDao extends AnnotationDao {
             'annotation',
             (Annotation item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
                   'id_revision': item.idRevision,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 }),
         _annotationUpdateAdapter = UpdateAdapter(
             database,
@@ -616,14 +634,15 @@ class _$AnnotationDao extends AnnotationDao {
             ['id'],
             (Annotation item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'title': item.title,
                   'text': item.text,
                   'date_text': item.dateText,
                   'id_revision': item.idRevision,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -635,23 +654,6 @@ class _$AnnotationDao extends AnnotationDao {
   final InsertionAdapter<Annotation> _annotationInsertionAdapter;
 
   final UpdateAdapter<Annotation> _annotationUpdateAdapter;
-
-  @override
-  Future<Annotation?> findAnnotationByIdExternal(int idExternal) async {
-    return _queryAdapter.query(
-        'select * from annotation where id_external = ?1',
-        mapper: (Map<String, Object?> row) => Annotation(
-            id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
-            title: row['title'] as String?,
-            text: row['text'] as String?,
-            dateText: row['date_text'] as String?,
-            idRevision: row['id_revision'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
-        arguments: [idExternal]);
-  }
 
   @override
   Future<void> disable(int id) async {
@@ -673,14 +675,16 @@ class _$AnnotationDao extends AnnotationDao {
         'select * from annotation where id_revision = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [idRevision]);
   }
 
@@ -690,14 +694,16 @@ class _$AnnotationDao extends AnnotationDao {
         'select * from annotation where and disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -706,14 +712,16 @@ class _$AnnotationDao extends AnnotationDao {
         'select * from annotation where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -721,14 +729,16 @@ class _$AnnotationDao extends AnnotationDao {
     return _queryAdapter.queryList('SELECT * FROM annotation where disable = 1',
         mapper: (Map<String, Object?> row) => Annotation(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             title: row['title'] as String?,
             text: row['text'] as String?,
             dateText: row['date_text'] as String?,
             idRevision: row['id_revision'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -771,12 +781,13 @@ class _$QuizDao extends QuizDao {
             'quiz',
             (Quiz item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'topic': item.topic,
                   'description': item.description,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 }),
         _quizUpdateAdapter = UpdateAdapter(
             database,
@@ -784,12 +795,13 @@ class _$QuizDao extends QuizDao {
             ['id'],
             (Quiz item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'topic': item.topic,
                   'description': item.description,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -807,12 +819,14 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.queryList('SELECT * FROM quiz where disable = 0',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -821,12 +835,14 @@ class _$QuizDao extends QuizDao {
         'SELECT * FROM quiz where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -835,12 +851,14 @@ class _$QuizDao extends QuizDao {
         'SELECT * FROM quiz where topic LIKE ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [text]);
   }
 
@@ -849,26 +867,14 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.queryList('SELECT * FROM quiz where disable = 1',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
-  }
-
-  @override
-  Future<Quiz?> findQuizByIdExternal(int idExternal) async {
-    return _queryAdapter.query('select * from quiz where id_external = ?1',
-        mapper: (Map<String, Object?> row) => Quiz(
-            id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
-            topic: row['topic'] as String?,
-            description: row['description'] as String?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
-        arguments: [idExternal]);
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -876,12 +882,14 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.query('SELECT * FROM quiz WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -890,12 +898,14 @@ class _$QuizDao extends QuizDao {
     return _queryAdapter.query('update quiz set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => Quiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             topic: row['topic'] as String?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -938,13 +948,14 @@ class _$QuestionDao extends QuestionDao {
             'question',
             (Question item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'id_quiz': item.idQuiz,
                   'description': item.description,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 }),
         _questionUpdateAdapter = UpdateAdapter(
             database,
@@ -952,13 +963,14 @@ class _$QuestionDao extends QuestionDao {
             ['id'],
             (Question item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'id_quiz': item.idQuiz,
                   'description': item.description,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -976,13 +988,15 @@ class _$QuestionDao extends QuestionDao {
     return _queryAdapter.queryList('SELECT * FROM question',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -991,13 +1005,15 @@ class _$QuestionDao extends QuestionDao {
         'SELECT * FROM question where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -1006,13 +1022,15 @@ class _$QuestionDao extends QuestionDao {
         'SELECT * FROM question WHERE id = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -1022,13 +1040,15 @@ class _$QuestionDao extends QuestionDao {
         'SELECT * FROM question WHERE id_quiz = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [idQuiz]);
   }
 
@@ -1037,13 +1057,15 @@ class _$QuestionDao extends QuestionDao {
     return _queryAdapter.queryList('SELECT * FROM question where disable = 1',
         mapper: (Map<String, Object?> row) => Question(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             idQuiz: row['id_quiz'] as int?,
             description: row['description'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -1058,21 +1080,6 @@ class _$QuestionDao extends QuestionDao {
     await _queryAdapter.queryNoReturn(
         'update question set disable = 1 WHERE id_quiz = ?1',
         arguments: [idQuiz]);
-  }
-
-  @override
-  Future<Question?> findQuestionByIdExternal(int idExternal) async {
-    return _queryAdapter.query('select * from question where id_external  = ?1',
-        mapper: (Map<String, Object?> row) => Question(
-            id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
-            idQuiz: row['id_quiz'] as int?,
-            description: row['description'] as String?,
-            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
-        arguments: [idExternal]);
   }
 
   @override
@@ -1225,13 +1232,14 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             'revision_quiz',
             (RevisionQuiz item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
                   'id_quiz': item.idQuiz,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 }),
         _revisionQuizUpdateAdapter = UpdateAdapter(
             database,
@@ -1239,13 +1247,14 @@ class _$RevisionQuizDao extends RevisionQuizDao {
             ['id'],
             (RevisionQuiz item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'date_revision': item.dateRevision,
                   'answer': item.answer == null ? null : (item.answer! ? 1 : 0),
                   'id_quiz': item.idQuiz,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -1264,13 +1273,15 @@ class _$RevisionQuizDao extends RevisionQuizDao {
         'SELECT * FROM revision_quiz where disable = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -1279,13 +1290,15 @@ class _$RevisionQuizDao extends RevisionQuizDao {
         'SELECT * FROM revision_quiz where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -1294,13 +1307,15 @@ class _$RevisionQuizDao extends RevisionQuizDao {
         'SELECT * FROM revision_quiz WHERE id = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -1310,13 +1325,15 @@ class _$RevisionQuizDao extends RevisionQuizDao {
         'SELECT * FROM revision_quiz WHERE id_quiz = ?1 and disable = 0',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [idQuiz]);
   }
 
@@ -1326,13 +1343,15 @@ class _$RevisionQuizDao extends RevisionQuizDao {
         'SELECT * FROM revision_quiz where disable = 1',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -1341,13 +1360,15 @@ class _$RevisionQuizDao extends RevisionQuizDao {
         'update revision_quiz set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionQuiz(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             dateRevision: row['date_revision'] as String?,
             answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
             idQuiz: row['id_quiz'] as int?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -1356,22 +1377,6 @@ class _$RevisionQuizDao extends RevisionQuizDao {
     await _queryAdapter.queryNoReturn(
         'update revision_quiz set disable = 1 WHERE id_quiz = ?1',
         arguments: [idQuiz]);
-  }
-
-  @override
-  Future<RevisionQuiz?> findRevisionQuizByIdExternal(int idExternal) async {
-    return _queryAdapter.query(
-        'select * from revision_quiz where id_external = ?1',
-        mapper: (Map<String, Object?> row) => RevisionQuiz(
-            id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
-            dateRevision: row['date_revision'] as String?,
-            answer: row['answer'] == null ? null : (row['answer'] as int) != 0,
-            idQuiz: row['id_quiz'] as int?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
-        arguments: [idExternal]);
   }
 
   @override
@@ -1414,11 +1419,12 @@ class _$RevisionThemeDao extends RevisionThemeDao {
             'revision_theme',
             (RevisionTheme item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'description': item.description,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 }),
         _revisionThemeUpdateAdapter = UpdateAdapter(
             database,
@@ -1426,11 +1432,12 @@ class _$RevisionThemeDao extends RevisionThemeDao {
             ['id'],
             (RevisionTheme item) => <String, Object?>{
                   'id': item.id,
-                  'id_external': item.idExternal,
                   'description': item.description,
                   'sync': item.sync == null ? null : (item.sync! ? 1 : 0),
                   'disable':
-                      item.disable == null ? null : (item.disable! ? 1 : 0)
+                      item.disable == null ? null : (item.disable! ? 1 : 0),
+                  'insert_app':
+                      item.insertApp == null ? null : (item.insertApp! ? 1 : 0)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -1448,11 +1455,13 @@ class _$RevisionThemeDao extends RevisionThemeDao {
     return _queryAdapter.queryList('SELECT * FROM revision_theme',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -1461,11 +1470,13 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         'SELECT * FROM revision_theme where sync = 0 and disable = 0',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -1474,11 +1485,13 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         'SELECT * FROM revision_theme where disable = 11',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0));
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0));
   }
 
   @override
@@ -1486,11 +1499,13 @@ class _$RevisionThemeDao extends RevisionThemeDao {
     return _queryAdapter.query('SELECT * FROM revision_theme WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -1500,11 +1515,13 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         'update revision_theme set disable = 1 WHERE id = ?1',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [id]);
   }
 
@@ -1515,26 +1532,14 @@ class _$RevisionThemeDao extends RevisionThemeDao {
         'SELECT * FROM revision_theme WHERE description LIKE ?1',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
             description: row['description'] as String?,
             sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
             disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
+                row['disable'] == null ? null : (row['disable'] as int) != 0,
+            insertApp: row['insert_app'] == null
+                ? null
+                : (row['insert_app'] as int) != 0),
         arguments: [text]);
-  }
-
-  @override
-  Future<RevisionTheme?> findRevisionThemeByIdExternal(int idExternal) async {
-    return _queryAdapter.query(
-        'select * from revision_theme where id_external  = ?1',
-        mapper: (Map<String, Object?> row) => RevisionTheme(
-            id: row['id'] as int?,
-            idExternal: row['id_external'] as int?,
-            description: row['description'] as String?,
-            sync: row['sync'] == null ? null : (row['sync'] as int) != 0,
-            disable:
-                row['disable'] == null ? null : (row['disable'] as int) != 0),
-        arguments: [idExternal]);
   }
 
   @override

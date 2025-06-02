@@ -15,7 +15,6 @@ abstract class AnnotationDatabaseFactory {
   Future<List<Annotation>?> getAnnotationAll();
   Future<List<Annotation>?> findAnnotationSync();
   Future<void> updateAnnotationList(List<Annotation> annotation);
-  Future<Annotation?> findAnnotationByIdExternal(int idExternal);
   Future<List<Annotation>?> findAnnotationDisable();
   Future<void> deleteTable();
 }
@@ -79,12 +78,6 @@ class AnnotationDatabase implements AnnotationDatabaseFactory {
   Future<void> updateAnnotationList(List<Annotation> annotation) async {
     final database = await getInstance();
     return await database.annotationDao.updateAnnotationList(annotation);
-  }
-
-  @override
-  Future<Annotation?> findAnnotationByIdExternal(int idExternal) async {
-    final database = await getInstance();
-    return await database.annotationDao.findAnnotationByIdExternal(idExternal);
   }
 
   @override

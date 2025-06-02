@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
 import 'package:planeje/revision/entities/revision.dart';
 import 'package:planeje/revision/utils/find_revision.dart';
-import 'package:planeje/revision_theme/datasource/datasource/revision_theme_datasource.dart';
+import 'package:planeje/revision_theme/datasource/database/revision_theme_database.dart';
 import 'package:planeje/revision_theme/utils/delete_revision_theme.dart';
 import 'package:planeje/utils/message_user.dart';
 
@@ -30,7 +30,7 @@ class DialogDelete {
                 children: [
                   TextButton(
                     onPressed: () async {
-                      List<Revision> list = await GetRevision(RevisionDatabaseDataSource()).findRevisioByIdRevisionTheme(revisionTheme.id!) ?? [];
+                      List<Revision> list = await GetRevision(RevisionDatabase()).findRevisioByIdRevisionTheme(revisionTheme.id!) ?? [];
 
                       if (list.isNotEmpty) {
                         // ignore: use_build_context_synchronously
@@ -40,7 +40,7 @@ class DialogDelete {
                         return;
                       }
 
-                      var result = await DeleteRevisionTheme(RevisionThemeDatabaseDataSource()).disableById(revisionTheme.id!);
+                      var result = await DeleteRevisionTheme(RevisionThemeDatabase()).disableById(revisionTheme.id!);
 
                       if (result != null && context.mounted) {
                         await MessageUser.message(context, 'Removido com sucesso');

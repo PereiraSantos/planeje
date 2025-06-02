@@ -1,35 +1,16 @@
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
 import 'package:planeje/revision/entities/revision.dart';
-import 'package:planeje/revision/utils/find_revision.dart';
+import 'package:planeje/revision/utils/delete_revision.dart';
 import 'package:planeje/revision/utils/register_revision.dart';
-import 'package:planeje/sync/list_info.dart';
 
 class RevisionController {
-  List<ListInfo> revisionInfos = [];
+  List<Revision> revisions = [];
 
   Future<bool> writeRevision() async {
-    List<ListInfo> listInfoUpdate = [...revisionInfos.where((item) => item.update)];
-
-    revisionInfos.removeWhere((item) => item.update);
-
-    if (listInfoUpdate.isNotEmpty) {
-      await Update(
-        RevisionDatabaseDataSource(),
-        revisions: listInfoUpdate.map<Revision>((e) => e.lists).toList(),
-      ).writeList();
-    }
-
-    if (revisionInfos.isNotEmpty) {
-      await Register(
-        RevisionDatabaseDataSource(),
-        revisions: revisionInfos.map<Revision>((e) => e.lists).toList(),
-      ).writeList();
-    }
+    if (revisions.isNotEmpty) await Register(RevisionDatabase(), revisions: revisions).writeList();
 
     return true;
   }
 
-  Future<Revision?> findRevisionByIdExternal(int idExternal) async {
-    return await GetRevision(RevisionDatabaseDataSource()).findRevisionByIdExternal(idExternal);
-  }
+  Future<void> deleteTable() async => await DeleteRevision(RevisionDatabase()).deleteTable();
 }

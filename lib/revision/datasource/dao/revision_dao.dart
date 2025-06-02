@@ -24,9 +24,6 @@ abstract class RevisionDao {
   @Query('SELECT * FROM revision where  disable = 1')
   Future<List<Revision>?> findRevisionDisable();
 
-  @Query('select * from revision where id_external  = :idExternal')
-  Future<Revision?> findRevisionByIdExternal(int idExternal);
-
   @insert
   Future<int> insertRevision(Revision revision);
 

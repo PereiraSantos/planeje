@@ -30,9 +30,6 @@ abstract class RevisionQuizDao {
   @Query('update revision_quiz set disable = 1 WHERE id_quiz = :idQuiz')
   Future<void> disableRevisionQuizByIdQuiz(int idQuiz);
 
-  @Query('select * from revision_quiz where id_external = :idExternal')
-  Future<RevisionQuiz?> findRevisionQuizByIdExternal(int idExternal);
-
   @update
   Future<int> updateRevisionQuiz(RevisionQuiz revisionQuiz);
 

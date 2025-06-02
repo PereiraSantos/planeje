@@ -25,7 +25,6 @@ class InsertSetting implements RegisterSettingFactory {
 
   @override
   Future writeList() {
-    // TODO: implement writeList
     throw UnimplementedError();
   }
 }
@@ -48,7 +47,6 @@ class UpdateSetting implements RegisterSettingFactory {
 
   @override
   Future writeList() {
-    // TODO: implement writeList
     throw UnimplementedError();
   }
 }

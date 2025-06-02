@@ -1,5 +1,5 @@
 import 'package:planeje/dashboard/controller/reviser_notifier.dart';
-import 'package:planeje/revision/datasource/database/revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/revision_database.dart';
 import 'package:planeje/revision/utils/find_revision.dart';
 import 'package:planeje/utils/format_date.dart';
 
@@ -13,8 +13,7 @@ class GetDelayedRevision implements FindRevisionFactory {
 
   @override
   Future<void> getRevision() async {
-    int total =
-        await GetRevision(RevisionDatabaseDataSource()).getQuantiyRevision(FormatDate.getDateNumber(), false);
+    int total = await GetRevision(RevisionDatabase()).getQuantiyRevision(FormatDate.getDateNumber(), false);
     if (total > 0) reviserNotifier.updateDelayed(total);
   }
 
@@ -27,8 +26,7 @@ class GetCompletedRevision implements FindRevisionFactory {
 
   @override
   Future<void> getRevision() async {
-    int total =
-        await GetRevision(RevisionDatabaseDataSource()).getQuantiyRevision(FormatDate.getDateNumber(), true);
+    int total = await GetRevision(RevisionDatabase()).getQuantiyRevision(FormatDate.getDateNumber(), true);
     if (total > 0) reviserNotifier.updateQuantityCompleted(total);
   }
 

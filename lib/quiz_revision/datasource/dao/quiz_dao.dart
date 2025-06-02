@@ -15,9 +15,6 @@ abstract class QuizDao {
   @Query('SELECT * FROM quiz where disable = 1')
   Future<List<Quiz>?> findQuizDisable();
 
-  @Query('select * from quiz where id_external = :idExternal')
-  Future<Quiz?> findQuizByIdExternal(int idExternal);
-
   @insert
   Future<int> insertQuiz(Quiz quiz);
 

@@ -1,11 +1,11 @@
-import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database.dart';
 import 'package:planeje/revision/entities/date_revision.dart';
 
 abstract class FindDateRevisionFactory {
   Future<List<DateRevision>> findAllDateRevisions();
   Future<List<DateRevision>?> findAllDateRevisionSync();
-  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal);
   Future<List<DateRevision>?> findDateRevisionDisable();
+  Future<List<DateRevision>?> findDateRevisionByIdRevision(int idRevision);
 }
 
 class GetDateRevision implements FindDateRevisionFactory {
@@ -24,12 +24,12 @@ class GetDateRevision implements FindDateRevisionFactory {
   }
 
   @override
-  Future<DateRevision?> findDateRevisionByIdExternal(int idExternal) async {
-    return await dateRevisionDatabase.findDateRevisionByIdExternal(idExternal);
+  Future<List<DateRevision>?> findDateRevisionDisable() async {
+    return await dateRevisionDatabase.findDateRevisionDisable();
   }
 
   @override
-  Future<List<DateRevision>?> findDateRevisionDisable() async {
-    return await dateRevisionDatabase.findDateRevisionDisable();
+  Future<List<DateRevision>?> findDateRevisionByIdRevision(int idRevision) async {
+    return await dateRevisionDatabase.findDateRevisionByIdRevision(idRevision);
   }
 }

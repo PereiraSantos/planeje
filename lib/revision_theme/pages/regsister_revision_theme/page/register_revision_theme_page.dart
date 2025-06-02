@@ -56,11 +56,11 @@ class RegisterRevisionThemePage extends StatelessWidget {
 
                 revisionTheme.revisionTheme?.setId(revisionTheme.revisionTheme?.id);
 
-                revisionTheme.revisionTheme?.setIdExternal(revisionTheme.revisionTheme?.idExternal);
-
                 revisionTheme.revisionTheme?.setDescription(description.text);
 
                 revisionTheme.revisionTheme?.setSync();
+
+                if (revisionTheme.revisionTheme?.id == null) revisionTheme.revisionTheme?.setInsertApp(true);
 
                 var idRevision = await revisionTheme.write();
 

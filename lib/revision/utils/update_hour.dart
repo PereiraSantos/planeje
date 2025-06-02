@@ -1,4 +1,4 @@
-import 'package:planeje/revision/datasource/database/date_revision_database_datasource.dart';
+import 'package:planeje/revision/datasource/database/date_revision_database.dart';
 
 abstract class UpdateHourFactory {
   Future<void> updateHourInit(String hourInit, int id);
@@ -7,7 +7,7 @@ abstract class UpdateHourFactory {
 }
 
 class UpdateHour implements UpdateHourFactory {
-  DateRevisionDatabaseDataSource dataSourceRepository;
+  DateRevisionDatabase dataSourceRepository;
 
   UpdateHour(this.dataSourceRepository);
   @override
