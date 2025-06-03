@@ -1482,7 +1482,7 @@ class _$RevisionThemeDao extends RevisionThemeDao {
   @override
   Future<List<RevisionTheme>?> findRevisionThemeDisable() async {
     return _queryAdapter.queryList(
-        'SELECT * FROM revision_theme where disable = 11',
+        'SELECT * FROM revision_theme where disable = 1',
         mapper: (Map<String, Object?> row) => RevisionTheme(
             id: row['id'] as int?,
             description: row['description'] as String?,

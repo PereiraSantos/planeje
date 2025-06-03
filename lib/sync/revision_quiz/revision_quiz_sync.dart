@@ -9,6 +9,7 @@ import 'package:planeje/sync/revision_quiz/revision_quiz_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
 import 'package:planeje/utils/networking/endpoint/network.dart';
+import 'package:planeje/utils/request_item.dart';
 
 class RevisionQuizSync {
   Future<bool> getRevisionQuiz() async {
@@ -53,7 +54,7 @@ class RevisionQuizSync {
 
     if (lists.isNotEmpty) {
       for (RevisionQuiz item in lists) {
-        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.quiz, Endpoint.update]).post(RevisionQuiz.fromObjectToMap(item));
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.quiz, Endpoint.update]).post(RequestItem().convert(item));
 
         if (response.data != null) {
           item.sync = true;

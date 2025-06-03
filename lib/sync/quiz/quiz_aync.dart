@@ -14,6 +14,7 @@ import 'package:planeje/sync/quiz/quiz_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
 import 'package:planeje/utils/networking/endpoint/network.dart';
+import 'package:planeje/utils/request_item.dart';
 
 class QuizAync {
   Future<bool> getQuiz() async {
@@ -40,6 +41,8 @@ class QuizAync {
 
     if (lists.isNotEmpty) {
       for (Quiz item in lists) {
+        int idOld = item.id!;
+
         if (item.insertApp!) item.id = null;
 
         Response response = await Network(ConfigApi(), [Endpoint.quiz]).post(Quiz.fromObjectToMap(item));
@@ -49,16 +52,16 @@ class QuizAync {
 
           await UpdateQuiz(QuizDatabase(), quiz: item).writeQuiz();
 
-          await updateIdQuizQuestion(response.data['id']);
-          await updateIdQuizRevisionQuiz(response.data['id']);
+          await updateIdQuizQuestion(response.data['id'], idOld);
+          await updateIdQuizRevisionQuiz(response.data['id'], idOld);
         }
       }
     }
     return true;
   }
 
-  Future<void> updateIdQuizQuestion(int id) async {
-    List<Question> questions = await GetQuestion(QuestionDatabase()).getQuestionByIdQuiz(id) ?? [];
+  Future<void> updateIdQuizQuestion(int id, int idOld) async {
+    List<Question> questions = await GetQuestion(QuestionDatabase()).getQuestionByIdQuiz(idOld) ?? [];
 
     if (questions.isNotEmpty) {
       for (Question question in questions) {
@@ -69,8 +72,8 @@ class QuizAync {
     }
   }
 
-  Future<void> updateIdQuizRevisionQuiz(int id) async {
-    List<RevisionQuiz> dateRevisions = await GetRevisionQuiz(RevisionQuizDatabase()).getRevisionQuizByIdQuiz(id) ?? [];
+  Future<void> updateIdQuizRevisionQuiz(int id, int idOld) async {
+    List<RevisionQuiz> dateRevisions = await GetRevisionQuiz(RevisionQuizDatabase()).getRevisionQuizByIdQuiz(idOld) ?? [];
 
     if (dateRevisions.isNotEmpty) {
       for (RevisionQuiz dateRevision in dateRevisions) {
@@ -86,7 +89,7 @@ class QuizAync {
 
     if (lists.isNotEmpty) {
       for (Quiz item in lists) {
-        Response response = await Network(ConfigApi(), [Endpoint.quiz, Endpoint.update]).post(Quiz.fromObjectToMap(item));
+        Response response = await Network(ConfigApi(), [Endpoint.quiz, Endpoint.update]).post(RequestItem().convert(item));
 
         if (response.data != null) {
           item.sync = true;

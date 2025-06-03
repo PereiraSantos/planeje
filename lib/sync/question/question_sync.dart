@@ -6,6 +6,7 @@ import 'package:planeje/sync/question/question_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
 import 'package:planeje/utils/networking/endpoint/network.dart';
+import 'package:planeje/utils/request_item.dart';
 
 class QuestionSync {
   Future<bool> getQuestion() async {
@@ -51,7 +52,7 @@ class QuestionSync {
 
     if (lists.isNotEmpty) {
       for (Question item in lists) {
-        Response response = await Network(ConfigApi(), [Endpoint.question, Endpoint.update]).post(Question.fromObjectToMap(item));
+        Response response = await Network(ConfigApi(), [Endpoint.question, Endpoint.update]).post(RequestItem().convert(item));
 
         if (response.data != null) {
           item.sync = true;

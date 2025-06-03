@@ -11,6 +11,7 @@ import 'package:planeje/sync/revision_theme/revision_theme_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
 import 'package:planeje/utils/networking/endpoint/network.dart';
+import 'package:planeje/utils/request_item.dart';
 
 class RevisionThemeSync {
   Future<bool> getRevisionTheme() async {
@@ -37,6 +38,8 @@ class RevisionThemeSync {
 
     if (lists.isNotEmpty) {
       for (RevisionTheme item in lists) {
+        int idOld = item.id!;
+
         if (item.insertApp!) item.id = null;
 
         Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.theme]).post(RevisionTheme.fromObjectToMap(item));
@@ -46,15 +49,15 @@ class RevisionThemeSync {
 
           await UpdateRevisionTheme(RevisionThemeDatabase(), revisionTheme: item).write();
 
-          await updateIdRevisionTheme(response.data['id']);
+          await updateIdRevisionTheme(response.data['id'], idOld);
         }
       }
     }
     return true;
   }
 
-  Future<void> updateIdRevisionTheme(int id) async {
-    List<Revision> revisions = await GetRevision(RevisionDatabase()).findRevisioByIdRevisionTheme(id) ?? [];
+  Future<void> updateIdRevisionTheme(int id, int idOld) async {
+    List<Revision> revisions = await GetRevision(RevisionDatabase()).findRevisioByIdRevisionTheme(idOld) ?? [];
 
     if (revisions.isNotEmpty) {
       for (Revision revision in revisions) {
@@ -70,7 +73,7 @@ class RevisionThemeSync {
 
     if (lists.isNotEmpty) {
       for (RevisionTheme item in lists) {
-        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.theme, Endpoint.update]).post(RevisionTheme.fromObjectToMap(item));
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.theme, Endpoint.update]).post(RequestItem().convert(item));
 
         if (response.data != null) {
           item.sync = true;

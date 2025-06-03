@@ -15,6 +15,7 @@ import 'package:planeje/sync/revision/revision_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
 import 'package:planeje/utils/networking/endpoint/network.dart';
+import 'package:planeje/utils/request_item.dart';
 
 class RevisionSync {
   Future<bool> getRevision() async {
@@ -41,6 +42,8 @@ class RevisionSync {
 
     if (lists.isNotEmpty) {
       for (Revision item in lists) {
+        int idOld = item.id!;
+
         if (item.insertApp!) item.id = null;
 
         Response response = await Network(ConfigApi(), [Endpoint.revision]).post(Revision.fromObjectToMap(item));
@@ -50,8 +53,8 @@ class RevisionSync {
 
           await Update(RevisionDatabase(), revision: item).write();
 
-          await updateIdRevisionAnnotation(response.data['id']);
-          await updateIdRevisionDate(response.data['id']);
+          await updateIdRevisionAnnotation(response.data['id'], idOld);
+          await updateIdRevisionDate(response.data['id'], idOld);
         }
       }
     }
@@ -59,8 +62,8 @@ class RevisionSync {
     return true;
   }
 
-  Future<void> updateIdRevisionAnnotation(int id) async {
-    List<Annotation> annotations = await GetAnnotation(AnnotationDatabase()).getAnnotationWidthIdRevision(id) ?? [];
+  Future<void> updateIdRevisionAnnotation(int id, int idOld) async {
+    List<Annotation> annotations = await GetAnnotation(AnnotationDatabase()).getAnnotationWidthIdRevision(idOld) ?? [];
 
     if (annotations.isNotEmpty) {
       for (Annotation annotation in annotations) {
@@ -71,8 +74,8 @@ class RevisionSync {
     }
   }
 
-  Future<void> updateIdRevisionDate(int id) async {
-    List<DateRevision> dateRevisions = await GetDateRevision(DateRevisionDatabase()).findDateRevisionByIdRevision(id) ?? [];
+  Future<void> updateIdRevisionDate(int id, int idOld) async {
+    List<DateRevision> dateRevisions = await GetDateRevision(DateRevisionDatabase()).findDateRevisionByIdRevision(idOld) ?? [];
 
     if (dateRevisions.isNotEmpty) {
       for (DateRevision dateRevision in dateRevisions) {
@@ -88,7 +91,7 @@ class RevisionSync {
 
     if (lists.isNotEmpty) {
       for (Revision item in lists) {
-        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.update]).post(Revision.fromObjectToMap(item));
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.update]).post(RequestItem().convert(item));
 
         if (response.data != null) {
           item.sync = true;

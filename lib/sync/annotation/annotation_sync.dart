@@ -8,6 +8,7 @@ import 'package:planeje/sync/annotation/annotation_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
 import 'package:planeje/utils/networking/endpoint/network.dart';
+import 'package:planeje/utils/request_item.dart';
 
 class AnnotationSync {
   Future<bool> getAnnotation() async {
@@ -52,7 +53,7 @@ class AnnotationSync {
 
     if (lists.isNotEmpty) {
       for (Annotation item in lists) {
-        Response response = await Network(ConfigApi(), [Endpoint.annotation, Endpoint.update]).post(Annotation.fromObjectToMap(item));
+        Response response = await Network(ConfigApi(), [Endpoint.annotation, Endpoint.update]).post(RequestItem().convert(item));
 
         if (response.data != null) {
           item.sync = true;

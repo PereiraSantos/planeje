@@ -9,7 +9,7 @@ abstract class RevisionThemeDao {
   @Query('SELECT * FROM revision_theme where sync = 0 and disable = 0')
   Future<List<RevisionTheme>?> findAllRevisionThemeSync();
 
-  @Query('SELECT * FROM revision_theme where disable = 11')
+  @Query('SELECT * FROM revision_theme where disable = 1')
   Future<List<RevisionTheme>?> findRevisionThemeDisable();
 
   @Query('SELECT * FROM revision_theme WHERE id = :id')

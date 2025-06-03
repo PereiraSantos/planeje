@@ -7,6 +7,7 @@ import 'package:planeje/sync/revision_date/revision_date_controller.dart';
 import 'package:planeje/utils/networking/config_api.dart';
 import 'package:planeje/utils/networking/endpoint.dart';
 import 'package:planeje/utils/networking/endpoint/network.dart';
+import 'package:planeje/utils/request_item.dart';
 
 class RevisionDateSync {
   Future<bool> getRevisionDate() async {
@@ -52,7 +53,7 @@ class RevisionDateSync {
 
     if (lists.isNotEmpty) {
       for (DateRevision item in lists) {
-        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.date, Endpoint.update]).post(DateRevision.fromObjectToMap(item));
+        Response response = await Network(ConfigApi(), [Endpoint.revision, Endpoint.date, Endpoint.update]).post(RequestItem().convert(item));
 
         if (response.data != null) {
           item.sync = true;

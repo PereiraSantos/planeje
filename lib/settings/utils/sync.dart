@@ -43,15 +43,14 @@ class Sync {
     try {
       syncNotifierPost.loading();
 
-      await Future.wait([
-        RevisionSync().postRevision(),
-        AnnotationSync().postAnnotation(),
-        QuizAync().posQuiz(),
-        QuestionSync().postQuestion(),
-        RevisionDateSync().postRevisionDate(),
-        RevisionQuizSync().postRevisionQuiz(),
-        RevisionThemeSync().postRevisionTheme(),
-      ]);
+      await RevisionThemeSync().postRevisionTheme();
+      await RevisionSync().postRevision();
+      await AnnotationSync().postAnnotation();
+      await RevisionDateSync().postRevisionDate();
+      await QuizAync().posQuiz();
+      await QuestionSync().postQuestion();
+      await RevisionQuizSync().postRevisionQuiz();
+
       syncNotifierPost.concluded();
 
       return true;
