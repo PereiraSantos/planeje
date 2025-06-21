@@ -27,7 +27,7 @@ class FutureBuilderComponent<T> extends StatelessWidget {
               child: Center(
                 child: Text(
                   '$message',
-                  style: TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w400),
+                  style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.w400),
                 ),
               ),
             ),

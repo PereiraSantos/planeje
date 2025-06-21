@@ -134,7 +134,7 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
                                 Expanded(
                                   flex: 10,
                                   child: Text(snapshot.data![index].description ?? '',
-                                      style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: const Color.fromARGB(130, 0, 0, 0))),
+                                      style: const TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: Color.fromARGB(130, 0, 0, 0))),
                                 ),
                                 Expanded(
                                   child: GestureDetector(
@@ -143,18 +143,18 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
                                         TransitionsBuilder.createRoute(ListRevision(revisionTheme: snapshot.data![index])),
                                       );
                                     },
-                                    child: Icon(Icons.menu_book_rounded, size: 20, color: Colors.black45),
+                                    child: const Icon(Icons.menu_book_rounded, size: 20, color: Colors.black45),
                                   ),
                                 ),
                               ],
                             ),
                             Text(_validTitleDescriptuionIsNull(snapshot.data![index].title, snapshot.data![index].revisionDescription),
-                                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300), overflow: TextOverflow.ellipsis, maxLines: 2),
+                                style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300), overflow: TextOverflow.ellipsis, maxLines: 2),
                             Visibility(
                               visible: snapshot.data![index].dateRevision != null,
                               child: Text(
                                 _validDateIsNull(snapshot.data![index].dateRevision),
-                                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300),
+                                style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300),
                               ),
                             ),
                           ],

@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                           checkColor: Colors.green,
                         ),
                       ),
-                      Expanded(flex: 8, child: const Text('Mantenha-me conectado')),
+                      const Expanded(flex: 8, child: Text('Mantenha-me conectado')),
                       Expanded(
                         flex: 3,
                         child: GestureDetector(
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                         if (await Credentials(UserDatabase()).login(user) && context.mounted) {
                           Credentials(UserDatabase()).updateKeepLogged(_keepMeLoggedIn);
 
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) => const Home()));
                         } else {
                           await MessageUser.message(context, 'Login incorreto!!!');
                         }

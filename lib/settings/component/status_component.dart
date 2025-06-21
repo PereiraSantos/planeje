@@ -9,7 +9,7 @@ class Start implements StatusFactory {
 
   @override
   Widget build(BuildContext context) {
-    return Container(padding: EdgeInsets.only(right: 10), child: Icon(Icons.check, color: Colors.grey, size: 18));
+    return Container(padding: const EdgeInsets.only(right: 10), child: const Icon(Icons.check, color: Colors.grey, size: 18));
   }
 }
 
@@ -18,7 +18,7 @@ class Loading implements StatusFactory {
 
   @override
   Widget build(BuildContext context) {
-    return Container(width: 30, height: 20, padding: EdgeInsets.only(right: 10), child: CircularProgressIndicator(strokeWidth: 1));
+    return Container(width: 30, height: 20, padding: const EdgeInsets.only(right: 10), child: const CircularProgressIndicator(strokeWidth: 1));
   }
 }
 
@@ -27,7 +27,7 @@ class Concluded implements StatusFactory {
 
   @override
   Widget build(BuildContext context) {
-    return Container(padding: EdgeInsets.only(right: 10), child: Icon(Icons.check, color: Colors.green, size: 18));
+    return Container(padding: const EdgeInsets.only(right: 10), child: const Icon(Icons.check, color: Colors.green, size: 18));
   }
 }
 
@@ -36,6 +36,6 @@ class Erro implements StatusFactory {
 
   @override
   Widget build(BuildContext context) {
-    return Container(padding: EdgeInsets.only(right: 10), child: Icon(Icons.error, color: Colors.red, size: 18));
+    return Container(padding: const EdgeInsets.only(right: 10), child: const Icon(Icons.error, color: Colors.red, size: 18));
   }
 }

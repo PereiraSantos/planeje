@@ -6,9 +6,9 @@ class MessageUser {
     await Flushbar(
       title: title,
       message: message,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
       flushbarPosition: FlushbarPosition.TOP,
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       borderRadius: BorderRadius.circular(8),
       backgroundColor: Colors.green,
     ).show(context);

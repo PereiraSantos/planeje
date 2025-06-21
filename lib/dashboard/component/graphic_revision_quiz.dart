@@ -27,8 +27,8 @@ class GraphicRevisionQuiz extends StatelessWidget {
               height: 12,
               color: Colors.green,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 5, right: 25),
+            const Padding(
+              padding: EdgeInsets.only(left: 5, right: 25),
               child: Text('Respostas corretas'),
             ),
             Container(
@@ -36,8 +36,8 @@ class GraphicRevisionQuiz extends StatelessWidget {
               height: 12,
               color: Colors.red,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 5),
+            const Padding(
+              padding: EdgeInsets.only(left: 5),
               child: Text('Respostas erradas'),
             ),
           ],

@@ -32,7 +32,7 @@ class _SearchState extends State<Search> {
         padding: const EdgeInsets.only(right: 10),
         child: GestureDetector(
           onTap: () => _change(true),
-          child: Icon(Icons.search, size: 22, color: Colors.black54),
+          child: const Icon(Icons.search, size: 22, color: Colors.black54),
         ),
       ),
       child: SizedBox(
@@ -43,10 +43,10 @@ class _SearchState extends State<Search> {
           borderRadius: 20,
           autofocus: false,
           fontSize: 16,
-          contentPadding: EdgeInsets.symmetric(vertical: 25.0, horizontal: 10.0),
+          contentPadding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 10.0),
           suffixIcon: GestureDetector(
             onTap: () => _change(false),
-            child: Icon(Icons.close, size: 20, color: Colors.black54),
+            child: const Icon(Icons.close, size: 20, color: Colors.black54),
           ),
           onChange: (value) => _setValue(value),
         ),

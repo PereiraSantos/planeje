@@ -10,7 +10,7 @@ class DialogAnnotation {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          contentPadding: EdgeInsets.all(15),
+          contentPadding: const EdgeInsets.all(15),
           content: Form(
             key: formKey,
             child: Column(
@@ -18,7 +18,7 @@ class DialogAnnotation {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Anotação", style: const TextStyle(color: Colors.black45, fontSize: 18)),
+                const Text("Anotação", style: TextStyle(color: Colors.black45, fontSize: 18)),
                 Flexible(
                   child: TextFormField(
                     controller: title,
@@ -81,7 +81,7 @@ class DialogAnnotation {
                     ),
                     child: const Text("CANCELA"),
                   ),
-                  Padding(padding: EdgeInsets.all(10)),
+                  const Padding(padding: EdgeInsets.all(10)),
                   TextButton(
                     onPressed: () {
                       onPressed(title.text, description.text);

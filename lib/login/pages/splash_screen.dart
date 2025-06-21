@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     User? user = await Credentials(UserDatabase()).findUserById();
 
     if (user != null) {
-      user.keepLogged ? _goTo(Home()) : _goTo(LoginPage());
+      user.keepLogged ? _goTo(const Home()) : _goTo(const LoginPage());
     } else {
       _goTo(RegisterPage());
     }

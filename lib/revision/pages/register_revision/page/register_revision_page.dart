@@ -90,13 +90,13 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                       setState(() {});
                     });
                   },
-                  child: Text('Adicionar anotação', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                  child: const Text('Adicionar anotação', style: TextStyle(color: Colors.grey, fontSize: 16)),
                 ),
                 ListView.separated(
                   itemCount: widget.annotations!.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.only(left: 20, right: 5),
+                  padding: const EdgeInsets.only(left: 20, right: 5),
                   separatorBuilder: (context, index) {
                     return const Divider(endIndent: 5, indent: 5);
                   },
@@ -111,8 +111,8 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('Título: ${widget.annotations![index].title}', style: TextStyle(color: Colors.black54)),
-                              Text('Descrição: ${widget.annotations![index].text}', style: TextStyle(color: Colors.black54)),
+                              Text('Título: ${widget.annotations![index].title}', style: const TextStyle(color: Colors.black54)),
+                              Text('Descrição: ${widget.annotations![index].text}', style: const TextStyle(color: Colors.black54)),
                             ],
                           ),
                         ),
@@ -132,7 +132,7 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                                     setState(() {});
                                   });
                                 },
-                                icon: Icon(Icons.edit, size: 18, color: Colors.blue)),
+                                icon: const Icon(Icons.edit, size: 18, color: Colors.blue)),
                           ),
                         ),
                         Expanded(
@@ -151,14 +151,14 @@ class _RegisterRevisionPageState extends State<RegisterRevisionPage> {
                                     MessageUser.message(context, 'Deletado com sucesso!!!');
                                   });
                                 },
-                                icon: Icon(Icons.delete, size: 18, color: Colors.red)),
+                                icon: const Icon(Icons.delete, size: 18, color: Colors.red)),
                           ),
                         )
                       ],
                     );
                   },
                 ),
-                Padding(padding: EdgeInsets.all(50))
+                const Padding(padding: EdgeInsets.all(50))
               ],
             ),
           ),

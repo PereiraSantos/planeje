@@ -39,21 +39,21 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
   Widget build(BuildContext context) {
     return ExpansionTile(
       initiallyExpanded: false,
-      title: Text(widget.revision.title ?? '', style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: const Color.fromARGB(130, 0, 0, 0))),
+      title: Text(widget.revision.title ?? '', style: const TextStyle(fontSize: 17.0, fontWeight: FontWeight.w500, color: Color.fromARGB(130, 0, 0, 0))),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Descrição: ${widget.revision.description ?? ''}', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300)),
+          Text('Descrição: ${widget.revision.description ?? ''}', style: const TextStyle(fontSize: 15.0, fontWeight: FontWeight.w300)),
           Text(
               widget.dateRevision.dateRevision == null
                   ? 'Não revisada'
                   : 'Revisada: ${FormatDate.formatDateString(widget.dateRevision.dateRevision!)} ${componentDate()}',
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w300))
+              style: const TextStyle(fontSize: 13.0, fontWeight: FontWeight.w300))
         ],
       ),
       backgroundColor: Colors.white,
       collapsedBackgroundColor: Colors.white,
-      shape: Border(),
+      shape: const Border(),
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,7 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Revisar', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                  const Text('Revisar', style: TextStyle(color: Colors.grey, fontSize: 16)),
                   SizedBox(
                     width: 35,
                     height: 25,
@@ -102,11 +102,11 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5, top: 5),
-                              child: Text('Anotação', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: const Color.fromARGB(130, 0, 0, 0))),
+                            const Padding(
+                              padding: EdgeInsets.only(left: 5, top: 5),
+                              child: Text('Anotação', style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: Color.fromARGB(130, 0, 0, 0))),
                             ),
-                            Divider(),
+                            const Divider(),
                             ListView.builder(
                               itemCount: snapshot.data!.length,
                               shrinkWrap: true,
@@ -123,17 +123,17 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                               child: Text(
                                                 'Título: ',
-                                                style: TextStyle(fontSize: 14, color: const Color.fromARGB(170, 0, 0, 0)),
+                                                style: TextStyle(fontSize: 14, color: Color.fromARGB(170, 0, 0, 0)),
                                               ),
                                             ),
                                             Expanded(
                                               flex: 4,
                                               child: Text(
                                                 snapshot.data![index].title ?? '',
-                                                style: TextStyle(fontSize: 14, color: const Color.fromARGB(170, 0, 0, 0)),
+                                                style: const TextStyle(fontSize: 14, color: Color.fromARGB(170, 0, 0, 0)),
                                               ),
                                             ),
                                           ],
@@ -143,7 +143,7 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(
+                                          const Expanded(
                                             child: Text(
                                               'Descrição: ',
                                               style: TextStyle(fontSize: 13, color: Colors.black54),
@@ -153,7 +153,7 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                                             flex: 4,
                                             child: Text(
                                               snapshot.data![index].text ?? '',
-                                              style: TextStyle(fontSize: 13, color: Colors.black54),
+                                              style: const TextStyle(fontSize: 13, color: Colors.black54),
                                             ),
                                           ),
                                         ],
@@ -179,7 +179,7 @@ class _ExpansionTileWidgetsState extends State<ExpansionTileWidgets> {
                 },
               ),
             ),
-            Padding(padding: EdgeInsets.all(5))
+            const Padding(padding: EdgeInsets.all(5))
           ],
         ),
       ],

@@ -28,9 +28,9 @@ class _HomeState extends State<Home> {
   }
 
   final List<Widget> _screen = [
-    Dashboard(),
-    ListRevisionTheme(),
-    ListQuiz(),
+    const Dashboard(),
+    const ListRevisionTheme(),
+    const ListQuiz(),
     SettingPage(),
   ];
 

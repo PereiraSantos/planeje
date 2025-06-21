@@ -8,7 +8,6 @@ import 'package:planeje/settings/utils/sync.dart';
 import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/transitions_builder.dart';
 import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
-import 'package:planeje/widgets/button_custon.dart';
 import 'package:planeje/widgets/privacy_policy.dart';
 
 import 'package:planeje/widgets/text_button_widget.dart';
@@ -45,25 +44,11 @@ class SettingPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 25.0, right: 10.0, top: 5.0),
-                  child: ButtonCuston(
-                    color: Colors.grey,
-                    child: GestureDetector(
-                      onTap: () async {
-                        await Navigator.of(context).push(
-                          TransitionsBuilder.createRoute(PrivacyPolicy()),
-                        );
-                      },
-                      child: Text('Política de privacidade.'),
-                    ),
-                  ),
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25.0, right: 20.0, top: 5.0),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 25.0, right: 20.0, top: 5.0),
                       child: Text('Enviar dados'),
                     ),
                     ListenableBuilder(
@@ -75,8 +60,8 @@ class SettingPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25.0, right: 20.0, top: 5.0),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 25.0, right: 20.0, top: 5.0),
                       child: Text('Receber dados'),
                     ),
                     ListenableBuilder(
@@ -84,6 +69,30 @@ class SettingPage extends StatelessWidget {
                       builder: (context, child) => sync.syncNotifierGet.status.build(context),
                     ),
                   ],
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      TransitionsBuilder.createRoute(const PrivacyPolicy()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 25, right: 10, top: 15),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Privacidade de dados',
+                          style: TextStyle(fontWeight: FontWeight.w300, color: Colors.black),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 18,
+                          color: Colors.grey,
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
