@@ -55,8 +55,8 @@ class UpdateRevisionTheme implements RevisionThemeFactory {
   }
 
   @override
-  Future writeList() async {
-    if (revisionThemes == null) throw ('Teve passar a uma lista de revisionThemes');
-    return await revisionThemeDatabase.updateRevisionThemeList(revisionThemes!);
+  Future writeList() {
+    // TODO: implement writeList
+    throw UnimplementedError();
   }
 }

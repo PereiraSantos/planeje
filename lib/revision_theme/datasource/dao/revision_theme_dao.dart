@@ -30,9 +30,6 @@ abstract class RevisionThemeDao {
   @update
   Future<int?> updateRevisionTheme(RevisionTheme revisionTheme);
 
-  @update
-  Future<void> updateRevisionThemeList(List<RevisionTheme> revisionThemes);
-
   @Query('delete from revision_theme')
   Future<void> deleteTable();
 }

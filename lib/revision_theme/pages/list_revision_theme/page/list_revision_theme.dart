@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:planeje/revision/pages/list_revision/page/list_revision.dart';
 
 import 'package:planeje/revision_theme/datasource/database/revision_theme_database.dart';
-import 'package:planeje/revision_theme/entities/revision_theme.dart';
 import 'package:planeje/revision_theme/entities/revision_theme_complement.dart';
-import 'package:planeje/revision_theme/pages/regsister_revision_theme/page/register_revision_theme_page.dart';
 import 'package:planeje/revision_theme/utils/find_revision_theme.dart';
-import 'package:planeje/revision_theme/utils/register_revision_theme.dart';
+import 'package:planeje/revision_theme/utils/insert_revision_theme.dart';
+import 'package:planeje/revision_theme/utils/update_revision_theme.dart';
 import 'package:planeje/utils/format_date.dart';
 import 'package:planeje/utils/message_user.dart';
 import 'package:planeje/utils/transitions_builder.dart';
@@ -15,6 +14,7 @@ import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/app_bar_widget/add_app_bar_widget.dart';
 import 'package:planeje/widgets/search.dart';
 
+import '../../regsister_revision_theme/page/register_revision_theme_page.dart';
 import '../component/dialog_delete.dart';
 
 class ListRevisionTheme extends StatefulWidget {
@@ -62,11 +62,11 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
           ),
           AddAppBarWidget(
             onClick: () async {
-              var result = await Navigator.of(context).push(
-                TransitionsBuilder.createRoute(
-                  RegisterRevisionThemePage(
-                    revisionTheme: RegisterRevisioTheme(RevisionThemeDatabase(), revisionTheme: RevisionTheme(), message: StatusNotification()),
-                  ),
+              var result = await TransitionsBuilder.navigateTo(
+                context,
+                RegisterRevisionThemePage(
+                  statusNotification: StatusNotification(),
+                  register: InsertRevisioTheme(RevisionThemeDatabase()),
                 ),
               );
 
@@ -102,10 +102,14 @@ class _ListRevisionThemeState extends State<ListRevisionTheme> {
                         } else {
                           try {
                             // ignore: use_build_context_synchronously
-                            var result = await Navigator.of(context).push(TransitionsBuilder.createRoute(RegisterRevisionThemePage(
-                              revisionTheme: UpdateRevisionTheme(RevisionThemeDatabase(),
-                                  revisionTheme: snapshot.data![index], message: StatusNotification(TypeMessage.Atualizar)),
-                            )));
+                            var result = await TransitionsBuilder.navigateTo(
+                              context,
+                              RegisterRevisionThemePage(
+                                register: UpdateRevisionTheme(RevisionThemeDatabase()),
+                                revisionTheme: snapshot.data![index],
+                                statusNotification: StatusNotification(TypeMessage.Atualizar),
+                              ),
+                            );
                             if (result) setState(() {});
                           } catch (e) {
                             // ignore: use_build_context_synchronously

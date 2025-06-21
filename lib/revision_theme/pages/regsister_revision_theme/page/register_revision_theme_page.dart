@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:planeje/revision_theme/utils/register_revision_theme.dart';
+import 'package:planeje/revision_theme/entities/revision_theme.dart';
+import 'package:planeje/revision_theme/utils/insert_revision_theme.dart';
 import 'package:planeje/utils/message_user.dart';
+import 'package:planeje/utils/type_message.dart';
 import 'package:planeje/widgets/bottom_sheet/bottom_sheet_widget.dart';
 import 'package:planeje/widgets/text_button_widget.dart';
 import 'package:planeje/widgets/text_form_field_widget.dart';
 
 class RegisterRevisionThemePage extends StatelessWidget {
-  RegisterRevisionThemePage({super.key, required this.revisionTheme}) {
-    description.text = revisionTheme.revisionTheme?.description ?? '';
+  RegisterRevisionThemePage({super.key, required this.register, required this.statusNotification, this.revisionTheme}) {
+    description.text = revisionTheme?.description ?? '';
   }
 
-  final RevisionThemeFactory revisionTheme;
+  final RevisionThemeFactory register;
   final formKey = GlobalKey<FormState>();
   final TextEditingController description = TextEditingController();
+  final StatusNotification statusNotification;
+  final RevisionTheme? revisionTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class RegisterRevisionThemePage extends StatelessWidget {
         backgroundColor: const Color(0xffffffff),
         elevation: 0,
         title: Text(
-          revisionTheme.message!.getTypeQuiz!.name,
+          statusNotification.getTypeQuiz!.name,
           style: const TextStyle(fontSize: 18, color: Colors.black54, fontWeight: FontWeight.bold),
         ),
       ),
@@ -54,21 +58,20 @@ class RegisterRevisionThemePage extends StatelessWidget {
               try {
                 if (!formKey.currentState!.validate()) return;
 
-                revisionTheme.revisionTheme?.setId(revisionTheme.revisionTheme?.id);
+                revisionTheme?.setId(revisionTheme?.id);
+                revisionTheme?.setDescription(description.text);
+                revisionTheme?.setSync();
 
-                revisionTheme.revisionTheme?.setDescription(description.text);
+                if (revisionTheme?.id == null) revisionTheme?.setInsertApp(true);
 
-                revisionTheme.revisionTheme?.setSync();
-
-                if (revisionTheme.revisionTheme?.id == null) revisionTheme.revisionTheme?.setInsertApp(true);
-
-                var idRevision = await revisionTheme.write();
+                register.revisionTheme = revisionTheme!;
+                var idRevision = await register.write();
 
                 if (idRevision == null) return;
 
-                if (idRevision != null && context.mounted) {
+                if (context.mounted) {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  await MessageUser.message(context, revisionTheme.message!.message);
+                  await MessageUser.message(context, statusNotification.message);
                   // ignore: use_build_context_synchronously
                   Navigator.pop(context, true);
                 }

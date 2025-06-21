@@ -18,4 +18,6 @@ class TransitionsBuilder {
       },
     );
   }
+
+  static navigateTo(BuildContext context, dynamic page) async => await Navigator.of(context).push(TransitionsBuilder.createRoute(page));
 }
